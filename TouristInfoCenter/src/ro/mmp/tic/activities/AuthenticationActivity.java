@@ -17,6 +17,9 @@ public class AuthenticationActivity extends Activity {
 		setContentView(R.layout.activity_authentication);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		
+		//Set the title of the activity
+		setTitle("Autentication");
 	}
 
 	/**

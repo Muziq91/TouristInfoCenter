@@ -130,7 +130,9 @@ public class MainActivity extends Activity {
 							public void onClick(DialogInterface dialog, int id) {
 								Intent callInternetSettingsIntent = new Intent(
 										android.provider.Settings.ACTION_WIRELESS_SETTINGS);
-								startActivity(callInternetSettingsIntent);
+								startActivityForResult(
+										callInternetSettingsIntent, 1);
+								dialog.cancel();
 
 							}
 						});
@@ -139,6 +141,7 @@ public class MainActivity extends Activity {
 
 					public void onClick(DialogInterface dialog, int id) {
 
+						startAgainButton.setVisibility(View.VISIBLE);
 						dialog.cancel();
 
 					}
@@ -181,7 +184,7 @@ public class MainActivity extends Activity {
 							public void onClick(DialogInterface dialog, int id) {
 								Intent callGPSSettingIntent = new Intent(
 										android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-								startActivity(callGPSSettingIntent);
+								startActivityForResult(callGPSSettingIntent, 2);
 								dialog.cancel();
 							}
 						});
@@ -189,6 +192,7 @@ public class MainActivity extends Activity {
 				new DialogInterface.OnClickListener() {
 
 					public void onClick(DialogInterface dialog, int id) {
+						startAgainButton.setVisibility(View.VISIBLE);
 						dialog.cancel();
 					}
 				});

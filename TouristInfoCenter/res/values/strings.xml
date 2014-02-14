@@ -8,6 +8,6 @@
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
 
     <!-- When the user goes to the first screen but wants to go back and not exit -->
-    <string name="startAgain">Start Again</string>
+    <string name="startAgain">Refresh</string>
 
 </resources>

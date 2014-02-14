@@ -1,3 +1,8 @@
+/**
+ * This is a buffer activity between the MainActivity and the AuthenticationActivity.
+ * It is a splash screen that  displays an image for 4 seconds.
+ */
+
 package ro.mmp.tic.activities;
 
 import ro.mmp.tic.R;
@@ -16,6 +21,8 @@ public class SplashScreenActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash_screen);
+		
+		setTitle("Welcome to TouristInfoCenter");
 
 		new Handler().postDelayed(new Runnable() {
 			@Override

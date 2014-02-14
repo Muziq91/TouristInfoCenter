@@ -10,13 +10,15 @@
     tools:context=".MainActivity" >
 
     <Button
-        android:background="@drawable/buttonback"
         android:id="@+id/startAgainButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="75dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/buttonback"
+        android:minHeight="38dip"
+        android:minWidth="24dip"
         android:onClick="startAgain"
         android:text="@string/startAgain" />
 
