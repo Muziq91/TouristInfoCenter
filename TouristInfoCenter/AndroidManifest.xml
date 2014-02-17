@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="ro.mmp.tic.activities.AuthenticationActivity"
+            android:name="ro.mmp.tic.activities.authenticate.AuthenticationActivity"
             android:label="@string/title_activity_authentication"
             android:parentActivityName="ro.mmp.tic.activities.MainActivity" >
 
@@ -42,6 +42,22 @@
         <activity
             android:name="ro.mmp.tic.activities.SplashScreenActivity"
             android:label="@string/title_activity_splash_screen" >
+        </activity>
+        <activity
+            android:name="ro.mmp.tic.activities.authenticate.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:parentActivityName="ro.mmp.tic.activities.authenticate.AuthenticationActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ro.mmp.tic.activities.authenticate.AuthenticationActivity" />
+        </activity>
+        <activity
+            android:name="ro.mmp.tic.activities.authenticate.RegisterActivity"
+            android:label="@string/title_activity_register"
+            android:parentActivityName="ro.mmp.tic.activities.authenticate.AuthenticationActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ro.mmp.tic.activities.authenticate.AuthenticationActivity" />
         </activity>
     </application>
 

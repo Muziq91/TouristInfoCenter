@@ -10,4 +10,19 @@
     <!-- When the user goes to the first screen but wants to go back and not exit -->
     <string name="startAgain">Refresh</string>
 
+    <!-- Login and Register buttons -->
+
+    <string name="login">Log in</string>
+    <string name="register">Register</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
+
+    <!-- Registration form hit values -->
+    <string name="name">Name</string>
+    <string name="username">UserName</string>
+    <string name="password">Password</string>
+    <string name="repassword">Re-type Password</string>
+    <string name="email">Email</string>
+    <string name="country">Country</string>
+
 </resources>

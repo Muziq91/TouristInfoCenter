@@ -1,13 +1,15 @@
-package ro.mmp.tic.activities;
+package ro.mmp.tic.activities.authenticate;
 
 import ro.mmp.tic.R;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class AuthenticationActivity extends Activity {
 
@@ -17,9 +19,29 @@ public class AuthenticationActivity extends Activity {
 		setContentView(R.layout.activity_authentication);
 		// Show the Up button in the action bar.
 		setupActionBar();
-		
-		//Set the title of the activity
+
+		// Set the title of the activity
 		setTitle("Autentication");
+	}
+
+	/**
+	 * The login button
+	 */
+	public void login(View v) {
+
+		Intent i = new Intent(AuthenticationActivity.this, LoginActivity.class);
+		startActivity(i);
+	}
+
+	/**
+	 * The regoister button
+	 */
+
+	public void register(View v) {
+		Intent i = new Intent(AuthenticationActivity.this,
+				RegisterActivity.class);
+		startActivity(i);
+
 	}
 
 	/**
