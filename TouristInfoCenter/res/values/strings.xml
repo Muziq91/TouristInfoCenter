@@ -24,5 +24,6 @@
     <string name="repassword">Re-type Password</string>
     <string name="email">Email</string>
     <string name="country">Country</string>
+    <string name="remember">Remember username and password</string>
 
 </resources>
