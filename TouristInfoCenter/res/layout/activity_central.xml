@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff" >
+
+        <!-- Header  Starts -->
+
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ticnamelogo"
+            android:orientation="horizontal"
+            android:paddingBottom="5dip"
+            android:paddingTop="5dip" >
+        </LinearLayout>
+        <!-- Header Ends -->
+
+
+        <!-- Central activity -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/header"
+            android:orientation="vertical"
+            android:padding="10dip" >
+
+            <!-- Street map button -->
+
+            <Button
+                android:id="@+id/streetMap"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/buttonback"
+                android:onClick="displayStreetMap"
+                android:text="@string/streetMap" />
+            <!-- Street map button  ends -->
+
+
+            <!-- Google map button -->
+
+            <Button
+                android:id="@+id/googleMap"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/buttonback"
+                android:onClick="displayGoogleMap"
+                android:text="@string/googleMap" />
+            <!-- Google map button  ends -->
+        </LinearLayout>
+        <!-- Central activity  Ends -->
+    </RelativeLayout>
+
+</ScrollView>
