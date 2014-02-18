@@ -1,10 +1,21 @@
+/**
+ * 
+ * @author Matei Mircea
+ * This activity has the role of getting the user input in order to register an account. It passes the information to the 
+ * UserRegisterService in order to process the information and deduce if the user can or not create an account.
+ */
+
 package ro.mmp.tic.activities.authenticate;
 
+import java.util.concurrent.ExecutionException;
+
 import ro.mmp.tic.R;
+import ro.mmp.tic.activities.CentralActivity;
 import ro.mmp.tic.domain.User;
 import ro.mmp.tic.service.userservice.UserRegisterService;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -46,6 +57,20 @@ public class RegisterActivity extends Activity {
 			UserRegisterService userRegisterService = new UserRegisterService(
 					getUserFromEdiTextFields(), getApplicationContext());
 			userRegisterService.execute("");
+
+			try {
+				if (userRegisterService.get().equals("registered")) {
+					Intent intent = new Intent(getApplicationContext(),
+							CentralActivity.class);
+					startActivity(intent);
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		}
 

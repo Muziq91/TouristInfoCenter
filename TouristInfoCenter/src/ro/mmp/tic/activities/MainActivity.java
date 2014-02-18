@@ -217,8 +217,10 @@ public class MainActivity extends Activity {
 	 */
 
 	public void startAgain(View v) {
+
 		back = 0;
 		activateInternetAndGps();
+
 	}
 
 }

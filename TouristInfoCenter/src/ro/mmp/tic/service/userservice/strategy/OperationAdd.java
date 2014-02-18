@@ -1,3 +1,9 @@
+/**
+ * @author Matei Mircea
+ * 
+ * This class is a part of the strategy design pattern, it adds the user to the database if the information provided are correct
+ */
+
 package ro.mmp.tic.service.userservice.strategy;
 
 import java.sql.Connection;

@@ -107,8 +107,6 @@
                 android:background="@drawable/buttonback"
                 android:onClick="registerAccount"
                 android:text="@string/register" />
-            <!-- Link to Login Screen -->
-
         </LinearLayout>
         <!-- Registration Form Ends -->
     </RelativeLayout>

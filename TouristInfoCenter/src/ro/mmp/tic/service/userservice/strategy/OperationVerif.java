@@ -1,3 +1,11 @@
+/**
+ * @author Matei Mircea
+ * 
+ * This class is a part of the strategy design pattern, it verifies if the user can register an account, or the
+ *   provided information are already in user
+ * 
+ */
+
 package ro.mmp.tic.service.userservice.strategy;
 
 import java.sql.Connection;

@@ -1,3 +1,10 @@
+/**
+ * @author Matei Mircea
+ * 
+ * This class represents the authenticate page and says what the buttons "login" and "Register" will do.
+ * 
+ */
+
 package ro.mmp.tic.activities.authenticate;
 
 import ro.mmp.tic.R;
@@ -10,8 +17,12 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 public class AuthenticationActivity extends Activity {
+
+	private Button loginButton;
+	private Button registerButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +33,10 @@ public class AuthenticationActivity extends Activity {
 
 		// Set the title of the activity
 		setTitle("Autentication");
+
+		loginButton = (Button) findViewById(R.id.loginButton);
+		registerButton = (Button) findViewById(R.id.registerButton);
+
 	}
 
 	/**
@@ -31,13 +46,15 @@ public class AuthenticationActivity extends Activity {
 
 		Intent i = new Intent(AuthenticationActivity.this, LoginActivity.class);
 		startActivity(i);
+
 	}
 
 	/**
-	 * The regoister button
+	 * The register button
 	 */
 
 	public void register(View v) {
+
 		Intent i = new Intent(AuthenticationActivity.this,
 				RegisterActivity.class);
 		startActivity(i);

@@ -1,3 +1,10 @@
+/**
+ * @author Matei Mircea
+ * 
+ * This class creates a connection to the cloud database and verifies if the user can create an account or not
+ * 
+ */
+
 package ro.mmp.tic.service.userservice;
 
 import java.sql.Connection;

@@ -1,11 +1,24 @@
+/**
+ * @author Matei Mircea
+ * 
+ * 
+ * This activity has the role of controlling the login page. It takes the username and password inserted by the user and
+ * passes them to the UserLoginService class to be processed. It also offers the possibility to remember the 
+ * username and password. This way the user does not have to input them all the time.
+ */
+
 package ro.mmp.tic.activities.authenticate;
 
+import java.util.concurrent.ExecutionException;
+
 import ro.mmp.tic.R;
+import ro.mmp.tic.activities.CentralActivity;
 import ro.mmp.tic.domain.User;
 import ro.mmp.tic.service.userservice.UserLoginService;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,6 +37,7 @@ public class LoginActivity extends Activity {
 	private EditText username;
 	private EditText password;
 	private CheckBox remember;
+	private Button loginButton;
 	private SharedPreferences loginPreferences;
 	private SharedPreferences.Editor loginPrefsEditor;
 	private Boolean saveLogin;
@@ -35,6 +50,7 @@ public class LoginActivity extends Activity {
 		// Show the Up button in the action bar.
 		setupActionBar();
 
+		loginButton = (Button) findViewById(R.id.login);
 		username = (EditText) findViewById(R.id.username);
 		password = (EditText) findViewById(R.id.password);
 		remember = (CheckBox) findViewById(R.id.remember);
@@ -43,7 +59,7 @@ public class LoginActivity extends Activity {
 		loginPrefsEditor = loginPreferences.edit();
 
 		saveLogin = loginPreferences.getBoolean("saveLogin", false);
-		
+
 		if (saveLogin == true) {
 			username.setText(loginPreferences.getString("username", ""));
 			password.setText(loginPreferences.getString("password", ""));
@@ -56,6 +72,7 @@ public class LoginActivity extends Activity {
 	 */
 
 	public void login(View v) {
+
 		InitializeEditTextFields();
 		if (canLogin) {
 
@@ -63,7 +80,22 @@ public class LoginActivity extends Activity {
 					createUser(), getApplicationContext());
 			userLoginService.execute("");
 
+			try {
+				if (userLoginService.get().equals("login")) {
+					Intent intent = new Intent(getApplicationContext(),
+							CentralActivity.class);
+					startActivity(intent);
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
+
 	}
 
 	public void remember(View view) {

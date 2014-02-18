@@ -25,5 +25,15 @@
     <string name="email">Email</string>
     <string name="country">Country</string>
     <string name="remember">Remember username and password</string>
+    <string name="title_activity_central">CentralActivity</string>
+
+    <!-- For the central activity -->
+    <string name="streetMap">Street Map</string>
+    <string name="googleMap">Google Map</string>
+
+    <!-- Metaio strings -->
+
+    <string name="mySdkSignature">Vvt9sk3kKKEX/cz1Xxy2S+faVyTQ6k7tv1NjBDPJSy0=</string>
+    <string name="gps">GPS</string>
 
 </resources>

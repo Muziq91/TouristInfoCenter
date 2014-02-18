@@ -1,15 +1,25 @@
+/**
+ * @author Matei Mircea
+ * 
+ * This class is an AsyncTask, it creates a connection to the database on the cloud 
+ * and verifies if the user can or cannot login into his account
+ * 
+ */
+
 package ro.mmp.tic.service.userservice;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import ro.mmp.tic.activities.CentralActivity;
 import ro.mmp.tic.domain.User;
 import ro.mmp.tic.service.userservice.strategy.OperationAdd;
 import ro.mmp.tic.service.userservice.strategy.OperationLoginVerif;
 import ro.mmp.tic.service.userservice.strategy.OperationVerif;
 import ro.mmp.tic.service.userservice.strategy.Strategy;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -21,6 +31,8 @@ public class UserLoginService extends AsyncTask<String, Void, String> {
 	private Connection connection;
 	private Context context;
 
+	private static boolean canLogin = false;
+
 	public UserLoginService(User user, Context context) {
 		this.user = user;
 		this.context = context;
@@ -28,6 +40,8 @@ public class UserLoginService extends AsyncTask<String, Void, String> {
 
 	@Override
 	protected String doInBackground(String... arg0) {
+
+		canLogin = false;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			connection = DriverManager
@@ -69,7 +83,17 @@ public class UserLoginService extends AsyncTask<String, Void, String> {
 			Toast.makeText(context, "Login successfully", Toast.LENGTH_LONG)
 					.show();
 
+			canLogin = true;
 		}
+
+	}
+
+	public boolean isCanLogin() {
+		return canLogin;
+	}
+
+	public void setCanLogin(boolean canLogin) {
+		this.canLogin = canLogin;
 	}
 
 }
