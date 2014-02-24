@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff" >
+
+        <!-- Header  Starts -->
+
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ticnamelogo"
+            android:orientation="horizontal"
+            android:paddingBottom="5dip"
+            android:paddingTop="5dip" >
+        </LinearLayout>
+        <!-- Header Ends -->
+
+        <LinearLayout
+            android:id="@+id/presentation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/header"
+            android:orientation="vertical"
+            android:padding="10dip" >
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/botanical"
+                android:src="@drawable/bastion" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/bastionText"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/unlikeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/presentation"
+            android:layout_marginRight="38dp"
+            android:background="@drawable/smallbuttonback"
+            android:minHeight="38dip"
+            android:minWidth="24dip"
+            android:onClick="unlikeTopic"
+            android:text="@string/unlike" />
+
+        <Button
+            android:id="@+id/likeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/presentation"
+            android:layout_marginRight="40dp"
+            android:layout_toLeftOf="@+id/unlikenButton"
+            android:background="@drawable/smallbuttonback"
+            android:minHeight="38dip"
+            android:minWidth="24dip"
+            android:onClick="likeTopic"
+            android:text="@string/like" />
+
+        <Button
+            android:id="@+id/commentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/likeButton"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/buttonback"
+            android:minHeight="38dip"
+            android:minWidth="24dip"
+            android:onClick="like"
+            android:text="@string/comment" />
+    </RelativeLayout>
+
+</ScrollView>
