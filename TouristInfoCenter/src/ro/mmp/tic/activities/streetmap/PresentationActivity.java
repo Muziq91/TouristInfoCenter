@@ -35,7 +35,6 @@ public class PresentationActivity extends Activity implements
 	private Like like;
 	private User user;
 	private Topic topic;
-	private boolean exists = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +47,9 @@ public class PresentationActivity extends Activity implements
 		imageView = (ImageView) findViewById(R.id.imageView);
 		likeButton = (Button) findViewById(R.id.likeButton);
 		unlikeButton = (Button) findViewById(R.id.unlikeButton);
+
+		likeButton.setVisibility(View.GONE);
+		unlikeButton.setVisibility(View.GONE);
 
 		Intent intent = getIntent();
 		topicName = intent.getStringExtra("name");
@@ -98,11 +100,13 @@ public class PresentationActivity extends Activity implements
 	public void likeTopic(View v) {
 		likeButton.setVisibility(View.GONE);
 		unlikeButton.setVisibility(View.VISIBLE);
-		UserService userUpdateLike;
-		if (exists) {
-			userUpdateLike = new UserUpdateLikeService(user, topic,
-					getApplicationContext(), like, exists);
-		}
+
+		like.setLike(1);
+		like.setUnlike(0);
+		UserService userUpdateLike = new UserUpdateLikeService(user, topic,
+				getApplicationContext(), like);
+		userUpdateLike.execute("");
+
 	}
 
 	/**
@@ -111,6 +115,12 @@ public class PresentationActivity extends Activity implements
 	public void unlikeTopic(View v) {
 		unlikeButton.setVisibility(View.GONE);
 		likeButton.setVisibility(View.VISIBLE);
+		like.setLike(0);
+		like.setUnlike(1);
+		UserService userUpdateLike = new UserUpdateLikeService(user, topic,
+				getApplicationContext(), like);
+
+		userUpdateLike.execute("");
 	}
 
 	/**
@@ -138,9 +148,7 @@ public class PresentationActivity extends Activity implements
 			// activity, the Up button is shown. Use NavUtils to allow users
 			// to navigate up one level in the application structure. For
 			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
+
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		}
@@ -166,14 +174,18 @@ public class PresentationActivity extends Activity implements
 				+ like.getIduser() + " idtopic;" + like.getIdtopic());
 
 		if (like.getIdlike() != 0) {
-			exists = true;
+
 			if (like.getLike() == 1) {
 				likeButton.setVisibility(View.GONE);
+				unlikeButton.setVisibility(View.VISIBLE);
 			} else if (like.getUnlike() == 1) {
 				unlikeButton.setVisibility(View.GONE);
+				likeButton.setVisibility(View.VISIBLE);
+			} else {
+				unlikeButton.setVisibility(View.VISIBLE);
+				likeButton.setVisibility(View.VISIBLE);
+
 			}
-		} else {
-			exists = false;
 		}
 
 	}

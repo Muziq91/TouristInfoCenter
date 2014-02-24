@@ -14,11 +14,10 @@ import java.sql.SQLException;
 import ro.mmp.tic.domain.User;
 import ro.mmp.tic.service.UserService;
 import ro.mmp.tic.service.interfaces.UserLoginServiceFinishedListener;
-import ro.mmp.tic.service.userservice.strategy.OperationLoginVerif;
 import ro.mmp.tic.service.userservice.strategy.Strategy;
+import ro.mmp.tic.service.userservice.strategy.user.OperationLoginVerif;
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 public class UserLoginService extends UserService {
 
@@ -65,17 +64,16 @@ public class UserLoginService extends UserService {
 	@Override
 	protected void onPostExecute(String result) {
 
+		boolean canLogin = false;
 		if (result.equals("nologin")) {
 
-			Toast.makeText(context, "There is no user with the specified data",
-					Toast.LENGTH_LONG).show();
+			canLogin = false;
 
 		} else {
+			canLogin = true;
 
-			Toast.makeText(context, "Login successfully", Toast.LENGTH_LONG)
-					.show();
-			finishedListener.onTaskFinished();
 		}
+		finishedListener.onTaskFinished(canLogin);
 
 	}
 

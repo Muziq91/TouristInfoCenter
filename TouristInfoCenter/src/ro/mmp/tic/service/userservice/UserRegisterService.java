@@ -12,20 +12,22 @@ import java.sql.SQLException;
 
 import ro.mmp.tic.domain.User;
 import ro.mmp.tic.service.UserService;
-import ro.mmp.tic.service.userservice.strategy.OperationAdd;
-import ro.mmp.tic.service.userservice.strategy.OperationVerif;
+import ro.mmp.tic.service.interfaces.UserRegisterServiceFinishedListener;
 import ro.mmp.tic.service.userservice.strategy.Strategy;
+import ro.mmp.tic.service.userservice.strategy.user.OperationAdd;
+import ro.mmp.tic.service.userservice.strategy.user.OperationVerif;
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 public class UserRegisterService extends UserService {
 
-	
+	private UserRegisterServiceFinishedListener finishedListener;
 
-	public UserRegisterService(User user, Context context) {
+	public UserRegisterService(User user, Context context,
+			UserRegisterServiceFinishedListener finishedListener) {
 		this.user = user;
 		this.context = context;
+		this.finishedListener = finishedListener;
 	}
 
 	@Override
@@ -57,22 +59,23 @@ public class UserRegisterService extends UserService {
 
 		}
 
-		return null;
+		return "noregister";
 	}
 
 	@Override
 	protected void onPostExecute(String result) {
-		Log.i("TAG", "INTRU AICI  " + result);
-		if (result == null) {
-			Toast.makeText(context, "UserName or Email are already in user",
-					Toast.LENGTH_LONG).show();
+
+		boolean canRegister = false;
+		if (result.equals("noregister")) {
+			canRegister = false;
 
 		} else {
 
-			Toast.makeText(context, "You have been successfully registered",
-					Toast.LENGTH_LONG).show();
+			canRegister = true;
 
 		}
+
+		finishedListener.onTaskFinished(canRegister);
 	}
 
 }

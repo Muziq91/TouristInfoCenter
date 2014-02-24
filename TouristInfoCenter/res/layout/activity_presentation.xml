@@ -64,14 +64,14 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/presentation"
             android:layout_marginRight="40dp"
-            android:layout_toLeftOf="@+id/unlikenButton"
+            android:layout_toLeftOf="@+id/unlikeButton"
             android:background="@drawable/smallbuttonback"
             android:minHeight="38dip"
             android:minWidth="24dip"
             android:onClick="likeTopic"
             android:text="@string/like" />
 
-        <Button
+       <!--  <Button
             android:id="@+id/commentButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
             android:minHeight="38dip"
             android:minWidth="24dip"
             android:onClick="like"
-            android:text="@string/comment" />
+            android:text="@string/comment" /> -->
     </RelativeLayout>
 
 </ScrollView>

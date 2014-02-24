@@ -77,11 +77,10 @@ public class LoginActivity extends Activity implements
 		InitializeEditTextFields();
 		if (canLogin) {
 
+			loginButton.setVisibility(View.GONE);
 			UserService userLoginService = new UserLoginService(createUser(),
 					getApplicationContext(), this);
 			userLoginService.execute("");
-
-			
 
 		}
 
@@ -173,13 +172,17 @@ public class LoginActivity extends Activity implements
 	}
 
 	@Override
-	public void onTaskFinished() {
-		Intent intent = new Intent(getApplicationContext(),
-				CentralActivity.class);
-		intent.putExtra("loggedUser", username.getText().toString());
+	public void onTaskFinished(boolean canLogin) {
+		if (canLogin) {
+			Intent intent = new Intent(getApplicationContext(),
+					CentralActivity.class);
+			intent.putExtra("loggedUser", username.getText().toString());
 
-		startActivity(intent);
-
+			startActivity(intent);
+		} else {
+			toastMessage("Username or password are incorrect");
+			loginButton.setVisibility(View.VISIBLE);
+		}
 	}
 
 }

@@ -2,5 +2,5 @@ package ro.mmp.tic.service.interfaces;
 
 public interface UserLoginServiceFinishedListener {
 
-	void onTaskFinished();
+	void onTaskFinished(boolean canLogin);
 }

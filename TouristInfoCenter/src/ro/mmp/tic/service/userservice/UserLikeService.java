@@ -8,11 +8,10 @@ import ro.mmp.tic.domain.Topic;
 import ro.mmp.tic.domain.User;
 import ro.mmp.tic.service.UserService;
 import ro.mmp.tic.service.interfaces.UserLikeServiceFinishedListener;
-import ro.mmp.tic.service.userservice.strategy.OperationGetLike;
 import ro.mmp.tic.service.userservice.strategy.Strategy;
+import ro.mmp.tic.service.userservice.strategy.like.OperationGetLike;
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 public class UserLikeService extends UserService {
 
@@ -40,10 +39,6 @@ public class UserLikeService extends UserService {
 					.getConnection(
 							"jdbc:mysql://ec2-50-19-213-178.compute-1.amazonaws.com:3306/center",
 							"Muziq91", "vasilecaine09");
-
-			Log.d("USERLIKESERVICE AAAAAAAAAAAAAAAA  ",
-					"Username is " + user.getUsername() + " TopiName is "
-							+ topic.getName());
 
 			Strategy getLike = new OperationGetLike();
 			like = getLike.execute(user.getUsername(), topic.getName(),

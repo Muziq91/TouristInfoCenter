@@ -7,12 +7,11 @@
 
 package ro.mmp.tic.activities.authenticate;
 
-import java.util.concurrent.ExecutionException;
-
 import ro.mmp.tic.R;
 import ro.mmp.tic.activities.CentralActivity;
 import ro.mmp.tic.domain.User;
 import ro.mmp.tic.service.UserService;
+import ro.mmp.tic.service.interfaces.UserRegisterServiceFinishedListener;
 import ro.mmp.tic.service.userservice.UserRegisterService;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -27,7 +26,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class RegisterActivity extends Activity {
+public class RegisterActivity extends Activity implements
+		UserRegisterServiceFinishedListener {
 
 	private EditText name;
 	private EditText username;
@@ -55,25 +55,10 @@ public class RegisterActivity extends Activity {
 		intializeEditTextFields();
 		if (canRegister) {
 
+			registerButton.setVisibility(View.GONE);
 			UserService userRegisterService = new UserRegisterService(
-					getUserFromEdiTextFields(), getApplicationContext());
+					getUserFromEdiTextFields(), getApplicationContext(), this);
 			userRegisterService.execute("");
-
-			try {
-				if (userRegisterService.get().equals("registered")) {
-
-					Intent intent = new Intent(getApplicationContext(),
-							CentralActivity.class);
-					intent.putExtra("loggedUser", username.getText().toString());
-					startActivity(intent);
-				}
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 
 		}
 
@@ -164,6 +149,20 @@ public class RegisterActivity extends Activity {
 
 		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
 
+	}
+
+	@Override
+	public void onTaskFinished(boolean canRegister) {
+
+		if (canRegister) {
+			Intent intent = new Intent(getApplicationContext(),
+					CentralActivity.class);
+			intent.putExtra("loggedUser", username.getText().toString());
+			startActivity(intent);
+		} else {
+			toastMessage("Username or email are already in use");
+			registerButton.setVisibility(View.VISIBLE);
+		}
 	}
 
 }
