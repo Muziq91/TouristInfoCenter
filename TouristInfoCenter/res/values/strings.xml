@@ -36,4 +36,31 @@
     <string name="mySdkSignature">Vvt9sk3kKKEX/cz1Xxy2S+faVyTQ6k7tv1NjBDPJSy0=</string>
     <string name="gps">GPS</string>
 
+    <!-- Presentation Activities String -->
+
+    <string name="title_activity_presentation">PresentationActivity</string>
+    <string name="botanical">Botanical Garden</string>
+    <string name="botanicalText">"The Cluj-Napoca Botanical Garden, officially Alexandru Borza Cluj-Napoca University Botanic Garden, is a botanical garden in Cluj-Napoca, Romania. 
+        It was founded in 1872 by Brassai Samuel. Was overtaken 1920 by the local university, and by Alexandru Borza. The garden is over 14 hectares in area, with over 10,000 plants from throughout the world. 
+        It is divided into ornamental, phytogeographic (geobotanical), systematic (taxonomical), economic, and medicinal sections. Romanian flora and vegetation are represented by plants from the Transylvanian plains, the Carpathian Mountains, Banat, etc.
+        Among the Botanical Garden's interesting attractions are the Japanese Garden (a garden in Japanese style, with a brook and a Japanese-style house), the Roman Garden with archeological remains from the Roman colony of Napoca, among them a statue of Ceres, goddess of cereals and bread, alongside cultivated plants that dominate contemporary Romanian agriculture. Jablonovszki Elemér was its head gardener for 45 years."</string>
+    <string name="statue">Materi Corvin Statue</string>
+    <string name="statueText">"Union Square is the largest and most important plaza in the Romanian city of Cluj-Napoca. The square is one of the largest in Romania, with dimensions of 220 m by 160 m. The centre of the city spreads out from this square. The St. Michael's Church, with the highest church tower in Romania (80m), is the second largest Gothic-style church in Romania. 
+        The church was constructed in two phases. The first from 1316 to 1390 and the second from 1410 to 1487. Also, the statue of King of Hungary Matthias Corvinus is located here. The old town hall, the National Museum of Art, the Josika Palace, and the Rhédey palace can also be found here.
+        Apart from the medieval buildings, there are also Roman and Dacian ruins under the square, partially visible thanks to a glass screen in the plaza.
+        The Unirii Square was originally called Nagypiac in Hungarian (Piaţa Mare in Romanian), meaning "Big Market Square", as opposed to the Kispiac ("Little Market Square"), which is now the Museum Square."</string>
+    <string name="cathedral">Orthodox cathedral</string>
+    <string name="cathedralText">"After the Mitropoly of Vad, Feleac and Cluj was set up, the Romanian Orthodox Church asked the Cluj City Hall permission to use the space in front of the National Theater to build the Orthodox Cathedral. The church was built in Byzantine style after the design produced by architects C. Pomponiu and Gh. Cristinel, by the contractor Tiberiu Ieremia. 
+        It was inaugurated and ordained in 1933, in a ceremony attended by King Charles II. The cathedral, a remarkable landmark of the city and an important religious center in Romania, is 64 m in height, with a 40-meter high imposing dome and a diameter of 12 meters, which make it visible from all the hills around the city."</string>
+    <string name="bastion">Bastionul Croitorilor</string>
+    <string name="bastionText">"The Cluj-Napoca Bastionul Croitorilor is located at the southeast corner of the old Cluj-Napoca citadel. It was built in the 15th century and rebuilt between 1627 and 1629, assuming its present form. 
+        It was named after the Tailors' Guild, who took care of and guarded this part of the city. Near the tower — where Baba Novac, general of Michael the Brave and Saski priest, was killed in 1601 by General Basta — there is a statue of Baba Novac. 
+        Deserted until 2007, the municipality of Cluj-Napoca undertook to include the tower in the city's touristic itinerary, financing its restoration. 
+        The tower will become a Centre for Urban Culture, based on a project offered by the Transilvanian Branch of the Architects’ Chamber of Romania in collaboration with BAU (Birou de Arhitectura si Urbanism). The Centre will host an exhibition space on the ground floor, a library and a conference room on the upper floors."</string>
+
+    <!-- Like and unlike buttons -->
+    <string name="like">Like</string>
+    <string name="unlike">Unlike</string>
+    <string name="comment">Comment Section</string>
+
 </resources>

@@ -10,15 +10,21 @@ import android.view.View;
 
 public class CentralActivity extends Activity {
 
+	private String username;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_central);
+
+		Intent i = getIntent();
+		username = i.getStringExtra("loggedUser");
 	}
 
 	public void displayStreetMap(View view) {
 		Intent intent = new Intent(CentralActivity.this,
 				StreetMapActivity.class);
+		intent.putExtra("loggedUser", username);
 		startActivity(intent);
 
 	}

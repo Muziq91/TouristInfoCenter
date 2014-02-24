@@ -7,25 +7,21 @@
 
 package ro.mmp.tic.service.userservice;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import ro.mmp.tic.domain.User;
+import ro.mmp.tic.service.UserService;
 import ro.mmp.tic.service.userservice.strategy.OperationAdd;
 import ro.mmp.tic.service.userservice.strategy.OperationVerif;
 import ro.mmp.tic.service.userservice.strategy.Strategy;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-public class UserRegisterService extends AsyncTask<String, Void, String> {
+public class UserRegisterService extends UserService {
 
-	private final String TAG = "UserRegisterService";
-	private User user;
-	private Connection connection;
-	private Context context;
+	
 
 	public UserRegisterService(User user, Context context) {
 		this.user = user;

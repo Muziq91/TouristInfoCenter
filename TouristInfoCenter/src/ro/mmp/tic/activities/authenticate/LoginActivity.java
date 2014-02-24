@@ -9,11 +9,11 @@
 
 package ro.mmp.tic.activities.authenticate;
 
-import java.util.concurrent.ExecutionException;
-
 import ro.mmp.tic.R;
 import ro.mmp.tic.activities.CentralActivity;
 import ro.mmp.tic.domain.User;
+import ro.mmp.tic.service.UserService;
+import ro.mmp.tic.service.interfaces.UserLoginServiceFinishedListener;
 import ro.mmp.tic.service.userservice.UserLoginService;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -32,7 +32,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity implements
+		UserLoginServiceFinishedListener {
 
 	private EditText username;
 	private EditText password;
@@ -76,23 +77,11 @@ public class LoginActivity extends Activity {
 		InitializeEditTextFields();
 		if (canLogin) {
 
-			UserLoginService userLoginService = new UserLoginService(
-					createUser(), getApplicationContext());
+			UserService userLoginService = new UserLoginService(createUser(),
+					getApplicationContext(), this);
 			userLoginService.execute("");
 
-			try {
-				if (userLoginService.get().equals("login")) {
-					Intent intent = new Intent(getApplicationContext(),
-							CentralActivity.class);
-					startActivity(intent);
-				}
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
 
 		}
 
@@ -180,6 +169,16 @@ public class LoginActivity extends Activity {
 	private void toastMessage(String text) {
 
 		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+
+	}
+
+	@Override
+	public void onTaskFinished() {
+		Intent intent = new Intent(getApplicationContext(),
+				CentralActivity.class);
+		intent.putExtra("loggedUser", username.getText().toString());
+
+		startActivity(intent);
 
 	}
 

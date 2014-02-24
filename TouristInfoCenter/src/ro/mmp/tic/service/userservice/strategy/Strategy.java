@@ -9,12 +9,21 @@ package ro.mmp.tic.service.userservice.strategy;
 
 import java.sql.Connection;
 
+import ro.mmp.tic.domain.Like;
 import ro.mmp.tic.domain.User;
 
 public abstract class Strategy {
 
 	public boolean execute(User user, Connection connection) {
 		return false;
+	}
+
+	public Like execute(String username, String topic, Connection connection) {
+		return null;
+	}
+
+	public void execute(String username, String topic, Like like,
+			Connection connection) {
 	}
 
 }

@@ -8,40 +8,32 @@
 
 package ro.mmp.tic.service.userservice;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import ro.mmp.tic.activities.CentralActivity;
 import ro.mmp.tic.domain.User;
-import ro.mmp.tic.service.userservice.strategy.OperationAdd;
+import ro.mmp.tic.service.UserService;
+import ro.mmp.tic.service.interfaces.UserLoginServiceFinishedListener;
 import ro.mmp.tic.service.userservice.strategy.OperationLoginVerif;
-import ro.mmp.tic.service.userservice.strategy.OperationVerif;
 import ro.mmp.tic.service.userservice.strategy.Strategy;
 import android.content.Context;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-public class UserLoginService extends AsyncTask<String, Void, String> {
+public class UserLoginService extends UserService {
 
-	private final String TAG = "UserRegisterService";
-	private User user;
-	private Connection connection;
-	private Context context;
+	private final UserLoginServiceFinishedListener finishedListener;
 
-	private static boolean canLogin = false;
-
-	public UserLoginService(User user, Context context) {
+	public UserLoginService(User user, Context context,
+			UserLoginServiceFinishedListener finishedListener) {
 		this.user = user;
 		this.context = context;
+		this.finishedListener = finishedListener;
 	}
 
 	@Override
 	protected String doInBackground(String... arg0) {
 
-		canLogin = false;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			connection = DriverManager
@@ -67,13 +59,13 @@ public class UserLoginService extends AsyncTask<String, Void, String> {
 
 		}
 
-		return null;
+		return "nologin";
 	}
 
 	@Override
 	protected void onPostExecute(String result) {
 
-		if (result == null) {
+		if (result.equals("nologin")) {
 
 			Toast.makeText(context, "There is no user with the specified data",
 					Toast.LENGTH_LONG).show();
@@ -82,18 +74,9 @@ public class UserLoginService extends AsyncTask<String, Void, String> {
 
 			Toast.makeText(context, "Login successfully", Toast.LENGTH_LONG)
 					.show();
-
-			canLogin = true;
+			finishedListener.onTaskFinished();
 		}
 
-	}
-
-	public boolean isCanLogin() {
-		return canLogin;
-	}
-
-	public void setCanLogin(boolean canLogin) {
-		this.canLogin = canLogin;
 	}
 
 }

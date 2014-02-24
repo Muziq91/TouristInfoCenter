@@ -12,6 +12,7 @@ import java.util.concurrent.ExecutionException;
 import ro.mmp.tic.R;
 import ro.mmp.tic.activities.CentralActivity;
 import ro.mmp.tic.domain.User;
+import ro.mmp.tic.service.UserService;
 import ro.mmp.tic.service.userservice.UserRegisterService;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -54,14 +55,16 @@ public class RegisterActivity extends Activity {
 		intializeEditTextFields();
 		if (canRegister) {
 
-			UserRegisterService userRegisterService = new UserRegisterService(
+			UserService userRegisterService = new UserRegisterService(
 					getUserFromEdiTextFields(), getApplicationContext());
 			userRegisterService.execute("");
 
 			try {
 				if (userRegisterService.get().equals("registered")) {
+
 					Intent intent = new Intent(getApplicationContext(),
 							CentralActivity.class);
+					intent.putExtra("loggedUser", username.getText().toString());
 					startActivity(intent);
 				}
 			} catch (InterruptedException e) {

@@ -78,6 +78,14 @@
             android:name="ro.mmp.tic.activities.streetmap.StreetMapActivity"
             android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen" >
         </activity>
+        <activity
+            android:name="ro.mmp.tic.activities.streetmap.PresentationActivity"
+            android:label="@string/title_activity_presentation"
+            android:parentActivityName="ro.mmp.tic.activities.streetmap.StreetMapActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ro.mmp.tic.activities.streetmap.StreetMapActivity" />
+        </activity>
     </application>
 
 </manifest>

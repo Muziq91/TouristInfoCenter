@@ -10,8 +10,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.apache.http.client.UserTokenHandler;
+
 import ro.mmp.tic.R;
 import ro.mmp.tic.metaio.ARViewActivity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -21,8 +24,8 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
-import com.metaio.sdk.MetaioDebug;
 import com.metaio.sdk.SensorsComponentAndroid;
 import com.metaio.sdk.jni.IGeometry;
 import com.metaio.sdk.jni.IMetaioSDKCallback;
@@ -184,6 +187,11 @@ public class StreetMapActivity extends ARViewActivity implements
 			mBastion = metaioSDK.createGeometryFromImage(
 					createSign("Bastionul Croitorilor"), true);
 
+			mBotanical.setName("Botanical");
+			mStatue.setName("Statue");
+			mCathedral.setName("Cathedral");
+			mBastion.setName("Bastion");
+
 			/**
 			 * build the location of our interest points
 			 */
@@ -196,7 +204,7 @@ public class StreetMapActivity extends ARViewActivity implements
 			radar = metaioSDK.createRadar();
 			radar.setBackgroundTexture(AssetsManager
 					.getAssetPath("streetmap/radar.png"));
-			radar.setObjectsDefaultTexture("streetmap/yellow.png");
+			radar.setObjectsDefaultTexture("streetmap/red.png");
 			radar.setRelativeToScreen(IGeometry.ANCHOR_TL);
 
 			/**
@@ -241,7 +249,40 @@ public class StreetMapActivity extends ARViewActivity implements
 
 	@Override
 	protected void onGeometryTouched(IGeometry geometry) {
-		// TODO Auto-generated method stub
+
+		Intent i = getIntent();
+		String username = i.getStringExtra("loggedUser");
+
+		if (geometry.getName().equals("Botanical")) {
+			toastMessage("You accessed the Botanical Garden Page");
+			Intent intent = new Intent(StreetMapActivity.this,
+					PresentationActivity.class);
+			intent.putExtra("loggedUser", username);
+			intent.putExtra("name", "Botanical Garden");
+			startActivity(intent);
+
+		} else if (geometry.getName().equals("Statue")) {
+			toastMessage("You accessed the Matei Corvin Statue page");
+			Intent intent = new Intent(StreetMapActivity.this,
+					PresentationActivity.class);
+			intent.putExtra("loggedUser", username);
+			intent.putExtra("name", "Matei Corvin Statue");
+			startActivity(intent);
+		} else if (geometry.getName().equals("Cathedral")) {
+			toastMessage("You accessed the Orthodox Cathedral Page \n Accros from it you can see the National Theatre");
+			Intent intent = new Intent(StreetMapActivity.this,
+					PresentationActivity.class);
+			intent.putExtra("loggedUser", username);
+			intent.putExtra("name", "Orthodox Cathedral");
+			startActivity(intent);
+		} else if (geometry.getName().equals("Bastion")) {
+			toastMessage("You accessed the Bastionul Croitorilor page");
+			Intent intent = new Intent(StreetMapActivity.this,
+					PresentationActivity.class);
+			intent.putExtra("loggedUser", username);
+			intent.putExtra("name", "Bastionul Croitorilor");
+			startActivity(intent);
+		}
 
 	}
 
@@ -255,7 +296,6 @@ public class StreetMapActivity extends ARViewActivity implements
 	private String createSign(String title) {
 
 		try {
-			
 
 			final String texture = getCacheDir() + "/" + title + ".png";
 			Paint paint = new Paint();
@@ -265,7 +305,8 @@ public class StreetMapActivity extends ARViewActivity implements
 
 			Bitmap sign = null;
 			/**
-			 * Get the image from the assets folder			 */
+			 * Get the image from the assets folder
+			 */
 
 			String file = AssetsManager.getAssetPath("streetmap/POI_bg2.png");
 			Bitmap background = BitmapFactory.decodeFile(file);
@@ -284,11 +325,12 @@ public class StreetMapActivity extends ARViewActivity implements
 			 */
 
 			if (title.length() > 0) {
+
 				/**
 				 * it removes the white spaces from the initial String
 				 */
-
 				String trim = title.trim();
+
 				final int width = 200;
 				/**
 				 * we make sure that no text extends outside the rectangle
@@ -398,6 +440,17 @@ public class StreetMapActivity extends ARViewActivity implements
 	@Override
 	public void onHeadingSensorChanged(float[] orientation) {
 		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * Creates andSends a Toast message
+	 * 
+	 * @param text
+	 */
+	private void toastMessage(String text) {
+
+		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
 
 	}
 
