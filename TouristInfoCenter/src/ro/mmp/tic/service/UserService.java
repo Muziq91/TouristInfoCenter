@@ -1,3 +1,9 @@
+/**
+ * @author Matei Mircea
+ * 
+ * This is an abstract class used by the service part of the program
+ */
+
 package ro.mmp.tic.service;
 
 import java.sql.Connection;

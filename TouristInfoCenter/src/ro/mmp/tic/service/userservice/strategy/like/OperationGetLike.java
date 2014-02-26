@@ -1,8 +1,17 @@
+/**
+ * @author Matei Mircea
+ * 
+ * 
+ * This class extends Strategy and has the rol of retrieveing the likes and unlikes of a scpecific user in order
+ * to set the visibility of the buttons in the presentaion activity
+ */
+
 package ro.mmp.tic.service.userservice.strategy.like;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import ro.mmp.tic.domain.Like;
 import ro.mmp.tic.service.userservice.strategy.Strategy;
@@ -40,6 +49,14 @@ public class OperationGetLike extends Strategy {
 		} catch (Exception e) {
 
 		} finally {
+
+			try {
+				statement.close();
+				result.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		}
 

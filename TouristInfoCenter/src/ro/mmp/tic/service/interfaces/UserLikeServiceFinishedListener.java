@@ -1,3 +1,8 @@
+/**
+ * 
+ * @author Matei Mircea
+ * This interface is used to retrieve information once the asycnh task is finished
+ */
 package ro.mmp.tic.service.interfaces;
 
 import ro.mmp.tic.domain.Like;

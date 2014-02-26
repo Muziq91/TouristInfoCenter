@@ -10,8 +10,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import org.apache.http.client.UserTokenHandler;
-
 import ro.mmp.tic.R;
 import ro.mmp.tic.metaio.ARViewActivity;
 import android.content.Intent;
@@ -179,11 +177,11 @@ public class StreetMapActivity extends ARViewActivity implements
 			 * set the sign for each geometry
 			 */
 			mBotanical = metaioSDK.createGeometryFromImage(
-					createSign("Gradina Botanica"), true);
+					createSign("Botanical Garden"), true);
 			mStatue = metaioSDK.createGeometryFromImage(
-					createSign("Matei Corvin"), true);
+					createSign("Matei Corvin Statue"), true);
 			mCathedral = metaioSDK.createGeometryFromImage(
-					createSign("Catedrala Ortodoxa"), true);
+					createSign("Orthodox Cathedral"), true);
 			mBastion = metaioSDK.createGeometryFromImage(
 					createSign("Bastionul Croitorilor"), true);
 
@@ -237,6 +235,7 @@ public class StreetMapActivity extends ARViewActivity implements
 
 	public void onGPSBUttonClick(View view) {
 
+		@SuppressWarnings("unused")
 		boolean result = metaioSDK.setTrackingConfiguration("GPS");
 		metaioSDK.setLLAObjectRenderingLimits(2, 275);
 		radar.setVisible(true);

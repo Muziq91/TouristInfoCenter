@@ -86,6 +86,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ro.mmp.tic.activities.streetmap.StreetMapActivity" />
         </activity>
+        <activity
+            android:name="ro.mmp.tic.activities.streetmap.OpinionActivity"
+            android:label="@string/title_activity_opinion"
+            android:parentActivityName="ro.mmp.tic.activities.streetmap.PresentationActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ro.mmp.tic.activities.streetmap.PresentationActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -10,6 +10,7 @@ package ro.mmp.tic.service.userservice.strategy.user;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import ro.mmp.tic.domain.User;
 import ro.mmp.tic.service.userservice.strategy.Strategy;
@@ -36,6 +37,14 @@ public class OperationLoginVerif extends Strategy {
 		} catch (Exception e) {
 
 		} finally {
+
+			try {
+				statement.close();
+				result.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		}
 

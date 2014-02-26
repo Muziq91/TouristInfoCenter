@@ -1,3 +1,9 @@
+/**
+ * @author Matei Mircea
+ * 
+ * This is an AsynchTask extendingUserServie that gets the likes from a certain landmark by a certain user
+ */
+
 package ro.mmp.tic.service.userservice;
 
 import java.sql.DriverManager;

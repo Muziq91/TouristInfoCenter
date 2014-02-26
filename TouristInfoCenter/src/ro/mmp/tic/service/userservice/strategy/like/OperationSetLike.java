@@ -1,6 +1,12 @@
+/**
+ * @author Matei Mircea
+ * 
+ * this class extends Strategy and has the role of updating the likes and unlikes of a user for a certain landmark
+ */
 package ro.mmp.tic.service.userservice.strategy.like;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import ro.mmp.tic.domain.Like;
@@ -38,6 +44,13 @@ public class OperationSetLike extends Strategy {
 			Log.d("OperationSetLike",
 					"3 am ajuns aici si am facut apelu in baza de date");
 		} catch (Exception e) {
+
+			try {
+				statement.close();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 
 		} finally {
 

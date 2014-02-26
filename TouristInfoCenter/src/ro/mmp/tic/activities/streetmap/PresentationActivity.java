@@ -1,3 +1,10 @@
+/**
+ * @author Matei Mircea
+ * 
+ * This activity will present to the user facts about a landmark and it will also let the suer like or unlike
+ * the specific landmark. It will display a button that will give the user access to the comment section of the landmark
+ */
+
 package ro.mmp.tic.activities.streetmap;
 
 import ro.mmp.tic.R;
@@ -20,7 +27,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class PresentationActivity extends Activity implements
 		UserLikeServiceFinishedListener {
@@ -29,7 +35,7 @@ public class PresentationActivity extends Activity implements
 	private ImageView imageView;
 	private Button likeButton;
 	private Button unlikeButton;
-	private int onTopic;
+
 	private String username;
 	private String topicName;
 	private Like like;
@@ -55,27 +61,26 @@ public class PresentationActivity extends Activity implements
 		topicName = intent.getStringExtra("name");
 		username = intent.getStringExtra("loggedUser");
 
-		toastMessage("The user on this page is " + username);
 		if (topicName.equals("Botanical Garden")) {
-			onTopic = 1;
+
 			setTitle("Botanical Garden");
 			textView.setText(getString(R.string.botanicalText));
 			imageView.setImageResource(R.drawable.botanical);
 
 		} else if (topicName.equals("Matei Corvin Statue")) {
-			onTopic = 2;
+
 			setTitle("Matei Corvin Statue");
 			textView.setText(getString(R.string.statueText));
 			imageView.setImageResource(R.drawable.statue);
 
 		} else if (topicName.equals("Orthodox Cathedral")) {
-			onTopic = 3;
+
 			setTitle("Orthodox Cathedral");
 			textView.setText(getString(R.string.cathedralText));
 			imageView.setImageResource(R.drawable.cathedral);
 
 		} else if (topicName.equals("Bastionul Croitorilor")) {
-			onTopic = 4;
+
 			setTitle("Bastionul Croitorilor");
 			textView.setText(getString(R.string.bastionText));
 			imageView.setImageResource(R.drawable.bastion);
@@ -124,6 +129,21 @@ public class PresentationActivity extends Activity implements
 	}
 
 	/**
+	 * Whent the user presses the comment button he will be sent to the page
+	 * where users can see a chart of likes and unlikes and a comment section
+	 * 
+	 * @param v
+	 */
+
+	public void displayComment(View v) {
+		Intent intent = new Intent(PresentationActivity.this,
+				OpinionActivity.class);
+		intent.putExtra("loggedUser", user.getUsername());
+		intent.putExtra("name", topicName);
+		startActivity(intent);
+	}
+
+	/**
 	 * Set up the {@link android.app.ActionBar}, if the API is available.
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -131,6 +151,7 @@ public class PresentationActivity extends Activity implements
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
+
 	}
 
 	@Override
@@ -155,23 +176,9 @@ public class PresentationActivity extends Activity implements
 		return super.onOptionsItemSelected(item);
 	}
 
-	/**
-	 * Creates andSends a Toast message
-	 * 
-	 * @param text
-	 */
-	private void toastMessage(String text) {
-
-		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
-
-	}
-
 	@Override
 	public void onTaskFinished(Like like) {
 		this.like = like;
-
-		toastMessage("We got a like " + like.getIdlike() + " iduseer: "
-				+ like.getIduser() + " idtopic;" + like.getIdtopic());
 
 		if (like.getIdlike() != 0) {
 
