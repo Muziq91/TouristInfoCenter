@@ -28,25 +28,9 @@ public class OperationAdd extends Strategy {
 					+ "('" + user.getName() + "','" + user.getUsername()
 					+ "','" + user.getPassword() + "','" + user.getEmail()
 					+ "','" + user.getCountry() + "')";
-			String insertLikeBotanical = "INSERT INTO `center`.`like` (iduser, idtopic,likes,unlikes) "
-					+ "SELECT u.iduser,1,0,0 from `center`.`user` u where u.username='"
-					+ user.getUsername() + "'";
-			String insertLikeStatue = "INSERT INTO `center`.`like` (iduser, idtopic,likes,unlikes) "
-					+ "SELECT u.iduser,2,0,0 from `center`.`user` u where u.username='"
-					+ user.getUsername() + "'";
-			String insertLikeCathedral = "INSERT INTO `center`.`like` (iduser, idtopic,likes,unlikes) "
-					+ "SELECT u.iduser,3,0,0 from `center`.`user` u where u.username='"
-					+ user.getUsername() + "'";
-			String insertLikeBastion = "INSERT INTO `center`.`like` (iduser, idtopic,likes,unlikes) "
-					+ "SELECT u.iduser,4,0,0 from `center`.`user` u where u.username='"
-					+ user.getUsername() + "'";
 
 			addStatement = connection.createStatement();
 			addStatement.executeUpdate(insertTableSQL);
-			addStatement.executeUpdate(insertLikeBotanical);
-			addStatement.executeUpdate(insertLikeStatue);
-			addStatement.executeUpdate(insertLikeCathedral);
-			addStatement.executeUpdate(insertLikeBastion);
 
 			return true;
 

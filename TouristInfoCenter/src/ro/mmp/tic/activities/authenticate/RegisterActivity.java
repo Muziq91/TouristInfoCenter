@@ -7,11 +7,14 @@
 
 package ro.mmp.tic.activities.authenticate;
 
+import java.util.HashMap;
+
 import ro.mmp.tic.R;
 import ro.mmp.tic.activities.CentralActivity;
 import ro.mmp.tic.domain.User;
 import ro.mmp.tic.service.UserService;
 import ro.mmp.tic.service.interfaces.UserRegisterServiceFinishedListener;
+import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import ro.mmp.tic.service.userservice.UserRegisterService;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -37,6 +40,7 @@ public class RegisterActivity extends Activity implements
 	private EditText country;
 	private Button registerButton;
 	private boolean canRegister = false;
+	private DataBaseConnection dataBaseConnection;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,7 @@ public class RegisterActivity extends Activity implements
 		setContentView(R.layout.activity_register);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		dataBaseConnection = new DataBaseConnection(this);
 	}
 
 	/**
@@ -155,6 +160,16 @@ public class RegisterActivity extends Activity implements
 	public void onTaskFinished(boolean canRegister) {
 
 		if (canRegister) {
+
+			User user = getUserFromEdiTextFields();
+			HashMap<String, String> newUser = new HashMap<String, String>(0);
+			newUser.put("name", user.getName());
+			newUser.put("username", user.getUsername());
+			newUser.put("password", user.getPassword());
+			newUser.put("email", user.getEmail());
+			newUser.put("country", user.getCountry());
+			dataBaseConnection.insertUserAtRegister(newUser);
+
 			Intent intent = new Intent(getApplicationContext(),
 					CentralActivity.class);
 			intent.putExtra("loggedUser", username.getText().toString());

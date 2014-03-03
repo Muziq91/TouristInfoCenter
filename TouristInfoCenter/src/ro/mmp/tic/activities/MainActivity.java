@@ -37,7 +37,6 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		startAgainButton = (Button) findViewById(R.id.startAgainButton);
-
 		activateInternetAndGps();
 
 	}

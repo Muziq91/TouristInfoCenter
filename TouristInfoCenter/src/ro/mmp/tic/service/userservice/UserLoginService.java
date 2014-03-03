@@ -1,5 +1,5 @@
 /**
- * @author Matei Mircea
+w * @author Matei Mircea
  * 
  * This class is an AsyncTask, it creates a connection to the database on the cloud 
  * and verifies if the user can or cannot login into his account
@@ -8,7 +8,6 @@
 
 package ro.mmp.tic.service.userservice;
 
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import ro.mmp.tic.domain.User;
@@ -34,11 +33,8 @@ public class UserLoginService extends UserService {
 	protected String doInBackground(String... arg0) {
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager
-					.getConnection(
-							"jdbc:mysql://ec2-50-19-213-178.compute-1.amazonaws.com:3306/center",
-							"Muziq91", "vasilecaine09");
+
+			connection = super.getConnection();
 
 			Strategy loginVerif = new OperationLoginVerif();
 			if (loginVerif.execute(user, connection)) {

@@ -202,9 +202,9 @@ public class StreetMapActivity extends ARViewActivity implements
 			radar = metaioSDK.createRadar();
 			radar.setBackgroundTexture(AssetsManager
 					.getAssetPath("streetmap/radar.png"));
-			radar.setObjectsDefaultTexture("streetmap/red.png");
+			radar.setObjectsDefaultTexture("streetmap/red.png");			
 			radar.setRelativeToScreen(IGeometry.ANCHOR_TL);
-
+			
 			/**
 			 * add geometries to the radar
 			 */

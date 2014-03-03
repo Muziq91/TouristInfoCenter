@@ -26,7 +26,9 @@ public class OperationGetComment extends Strategy {
 			String sqlQuery = "Select c.idcomment,c.idu,c.idt,c.comment,u.username from `center`.`comment` c "
 					+ "join `center`.`topic` t on c.idt = t.idtopic "
 					+ "join `center`.`user` u on c.idu = u.iduser "
-					+ "where t.name = '" + topicName + "'";
+					+ "where t.name = '"
+					+ topicName
+					+ "' Order by c.idcomment desc";
 
 			statement = connection.prepareStatement(sqlQuery);
 
@@ -37,13 +39,9 @@ public class OperationGetComment extends Strategy {
 				Comment comment = new Comment();
 
 				comment.setIdcomment(result.getInt("idcomment"));
-
 				comment.setIdu(result.getInt("idu"));
-
 				comment.setIdt(result.getInt("idt"));
-
 				comment.setComment(result.getString("comment"));
-
 				String username = result.getString("username");
 
 				HashMap<String, String> hm = new HashMap<String, String>(0);

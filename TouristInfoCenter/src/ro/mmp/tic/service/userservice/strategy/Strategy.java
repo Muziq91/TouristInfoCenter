@@ -28,7 +28,7 @@ public abstract class Strategy {
 
 	// used by OperationSetLike
 	public void execute(String username, String topic, Like like,
-			Connection connection) {
+			boolean exists, Connection connection) {
 	}
 
 	// used by OperationGetLikeCount
@@ -42,6 +42,13 @@ public abstract class Strategy {
 			Connection connection) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	// used by operationSaveComment
+	public void execute(String username, String name, String comment,
+			Connection connection) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

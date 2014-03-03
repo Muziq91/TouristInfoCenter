@@ -7,13 +7,17 @@
 
 package ro.mmp.tic.activities.streetmap;
 
+import java.util.HashMap;
+
 import ro.mmp.tic.R;
 import ro.mmp.tic.domain.Like;
 import ro.mmp.tic.domain.Topic;
 import ro.mmp.tic.domain.User;
 import ro.mmp.tic.service.UserService;
-import ro.mmp.tic.service.interfaces.UserLikeServiceFinishedListener;
-import ro.mmp.tic.service.userservice.UserLikeService;
+import ro.mmp.tic.service.interfaces.UserLikeCountFinishedListener;
+import ro.mmp.tic.service.interfaces.UserUpdateLikeFinishedListener;
+import ro.mmp.tic.service.sqlite.DataBaseConnection;
+import ro.mmp.tic.service.userservice.UserLikeCountService;
 import ro.mmp.tic.service.userservice.UserUpdateLikeService;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -24,23 +28,29 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class PresentationActivity extends Activity implements
-		UserLikeServiceFinishedListener {
+		UserLikeCountFinishedListener, UserUpdateLikeFinishedListener {
 
 	private TextView textView;
 	private ImageView imageView;
 	private Button likeButton;
 	private Button unlikeButton;
-
+	private WebView mCharView;
+	private int likeCount;
+	private int unlikeCount;
 	private String username;
 	private String topicName;
 	private Like like;
 	private User user;
 	private Topic topic;
+	private boolean exists = false;
+	private DataBaseConnection dataBaseConnection;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,17 +59,19 @@ public class PresentationActivity extends Activity implements
 		// Show the Up button in the action bar.
 		setupActionBar();
 
+		dataBaseConnection = new DataBaseConnection(this);
+
+		mCharView = (WebView) findViewById(R.id.chartView);
 		textView = (TextView) findViewById(R.id.textView);
 		imageView = (ImageView) findViewById(R.id.imageView);
 		likeButton = (Button) findViewById(R.id.likeButton);
 		unlikeButton = (Button) findViewById(R.id.unlikeButton);
 
-		likeButton.setVisibility(View.GONE);
-		unlikeButton.setVisibility(View.GONE);
-
 		Intent intent = getIntent();
 		topicName = intent.getStringExtra("name");
 		username = intent.getStringExtra("loggedUser");
+
+		setLikeButtons();
 
 		if (topicName.equals("Botanical Garden")) {
 
@@ -93,9 +105,41 @@ public class PresentationActivity extends Activity implements
 		topic = new Topic();
 		topic.setName(topicName);
 
-		UserService userLikeService = new UserLikeService(user, topic,
+		UserService likeCount = new UserLikeCountService(topic,
 				getApplicationContext(), this);
-		userLikeService.execute("");
+		likeCount.execute("");
+
+	}
+
+	private void setLikeButtons() {
+		HashMap<String, String> likes = dataBaseConnection.getLike(username,
+				topicName);
+		like = new Like();
+		if (likes.get("likes") != null) {
+			exists = true;
+
+			like.setIduser(Integer.parseInt(likes.get("iduser")));
+			like.setIdtopic(Integer.parseInt(likes.get("idtopic")));
+			like.setLike(Integer.parseInt(likes.get("likes")));
+			like.setUnlike(Integer.parseInt(likes.get("unlikes")));
+
+			toastMessage("iduser:" + like.getIduser() + " idtopic:"
+					+ like.getIdtopic() + " likes:" + like.getLike()
+					+ " unlike:" + like.getUnlike());
+			if (like.getLike() == 1) {
+				likeButton.setVisibility(View.GONE);
+				unlikeButton.setVisibility(View.VISIBLE);
+			} else if (like.getIdlike() == 0) {
+				likeButton.setVisibility(View.VISIBLE);
+				unlikeButton.setVisibility(View.GONE);
+			}
+		} else {
+
+			likeButton.setVisibility(View.VISIBLE);
+			unlikeButton.setVisibility(View.VISIBLE);
+			exists = false;
+
+		}
 
 	}
 
@@ -109,9 +153,17 @@ public class PresentationActivity extends Activity implements
 		like.setLike(1);
 		like.setUnlike(0);
 		UserService userUpdateLike = new UserUpdateLikeService(user, topic,
-				getApplicationContext(), like);
+				getApplicationContext(), like, exists, this);
 		userUpdateLike.execute("");
 
+		if (exists == false) {
+			dataBaseConnection.insertLike(username, topicName, like);
+			exists = true;
+		} else {
+			dataBaseConnection.updateLike(username, topicName, like);
+		}
+
+		
 	}
 
 	/**
@@ -123,9 +175,18 @@ public class PresentationActivity extends Activity implements
 		like.setLike(0);
 		like.setUnlike(1);
 		UserService userUpdateLike = new UserUpdateLikeService(user, topic,
-				getApplicationContext(), like);
+				getApplicationContext(), like, exists, this);
 
 		userUpdateLike.execute("");
+
+		if (exists == false) {
+			dataBaseConnection.insertLike(username, topicName, like);
+			exists = true;
+		} else {
+			dataBaseConnection.updateLike(username, topicName, like);
+		}
+
+		
 	}
 
 	/**
@@ -176,24 +237,71 @@ public class PresentationActivity extends Activity implements
 		return super.onOptionsItemSelected(item);
 	}
 
+	/*
+	 * @Override public void onTaskFinished(Like like) { this.like = like;
+	 * 
+	 * toastMessage("Am terminat de cautat likeurile " + like.getIdlike());
+	 * 
+	 * if (like.getIdlike() != 0) { exists = true;
+	 * 
+	 * if (like.getLike() == 1) { likeButton.setVisibility(View.GONE);
+	 * unlikeButton.setVisibility(View.VISIBLE); } else if (like.getUnlike() ==
+	 * 1) { unlikeButton.setVisibility(View.GONE);
+	 * likeButton.setVisibility(View.VISIBLE); } else {
+	 * unlikeButton.setVisibility(View.VISIBLE);
+	 * likeButton.setVisibility(View.VISIBLE);
+	 * 
+	 * } } else { likeButton.setVisibility(View.VISIBLE);
+	 * unlikeButton.setVisibility(View.VISIBLE); exists = false; }
+	 * 
+	 * }
+	 */
+
 	@Override
-	public void onTaskFinished(Like like) {
-		this.like = like;
+	public void onTaskFinished(int likeCount, int unlikeCount) {
+		this.likeCount = likeCount;
+		this.unlikeCount = unlikeCount;
 
-		if (like.getIdlike() != 0) {
+		// here we load the chart with information from the database about the
+		// number of likes and unlikes
+		String mUrl = "http://chart.apis.google.com/chart?" + "cht=p3&" + // type
+				// of
+				// graph
+				"chs=500x200&" + // pixel dimension of chart
+				"chd=t:" + this.likeCount + "," + this.unlikeCount + "&" + // data
+				// to
+				// display
+				// in
+				// chart
+				"chts=000000,24&" + // specifies the font colour and size of the
+				// title
+				"chtt=Like+Unlike+Chart+of+" + topic.getName() + "&" + // specifies
+				// the title
+				// of the
+				// graph
+				"chl=Like|Unlike" + // chart labels
+				"&chco=335423,9011D3&" + // chart color
+				"chdl=Like|Unlike";
+		mCharView.loadUrl(mUrl);
 
-			if (like.getLike() == 1) {
-				likeButton.setVisibility(View.GONE);
-				unlikeButton.setVisibility(View.VISIBLE);
-			} else if (like.getUnlike() == 1) {
-				unlikeButton.setVisibility(View.GONE);
-				likeButton.setVisibility(View.VISIBLE);
-			} else {
-				unlikeButton.setVisibility(View.VISIBLE);
-				likeButton.setVisibility(View.VISIBLE);
+	}
 
-			}
-		}
+	/**
+	 * Creates andSends a Toast message
+	 * 
+	 * @param text
+	 */
+	private void toastMessage(String text) {
+
+		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+
+	}
+
+	@Override
+	public void onTaskFinished() {
+		UserService likeCount = new UserLikeCountService(topic,
+				getApplicationContext(), this);
+		likeCount.execute("");
 
 	}
 

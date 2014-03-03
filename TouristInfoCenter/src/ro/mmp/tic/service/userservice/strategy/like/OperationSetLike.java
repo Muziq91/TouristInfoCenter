@@ -16,27 +16,44 @@ import android.util.Log;
 public class OperationSetLike extends Strategy {
 
 	public void execute(String username, String topic, Like like,
-			Connection connection) {
+			boolean exists, Connection connection) {
 
 		Statement statement = null;
 
 		try {
 
-			Log.d("OperationSetLike", "2 am ajuns aici");
+			Log.d("OperationSetLike", "2 am ajuns aici " + like.getLike() + " "
+					+ like.getUnlike());
 
-			/*
-			 * String sqlQuery = "UPDATE `center`.`like` l SET l.likes='" +
-			 * like.getLike() + "',l.unlikes='" + like.getUnlike() +
-			 * "' WHERE l.iduser = (SELECT u.iduser from `center`.`user` u where u.username='"
-			 * + username +
-			 * "') AND l.idtopic=(SELECT t.idtopic from `center`.`topic` t where t.name='"
-			 * + topic + "')";
-			 */
+			String sqlQuery = "";
+			if (exists) {
+				Log.d("OperationSetLike",
+						"2 update am ajuns aici " + like.getLike() + " "
+								+ like.getUnlike());
+				
+				sqlQuery = "UPDATE `center`.`like` l SET l.likes="
+						+ like.getLike()
+						+ ",l.unlikes="
+						+ like.getUnlike()
+						+ " WHERE l.iduser = (Select u.iduser from `center`.`user` u where u.username = '"
+						+ username + "')" + " AND l.idtopic='"
+						+ like.getIdtopic() + "'";
+			} else {
 
-			String sqlQuery = "UPDATE `center`.`like` l SET l.likes='"
-					+ like.getLike() + "',l.unlikes='" + like.getUnlike()
-					+ "' WHERE l.iduser ='" + like.getIduser()
-					+ "' AND l.idtopic='" + like.getIdtopic() + "'";
+				Log.d("OperationSetLike",
+						"2 insert am ajuns aici " + like.getLike() + " "
+								+ like.getUnlike());
+				sqlQuery = "Insert into `center`.`like` (iduser,idtopic,likes,unlikes) "
+						+ "VALUES( (Select u.iduser from `center`.`user` u  where u.username='"
+						+ username
+						+ "'),"
+						+ "(Select t.idtopic from `center`.`topic` t where t.name='"
+						+ topic
+						+ "'),"
+						+ like.getLike()
+						+ ","
+						+ like.getUnlike() + ")";
+			}
 
 			statement = connection.createStatement();
 			statement.executeUpdate(sqlQuery);

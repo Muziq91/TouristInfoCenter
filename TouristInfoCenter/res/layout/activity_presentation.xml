@@ -71,12 +71,19 @@
                 android:text="@string/like" />
         </LinearLayout>
 
+        <WebView
+            android:id="@+id/chartView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/presentation"
+            android:visibility="visible" />
+
         <Button
             android:id="@+id/commentButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_below="@+id/presentation"
+            android:layout_below="@+id/chartView"
             android:layout_centerHorizontal="true"
             android:background="@drawable/buttonback"
             android:minHeight="38dip"

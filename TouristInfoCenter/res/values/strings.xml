@@ -64,4 +64,9 @@
     <string name="comment">Comment Section</string>
     <string name="title_activity_opinion">OpinionActivity</string>
 
+    <!-- Comment Section -->
+
+    <string name="submitComment">Submit Comment</string>
+    <string name="commentText">Comment</string>
+
 </resources>

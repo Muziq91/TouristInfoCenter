@@ -1,12 +1,12 @@
 package ro.mmp.tic.service.userservice;
 
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import ro.mmp.tic.domain.Like;
 import ro.mmp.tic.domain.Topic;
 import ro.mmp.tic.domain.User;
 import ro.mmp.tic.service.UserService;
+import ro.mmp.tic.service.interfaces.UserUpdateLikeFinishedListener;
 import ro.mmp.tic.service.userservice.strategy.Strategy;
 import ro.mmp.tic.service.userservice.strategy.like.OperationSetLike;
 import android.content.Context;
@@ -16,13 +16,18 @@ public class UserUpdateLikeService extends UserService {
 
 	private Like like;
 	private Topic topic;
+	private boolean exists;
+	private UserUpdateLikeFinishedListener finishedListener;
 
 	public UserUpdateLikeService(User user, Topic topic, Context context,
-			Like like) {
+			Like like, boolean exists,
+			UserUpdateLikeFinishedListener finishedListener) {
 		this.user = user;
 		this.topic = topic;
 		this.context = context;
 		this.like = like;
+		this.exists = exists;
+		this.finishedListener = finishedListener;
 
 		TAG = "UserUpdateLikeService";
 	}
@@ -31,16 +36,12 @@ public class UserUpdateLikeService extends UserService {
 	protected String doInBackground(String... params) {
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager
-					.getConnection(
-							"jdbc:mysql://ec2-50-19-213-178.compute-1.amazonaws.com:3306/center",
-							"Muziq91", "vasilecaine09");
 
-			
-			Log.d(TAG,"1 am ajuns aici");
+			connection = super.getConnection();
+
+			Log.d(TAG, "1 am ajuns aici");
 			Strategy getLike = new OperationSetLike();
-			getLike.execute(user.getUsername(), topic.getName(), like,
+			getLike.execute(user.getUsername(), topic.getName(), like, exists,
 					connection);
 
 		} catch (Exception e) {
@@ -56,6 +57,12 @@ public class UserUpdateLikeService extends UserService {
 		}
 
 		return null;
+	}
+
+	@Override
+	protected void onPostExecute(String result) {
+		super.onPostExecute(result);
+		finishedListener.onTaskFinished();
 	}
 
 }
