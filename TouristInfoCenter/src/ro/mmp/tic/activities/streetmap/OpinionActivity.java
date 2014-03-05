@@ -18,6 +18,7 @@ import ro.mmp.tic.service.userservice.UserCommentService;
 import ro.mmp.tic.service.userservice.UserSaveCommentService;
 import android.annotation.TargetApi;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,7 +26,6 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
@@ -36,8 +36,9 @@ public class OpinionActivity extends ListActivity implements
 
 	private User user;
 	private Topic topic;
-	private Button commentButton;
+
 	private EditText commentText;
+	private ProgressDialog loadDialog;
 
 	private ArrayList<HashMap<String, String>> commentList;
 
@@ -48,15 +49,29 @@ public class OpinionActivity extends ListActivity implements
 		// Show the Up button in the action bar.
 		setupActionBar();
 
-		commentText = (EditText) findViewById(R.id.commentText);
-		commentButton = (Button) findViewById(R.id.commentButton);
-		Intent intent = getIntent();
+		loadDialog = new ProgressDialog(this);
+		loadDialog.setTitle("Loading Content...");
+		loadDialog.setMessage("Please wait.");
+		loadDialog.setCancelable(false);
+		loadDialog.setIndeterminate(true);
 
+		try {
+			loadDialog.show();
+		} catch (Exception e) {
+			// WindowManager$BadTokenException will be caught and the app
+			// would not display
+			// the 'Force Close' message
+		}
+		commentText = (EditText) findViewById(R.id.commentText);
+
+		Intent intent = getIntent();
 		String username = intent.getStringExtra("loggedUser");
+
 		user = new User();
 		user.setUsername(username);
 
 		String topicName = intent.getStringExtra("name");
+
 		topic = new Topic();
 		topic.setName(topicName);
 
@@ -69,7 +84,7 @@ public class OpinionActivity extends ListActivity implements
 
 	public void sendComment(View v) {
 
-		commentButton.setVisibility(View.GONE);
+		loadDialog.show();
 		UserService saveComment = new UserSaveCommentService(user, topic,
 				commentText.getText().toString());
 		saveComment.execute("");
@@ -142,7 +157,7 @@ public class OpinionActivity extends ListActivity implements
 		// The Cursor provides access to the database data
 
 		setListAdapter(adapter);
-		commentButton.setVisibility(View.VISIBLE);
+		loadDialog.dismiss();
 	}
 
 }

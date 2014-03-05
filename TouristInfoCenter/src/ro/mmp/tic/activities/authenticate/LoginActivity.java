@@ -20,6 +20,7 @@ import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import ro.mmp.tic.service.userservice.UserLoginService;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,7 +31,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -41,7 +41,8 @@ public class LoginActivity extends Activity implements
 	private EditText username;
 	private EditText password;
 	private CheckBox remember;
-	private Button loginButton;
+	private ProgressDialog loadDialog;
+
 	private SharedPreferences loginPreferences;
 	private SharedPreferences.Editor loginPrefsEditor;
 	private Boolean saveLogin;
@@ -55,9 +56,10 @@ public class LoginActivity extends Activity implements
 		// Show the Up button in the action bar.
 		setupActionBar();
 
+		loadDialog = new ProgressDialog(this);
+
 		dataBaseConnection = new DataBaseConnection(this);
 
-		loginButton = (Button) findViewById(R.id.login);
 		username = (EditText) findViewById(R.id.username);
 		password = (EditText) findViewById(R.id.password);
 		remember = (CheckBox) findViewById(R.id.remember);
@@ -85,8 +87,9 @@ public class LoginActivity extends Activity implements
 
 			HashMap<String, String> sqlUser = dataBaseConnection
 					.getUserAfterUsername(username.getText().toString());
+
 			if (sqlUser.get("username") == null) {
-				loginButton.setVisibility(View.GONE);
+
 				UserService userLoginService = new UserLoginService(
 						createUser(), getApplicationContext(), this);
 				userLoginService.execute("");
@@ -95,10 +98,19 @@ public class LoginActivity extends Activity implements
 						CentralActivity.class);
 				intent.putExtra("loggedUser", username.getText().toString());
 
-				startActivity(intent);
+				startActivityForResult(intent, 0);
+				loadDialog.dismiss();
 			}
 		}
 
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+
+		loadDialog.dismiss();
 	}
 
 	public void remember(View view) {
@@ -131,10 +143,26 @@ public class LoginActivity extends Activity implements
 	private void InitializeEditTextFields() {
 		canLogin = false;
 
+		loadDialog.setTitle("Loading Content...");
+		loadDialog.setMessage("Please wait.");
+		loadDialog.setCancelable(false);
+		loadDialog.setIndeterminate(true);
+
+		try {
+			loadDialog.show();
+		} catch (Exception e) {
+			// WindowManager$BadTokenException will be caught and the app
+			// would not display
+			// the 'Force Close' message
+		}
 		if (username.getText().toString().matches("")) {
+			loadDialog.dismiss();
 			toastMessage("Username can not be empty");
+
 		} else if (username.getText().toString().matches("")) {
+			loadDialog.dismiss();
 			toastMessage("Password can not be empty");
+
 		} else {
 			canLogin = true;
 		}
@@ -193,10 +221,13 @@ public class LoginActivity extends Activity implements
 					CentralActivity.class);
 			intent.putExtra("loggedUser", username.getText().toString());
 
-			startActivity(intent);
+			startActivityForResult(intent, 1);
+			loadDialog.dismiss();
 		} else {
 			toastMessage("Username or password are incorrect");
-			loginButton.setVisibility(View.VISIBLE);
+
+			loadDialog.dismiss();
+
 		}
 	}
 

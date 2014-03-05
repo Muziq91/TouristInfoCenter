@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.metaio.sdk.SensorsComponentAndroid;
+import com.metaio.sdk.jni.IBillboardGroup;
 import com.metaio.sdk.jni.IGeometry;
 import com.metaio.sdk.jni.IMetaioSDKCallback;
 import com.metaio.sdk.jni.IRadar;
@@ -58,6 +59,8 @@ public class StreetMapActivity extends ARViewActivity implements
 	private LLACoordinate mCoordStatue;
 	private LLACoordinate mCoordCathedral;
 	private LLACoordinate mCoordBastion;
+
+	private IBillboardGroup billboardGroup;
 
 	/**
 	 * Next is the radar component
@@ -176,6 +179,13 @@ public class StreetMapActivity extends ARViewActivity implements
 			/**
 			 * set the sign for each geometry
 			 */
+
+			billboardGroup = metaioSDK.createBillboardGroup(720, 850);
+			billboardGroup.setBillboardExpandFactors(1, 5, 30);
+			metaioSDK.setRendererClippingPlaneLimits(50, 100000000);
+			metaioSDK.setLLAObjectRenderingLimits(10, 10000); // to reduce
+																// flickering
+
 			mBotanical = metaioSDK.createGeometryFromImage(
 					createSign("Botanical Garden"), true);
 			mStatue = metaioSDK.createGeometryFromImage(
@@ -190,6 +200,11 @@ public class StreetMapActivity extends ARViewActivity implements
 			mCathedral.setName("Cathedral");
 			mBastion.setName("Bastion");
 
+			billboardGroup.addBillboard(mBotanical);
+			billboardGroup.addBillboard(mStatue);
+			billboardGroup.addBillboard(mCathedral);
+			billboardGroup.addBillboard(mBastion);
+
 			/**
 			 * build the location of our interest points
 			 */
@@ -200,11 +215,12 @@ public class StreetMapActivity extends ARViewActivity implements
 			 */
 
 			radar = metaioSDK.createRadar();
+			String file = AssetsManager.getAssetPath("streetmap/yellow.png");
 			radar.setBackgroundTexture(AssetsManager
 					.getAssetPath("streetmap/radar.png"));
-			radar.setObjectsDefaultTexture("streetmap/red.png");			
+			radar.setObjectsDefaultTexture(file);
 			radar.setRelativeToScreen(IGeometry.ANCHOR_TL);
-			
+
 			/**
 			 * add geometries to the radar
 			 */
@@ -237,7 +253,7 @@ public class StreetMapActivity extends ARViewActivity implements
 
 		@SuppressWarnings("unused")
 		boolean result = metaioSDK.setTrackingConfiguration("GPS");
-		metaioSDK.setLLAObjectRenderingLimits(2, 275);
+
 		radar.setVisible(true);
 		mBotanical.setVisible(true);
 		mStatue.setVisible(true);
@@ -245,6 +261,28 @@ public class StreetMapActivity extends ARViewActivity implements
 		mBastion.setVisible(true);
 
 	}
+
+	/*
+	 * @Override public boolean onTouch(View v, MotionEvent event) { int x =
+	 * (int) event.getX(); int y = (int) event.getY();
+	 * 
+	 * if (radar != null) { if (x < 117 && y < 142) {
+	 * radar.setScale(CONTEXT_RESTRICTED);
+	 * 
+	 * } else { radar.setScale(CONTEXT_INCLUDE_CODE);
+	 * 
+	 * } }
+	 * 
+	 * switch (event.getAction()) { case MotionEvent.ACTION_DOWN:
+	 * 
+	 * break;
+	 * 
+	 * case MotionEvent.ACTION_MOVE:
+	 * 
+	 * break; case MotionEvent.ACTION_UP:
+	 * 
+	 * break; } return false; }
+	 */
 
 	@Override
 	protected void onGeometryTouched(IGeometry geometry) {
@@ -398,15 +436,20 @@ public class StreetMapActivity extends ARViewActivity implements
 		LLACoordinate currPos = mSensors.getLocation();
 
 		mCoordBotanical = new LLACoordinate(46.762737, 23.588569,
-				currPos.getAltitude(), currPos.getAccuracy());
+				currPos.getAltitude(), currPos.getAltitude(),
+				currPos.getAccuracy());
+
 		mCoordStatue = new LLACoordinate(46.772437, 23.58799,
-				currPos.getAltitude(), currPos.getAccuracy());
+				currPos.getAltitude(), currPos.getAltitude(),
+				currPos.getAccuracy());
 
 		mCoordCathedral = new LLACoordinate(46.77201, 23.59634,
-				currPos.getAltitude(), currPos.getAccuracy());
+				currPos.getAltitude(), currPos.getAltitude(),
+				currPos.getAccuracy());
 
 		mCoordBastion = new LLACoordinate(46.771027, 23.597059,
-				currPos.getAltitude(), currPos.getAccuracy());
+				currPos.getAltitude(), currPos.getAltitude(),
+				currPos.getAccuracy());
 
 		if (mBotanical != null) {
 			mBotanical.setTranslationLLA(mCoordBotanical);

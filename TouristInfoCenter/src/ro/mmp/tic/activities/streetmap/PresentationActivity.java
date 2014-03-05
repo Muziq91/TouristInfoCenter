@@ -21,6 +21,7 @@ import ro.mmp.tic.service.userservice.UserLikeCountService;
 import ro.mmp.tic.service.userservice.UserUpdateLikeService;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -49,6 +50,7 @@ public class PresentationActivity extends Activity implements
 	private Like like;
 	private User user;
 	private Topic topic;
+	private ProgressDialog loadDialog;
 	private boolean exists = false;
 	private DataBaseConnection dataBaseConnection;
 
@@ -58,6 +60,20 @@ public class PresentationActivity extends Activity implements
 		setContentView(R.layout.activity_presentation);
 		// Show the Up button in the action bar.
 		setupActionBar();
+
+		loadDialog = new ProgressDialog(this);
+		loadDialog.setTitle("Loading Content...");
+		loadDialog.setMessage("Please wait.");
+		loadDialog.setCancelable(false);
+		loadDialog.setIndeterminate(true);
+
+		try {
+			loadDialog.show();
+		} catch (Exception e) {
+			// WindowManager$BadTokenException will be caught and the app
+			// would not display
+			// the 'Force Close' message
+		}
 
 		dataBaseConnection = new DataBaseConnection(this);
 
@@ -147,6 +163,7 @@ public class PresentationActivity extends Activity implements
 	 * When the user presses the like button
 	 */
 	public void likeTopic(View v) {
+		loadDialog.show();
 		likeButton.setVisibility(View.GONE);
 		unlikeButton.setVisibility(View.VISIBLE);
 
@@ -163,13 +180,13 @@ public class PresentationActivity extends Activity implements
 			dataBaseConnection.updateLike(username, topicName, like);
 		}
 
-		
 	}
 
 	/**
 	 * When the user presses the unlike button
 	 */
 	public void unlikeTopic(View v) {
+		loadDialog.show();
 		unlikeButton.setVisibility(View.GONE);
 		likeButton.setVisibility(View.VISIBLE);
 		like.setLike(0);
@@ -186,7 +203,6 @@ public class PresentationActivity extends Activity implements
 			dataBaseConnection.updateLike(username, topicName, like);
 		}
 
-		
 	}
 
 	/**
@@ -201,7 +217,15 @@ public class PresentationActivity extends Activity implements
 				OpinionActivity.class);
 		intent.putExtra("loggedUser", user.getUsername());
 		intent.putExtra("name", topicName);
-		startActivity(intent);
+		startActivityForResult(intent, 0);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+
+		loadDialog.dismiss();
 	}
 
 	/**
@@ -261,7 +285,7 @@ public class PresentationActivity extends Activity implements
 	public void onTaskFinished(int likeCount, int unlikeCount) {
 		this.likeCount = likeCount;
 		this.unlikeCount = unlikeCount;
-
+		loadDialog.dismiss();
 		// here we load the chart with information from the database about the
 		// number of likes and unlikes
 		String mUrl = "http://chart.apis.google.com/chart?" + "cht=p3&" + // type
@@ -299,6 +323,7 @@ public class PresentationActivity extends Activity implements
 
 	@Override
 	public void onTaskFinished() {
+		loadDialog.dismiss();
 		UserService likeCount = new UserLikeCountService(topic,
 				getApplicationContext(), this);
 		likeCount.execute("");

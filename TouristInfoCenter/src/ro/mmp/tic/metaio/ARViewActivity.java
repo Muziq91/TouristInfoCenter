@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.metaio.sdk.MetaioDebug;
 import com.metaio.sdk.MetaioSurfaceView;
@@ -179,7 +180,7 @@ public abstract class ARViewActivity extends Activity implements
 				startCamera();
 
 			// Set up GL surface view
-			mSurfaceView = new MetaioSurfaceView(this);
+			mSurfaceView = new MetaioSurfaceView(this,null);
 			mSurfaceView.registerCallback(this);
 			mSurfaceView.setKeepScreenOn(true);
 			mSurfaceView.setOnTouchListener(this);

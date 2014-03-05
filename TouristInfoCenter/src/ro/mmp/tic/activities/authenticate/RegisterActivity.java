@@ -18,6 +18,7 @@ import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import ro.mmp.tic.service.userservice.UserRegisterService;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,7 +26,6 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -37,8 +37,9 @@ public class RegisterActivity extends Activity implements
 	private EditText password;
 	private EditText repassword;
 	private EditText email;
+	private ProgressDialog loadDialog;
 	private EditText country;
-	private Button registerButton;
+
 	private boolean canRegister = false;
 	private DataBaseConnection dataBaseConnection;
 
@@ -46,6 +47,8 @@ public class RegisterActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
+
+		loadDialog = new ProgressDialog(this);
 		// Show the Up button in the action bar.
 		setupActionBar();
 		dataBaseConnection = new DataBaseConnection(this);
@@ -60,7 +63,6 @@ public class RegisterActivity extends Activity implements
 		intializeEditTextFields();
 		if (canRegister) {
 
-			registerButton.setVisibility(View.GONE);
 			UserService userRegisterService = new UserRegisterService(
 					getUserFromEdiTextFields(), getApplicationContext(), this);
 			userRegisterService.execute("");
@@ -81,6 +83,7 @@ public class RegisterActivity extends Activity implements
 	}
 
 	private void intializeEditTextFields() {
+
 		canRegister = false;
 		name = (EditText) findViewById(R.id.name);
 		username = (EditText) findViewById(R.id.username);
@@ -88,7 +91,6 @@ public class RegisterActivity extends Activity implements
 		repassword = (EditText) findViewById(R.id.repassword);
 		email = (EditText) findViewById(R.id.email);
 		country = (EditText) findViewById(R.id.country);
-		registerButton = (Button) findViewById(R.id.register);
 
 		if (name.getText().toString().matches("")) {
 			toastMessage("Name can not be empty");
@@ -107,6 +109,18 @@ public class RegisterActivity extends Activity implements
 			toastMessage("Passwords must match");
 		} else {
 
+			loadDialog.setTitle("Loading Content...");
+			loadDialog.setMessage("Please wait.");
+			loadDialog.setCancelable(false);
+			loadDialog.setIndeterminate(true);
+
+			try {
+				loadDialog.show();
+			} catch (Exception e) {
+				// WindowManager$BadTokenException will be caught and the app
+				// would not display
+				// the 'Force Close' message
+			}
 			canRegister = true;
 		}
 	}
@@ -169,15 +183,25 @@ public class RegisterActivity extends Activity implements
 			newUser.put("email", user.getEmail());
 			newUser.put("country", user.getCountry());
 			dataBaseConnection.insertUserAtRegister(newUser);
-
+			loadDialog.dismiss();
 			Intent intent = new Intent(getApplicationContext(),
 					CentralActivity.class);
 			intent.putExtra("loggedUser", username.getText().toString());
-			startActivity(intent);
+			startActivityForResult(intent, 0);
 		} else {
+			loadDialog.dismiss();
 			toastMessage("Username or email are already in use");
-			registerButton.setVisibility(View.VISIBLE);
+
 		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+
+		loadDialog.dismiss();
+
 	}
 
 }
