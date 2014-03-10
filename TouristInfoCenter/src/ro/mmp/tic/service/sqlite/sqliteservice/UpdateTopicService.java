@@ -19,7 +19,7 @@ public class UpdateTopicService extends UpdateDataBaseService {
 	public void insertTopic(ArrayList<Topic> topics) {
 
 		for (Topic t : topics) {
-			Log.d("UpdateTopicService", "6 am ajuns aici " + t.getName());
+
 			if (getTopic(t.getName(), db).isEmpty()) {
 				String sqlQuery = "Insert into topic (idcategory,idtype,name,address,lat,lng) "
 						+ "VALUES("
@@ -33,7 +33,7 @@ public class UpdateTopicService extends UpdateDataBaseService {
 						+ "',"
 						+ t.getLat() + "," + t.getLng() + ")";
 				db.execSQL(sqlQuery);
-				Log.d("UpdateTopicService", "7 isneram " + t.getName());
+
 			}
 		}
 

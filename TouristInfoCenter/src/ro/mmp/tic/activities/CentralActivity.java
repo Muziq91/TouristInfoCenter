@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import ro.mmp.tic.R;
-import ro.mmp.tic.activities.streetmap.StreetMapActivity;
+import ro.mmp.tic.activities.streetmap.SelectActivity;
 import ro.mmp.tic.domain.Category;
 import ro.mmp.tic.domain.Topic;
 import ro.mmp.tic.domain.Type;
@@ -57,8 +57,7 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 	}
 
 	public void displayStreetMap(View view) {
-		Intent intent = new Intent(CentralActivity.this,
-				StreetMapActivity.class);
+		Intent intent = new Intent(CentralActivity.this, SelectActivity.class);
 		intent.putExtra("loggedUser", username);
 		startActivityForResult(intent, 0);
 
@@ -131,7 +130,7 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 								"jdbc:mysql://ec2-50-19-213-178.compute-1.amazonaws.com:3306/center",
 								"Muziq91", "vasilecaine09");
 
-				String categoryQuery = "SELECT c.category FROM `center`.`category` c";
+				String categoryQuery = "SELECT c.category,c.color FROM `center`.`category` c";
 
 				categoryStatement = connection.prepareStatement(categoryQuery);
 				categooryResult = categoryStatement.executeQuery();
@@ -140,6 +139,7 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 					Category c = new Category();
 
 					c.setCategory(categooryResult.getString("category"));
+					c.setColor(categooryResult.getString("color"));
 					categories.add(c);
 				}
 
@@ -158,17 +158,15 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 
 					if (dbc.insertType(types)) {
 
-						Log.d("CentralActivity", "1 begin");
 						String topicQuery = "SELECT t.idcategory,t.idtype,t.name,t.address,t.lat,t.lng FROM `center`.`topic` t";
-						Log.d("CentralActivity", "2 facem selectu");
+
 						topicStatement = connection
 								.prepareStatement(topicQuery);
 						topicResult = topicStatement.executeQuery();
 
 						while (topicResult.next()) {
 							Topic t = new Topic();
-							Log.d("CentralActivity", "3 selectam "
-									+ topicResult.getString("name"));
+
 							t.setIdcategory(topicResult.getInt("idcategory"));
 							t.setIdtype(topicResult.getInt("idtype"));
 							t.setName(topicResult.getString("name"));
@@ -178,7 +176,7 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 							topics.add(t);
 
 						}
-						Log.d("CentralActivity", "4 incercam sa inseram");
+
 						dbc.insertTopic(topics);
 					}
 				}

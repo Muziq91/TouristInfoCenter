@@ -94,6 +94,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ro.mmp.tic.activities.streetmap.PresentationActivity" />
         </activity>
+        <activity
+            android:name="ro.mmp.tic.activities.streetmap.SelectActivity"
+            android:label="@string/title_activity_select"
+            android:parentActivityName="ro.mmp.tic.activities.CentralActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ro.mmp.tic.activities.CentralActivity" />
+        </activity>
     </application>
 
 </manifest>

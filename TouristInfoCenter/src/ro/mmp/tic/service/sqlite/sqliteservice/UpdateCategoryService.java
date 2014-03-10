@@ -19,8 +19,9 @@ public class UpdateCategoryService extends UpdateDataBaseService {
 		for (Category c : categories) {
 
 			if (getCategory(c.getCategory(), db).isEmpty()) {
-				String sqlQuery = "Insert into category (category) "
-						+ "VALUES('" + c.getCategory() + "')";
+				String sqlQuery = "Insert into category (category,color) "
+						+ "VALUES('" + c.getCategory() + "','" + c.getColor()
+						+ "')";
 
 				db.execSQL(sqlQuery);
 
@@ -43,6 +44,7 @@ public class UpdateCategoryService extends UpdateDataBaseService {
 
 				category.put("idcategory", cursor.getString(0));
 				category.put("category", cursor.getString(1));
+				category.put("color", cursor.getString(2));
 
 			} while (cursor.moveToNext());
 		}

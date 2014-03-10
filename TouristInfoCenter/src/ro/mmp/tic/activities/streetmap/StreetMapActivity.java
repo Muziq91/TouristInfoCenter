@@ -9,9 +9,13 @@ package ro.mmp.tic.activities.streetmap;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import ro.mmp.tic.R;
+import ro.mmp.tic.activities.streetmap.fragment.LocationFragment;
+import ro.mmp.tic.adapter.model.MapModel;
 import ro.mmp.tic.metaio.ARViewActivity;
+import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,34 +40,11 @@ public class StreetMapActivity extends ARViewActivity implements
 		SensorsComponentAndroid.Callback {
 
 	private final String TAG = "StreetMapActivity";
-	/**
-	 * We first declare the geometries
-	 * 
-	 * Botanical Garden : North : 46.762737 East : 23.588569 Matei Corvin
-	 * statue: North:46.772437 East:23.58799 Orthodox Cathedral: North:46.77201
-	 * East:23.59634 Bastionul Croitorilor: North:46.771027 East: 23.597059
-	 * 
-	 * 
-	 */
-
-	private IGeometry mBotanical;
-	private IGeometry mStatue;
-	private IGeometry mCathedral;
-	private IGeometry mBastion;
-
-	/**
-	 * We need LLACoordinates for all 4 positions
-	 */
-
-	private LLACoordinate mCoordBotanical;
-	private LLACoordinate mCoordStatue;
-	private LLACoordinate mCoordCathedral;
-	private LLACoordinate mCoordBastion;
-
+	private ArrayList<MapModel> mapModel;
 	private IBillboardGroup billboardGroup;
 
 	/**
-	 * Next is the radar component
+	 * radar component
 	 */
 
 	private IRadar radar;
@@ -99,6 +80,10 @@ public class StreetMapActivity extends ARViewActivity implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		mapModel = new ArrayList<MapModel>(0);
+		DataBaseConnection dbc = new DataBaseConnection(this);
+		mapModel = dbc.getMapModel(LocationFragment.getSelectedLocation());
 
 	}
 
@@ -186,24 +171,13 @@ public class StreetMapActivity extends ARViewActivity implements
 			metaioSDK.setLLAObjectRenderingLimits(10, 10000); // to reduce
 																// flickering
 
-			mBotanical = metaioSDK.createGeometryFromImage(
-					createSign("Botanical Garden"), true);
-			mStatue = metaioSDK.createGeometryFromImage(
-					createSign("Matei Corvin Statue"), true);
-			mCathedral = metaioSDK.createGeometryFromImage(
-					createSign("Orthodox Cathedral"), true);
-			mBastion = metaioSDK.createGeometryFromImage(
-					createSign("Bastionul Croitorilor"), true);
+			for (MapModel m : mapModel) {
 
-			mBotanical.setName("Botanical");
-			mStatue.setName("Statue");
-			mCathedral.setName("Cathedral");
-			mBastion.setName("Bastion");
-
-			billboardGroup.addBillboard(mBotanical);
-			billboardGroup.addBillboard(mStatue);
-			billboardGroup.addBillboard(mCathedral);
-			billboardGroup.addBillboard(mBastion);
+				m.setGeometry(metaioSDK.createGeometryFromImage(createSign(m
+						.getTopic().getName()), true));
+				m.getGeometry().setName(m.getTopic().getName());
+				billboardGroup.addBillboard(m.getGeometry());
+			}
 
 			/**
 			 * build the location of our interest points
@@ -215,25 +189,25 @@ public class StreetMapActivity extends ARViewActivity implements
 			 */
 
 			radar = metaioSDK.createRadar();
-			String file = AssetsManager.getAssetPath("streetmap/yellow.png");
 			radar.setBackgroundTexture(AssetsManager
 					.getAssetPath("streetmap/radar.png"));
-			radar.setObjectsDefaultTexture(file);
+
 			radar.setRelativeToScreen(IGeometry.ANCHOR_TL);
 
 			/**
 			 * add geometries to the radar
 			 */
 
-			radar.add(mBotanical);
-			radar.add(mStatue);
-			radar.add(mCathedral);
-			radar.add(mBastion);
+			for (MapModel m : mapModel) {
+				radar.add(m.getGeometry());
 
-			mBotanical.setVisible(false);
-			mStatue.setVisible(false);
-			mCathedral.setVisible(false);
-			mBastion.setVisible(false);
+				String file = AssetsManager.getAssetPath("streetmap/"
+						+ m.getColor() + ".png");
+				radar.setObjectTexture(m.getGeometry(), file);
+
+				m.getGeometry().setVisible(false);
+
+			}
 
 			Log.i(TAG, "Set up everything ");
 
@@ -255,34 +229,38 @@ public class StreetMapActivity extends ARViewActivity implements
 		boolean result = metaioSDK.setTrackingConfiguration("GPS");
 
 		radar.setVisible(true);
-		mBotanical.setVisible(true);
-		mStatue.setVisible(true);
-		mCathedral.setVisible(true);
-		mBastion.setVisible(true);
+
+		for (MapModel m : mapModel) {
+			m.getGeometry().setVisible(true);
+		}
 
 	}
 
-	/*
-	 * @Override public boolean onTouch(View v, MotionEvent event) { int x =
-	 * (int) event.getX(); int y = (int) event.getY();
+	/**
+	 * This method has the responsability of updating the location on the radar
+	 * It uses an offset to get a more precise location
 	 * 
-	 * if (radar != null) { if (x < 117 && y < 142) {
-	 * radar.setScale(CONTEXT_RESTRICTED);
-	 * 
-	 * } else { radar.setScale(CONTEXT_INCLUDE_CODE);
-	 * 
-	 * } }
-	 * 
-	 * switch (event.getAction()) { case MotionEvent.ACTION_DOWN:
-	 * 
-	 * break;
-	 * 
-	 * case MotionEvent.ACTION_MOVE:
-	 * 
-	 * break; case MotionEvent.ACTION_UP:
-	 * 
-	 * break; } return false; }
+	 * @param location
 	 */
+	private void updateGeometriesLocation(LLACoordinate location) {
+
+		Log.i(TAG, "Update geometry locations ");
+
+		LLACoordinate currPos = mSensors.getLocation();
+
+		for (MapModel mm : mapModel) {
+			mm.setCoordinate(new LLACoordinate(mm.getTopic().getLat(), mm
+					.getTopic().getLng(), currPos.getAltitude(), currPos
+					.getAltitude(), currPos.getAccuracy()));
+
+			if (mm.getGeometry() != null) {
+				mm.getGeometry().setTranslationLLA(mm.getCoordinate());
+				mm.getGeometry().setLLALimitsEnabled(true);
+			}
+
+		}
+
+	}
 
 	@Override
 	protected void onGeometryTouched(IGeometry geometry) {
@@ -415,61 +393,6 @@ public class StreetMapActivity extends ARViewActivity implements
 			return null;
 		}
 		return null;
-
-	}
-
-	/**
-	 * This method has the responsability of updating the location on the radar
-	 * It uses an offset to get a more precise location
-	 * 
-	 * @param location
-	 */
-	private void updateGeometriesLocation(LLACoordinate location) {
-
-		Log.i(TAG, "Update geometry locations ");
-		/*
-		 * Botanical Garden : North : 46.762737 East : 23.588569 Matei Corvin
-		 * statue: North:46.772437 East:23.58799 Orthodox Cathedral:
-		 * North:46.77201 East:23.59634 Bastionul Croitorilor: North:46.771027
-		 * East: 23.597059
-		 */
-		LLACoordinate currPos = mSensors.getLocation();
-
-		mCoordBotanical = new LLACoordinate(46.762737, 23.588569,
-				currPos.getAltitude(), currPos.getAltitude(),
-				currPos.getAccuracy());
-
-		mCoordStatue = new LLACoordinate(46.772437, 23.58799,
-				currPos.getAltitude(), currPos.getAltitude(),
-				currPos.getAccuracy());
-
-		mCoordCathedral = new LLACoordinate(46.77201, 23.59634,
-				currPos.getAltitude(), currPos.getAltitude(),
-				currPos.getAccuracy());
-
-		mCoordBastion = new LLACoordinate(46.771027, 23.597059,
-				currPos.getAltitude(), currPos.getAltitude(),
-				currPos.getAccuracy());
-
-		if (mBotanical != null) {
-			mBotanical.setTranslationLLA(mCoordBotanical);
-			mBotanical.setLLALimitsEnabled(true);
-		}
-
-		if (mStatue != null) {
-			mStatue.setTranslationLLA(mCoordStatue);
-			mStatue.setLLALimitsEnabled(true);
-		}
-
-		if (mCathedral != null) {
-			mCathedral.setTranslationLLA(mCoordCathedral);
-			mCathedral.setLLALimitsEnabled(true);
-		}
-
-		if (mBastion != null) {
-			mBastion.setTranslationLLA(mCoordBastion);
-			mBastion.setLLALimitsEnabled(true);
-		}
 
 	}
 

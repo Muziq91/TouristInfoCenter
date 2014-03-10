@@ -4,7 +4,7 @@ public class Category {
 
 	private int idcategory;
 	private String category;
-
+	private String color;
 	public Category() {
 
 	}
@@ -29,6 +29,14 @@ public class Category {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 
 }

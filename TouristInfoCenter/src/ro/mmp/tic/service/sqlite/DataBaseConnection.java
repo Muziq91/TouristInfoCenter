@@ -3,6 +3,7 @@ package ro.mmp.tic.service.sqlite;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ro.mmp.tic.adapter.model.MapModel;
 import ro.mmp.tic.domain.Category;
 import ro.mmp.tic.domain.Like;
 import ro.mmp.tic.domain.Topic;
@@ -30,7 +31,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 
 		String userTable = "create table user(iduser integer primary key AUTOINCREMENT, name text, username text, password text,email text, country text)";
-		String categorytable = "create table category(idcategory integer primary key AUTOINCREMENT, category text)";
+		String categorytable = "create table category(idcategory integer primary key AUTOINCREMENT, category text, color text)";
 		String typeTable = "create table type(idtype integer primary key AUTOINCREMENT, type text)";
 		String commentTable = "create table comment(idcomment integer primary key AUTOINCREMENT, idu integer,idt integer, comment text,FOREIGN KEY(idu) references user(iduser),FOREIGN KEY(idt) references topic(idtopic))";
 		String likeTable = "create table like(idlike integer primary key AUTOINCREMENT, iduser integer, idtopic integer, likes integer,unlikes integer, FOREIGN KEY (iduser) references user(iduser), FOREIGN KEY (idtopic) references topic(idtopic))";
@@ -210,6 +211,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 
 				category.put("idcategory", cursor.getString(0));
 				category.put("category", cursor.getString(1));
+				category.put("color", cursor.getString(2));
 
 			} while (cursor.moveToNext());
 		}
@@ -300,4 +302,141 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		return topic;
 	}
 
+	public ArrayList<HashMap<String, String>> getAllCategory() {
+		ArrayList<HashMap<String, String>> allCategories = new ArrayList<HashMap<String, String>>(
+				0);
+
+		db = this.getWritableDatabase();
+
+		String query = "Select * from category";
+
+		Cursor cursor = db.rawQuery(query, null);
+
+		if (cursor.moveToFirst()) {
+			do {
+				HashMap<String, String> category = new HashMap<String, String>(
+						0);
+
+				category.put("idcategory", cursor.getString(0));
+				category.put("category", cursor.getString(1));
+				category.put("color", cursor.getString(2));
+				allCategories.add(category);
+
+			} while (cursor.moveToNext());
+		}
+
+		closeDB();
+		return allCategories;
+	}
+
+	public ArrayList<HashMap<String, String>> getAllTypes(
+			ArrayList<String> selectedCategory) {
+		db = this.getWritableDatabase();
+
+		ArrayList<HashMap<String, String>> allTypes = new ArrayList<HashMap<String, String>>(
+				0);
+
+		for (String s : selectedCategory) {
+
+			String query = "SELECT t.idtype,t.type FROM type t "
+					+ "join topic tp on t.idtype=tp.idtype "
+					+ "join category c on c.idcategory=tp.idcategory "
+					+ "where c.category='" + s + "'";
+
+			Cursor cursor = db.rawQuery(query, null);
+
+			if (cursor.moveToFirst()) {
+				do {
+					HashMap<String, String> type = new HashMap<String, String>(
+							0);
+
+					type.put("idtype", cursor.getString(0));
+					type.put("type", cursor.getString(1));
+					allTypes.add(type);
+
+				} while (cursor.moveToNext());
+			}
+
+		}
+
+		closeDB();
+		return allTypes;
+	}
+
+	public ArrayList<HashMap<String, String>> getAllLocations(
+			ArrayList<String> seletedType) {
+		db = this.getWritableDatabase();
+
+		ArrayList<HashMap<String, String>> allLocations = new ArrayList<HashMap<String, String>>(
+				0);
+
+		for (String s : seletedType) {
+
+			String query = "SELECT tp.name,tp.address,tp.lat,tp.lng FROM topic tp "
+					+ "join type t  on tp.idtype=t.idtype "
+					+ "join category c  on tp.idcategory=c.idcategory "
+					+ "where t.type='" + s + "'";
+
+			Cursor cursor = db.rawQuery(query, null);
+
+			if (cursor.moveToFirst()) {
+				do {
+					HashMap<String, String> location = new HashMap<String, String>(
+							0);
+
+					location.put("name", cursor.getString(0));
+					location.put("address", cursor.getString(1));
+					location.put("lat", cursor.getString(2));
+					location.put("lng", cursor.getString(3));
+
+					allLocations.add(location);
+
+				} while (cursor.moveToNext());
+			}
+
+		}
+
+		closeDB();
+		return allLocations;
+	}
+
+	public ArrayList<MapModel> getMapModel(ArrayList<String> selectedLocation) {
+
+		db = this.getWritableDatabase();
+		ArrayList<MapModel> mapModel = new ArrayList<MapModel>(0);
+		for (String s : selectedLocation) {
+
+			String topicQuery = "SELECT tp.name,tp.address,tp.lat,tp.lng FROM topic tp "
+					+ "where tp.name='" + s + "'";
+			String colorQuery = "Select c.color from category c "
+					+ "join topic tp  on c.idcategory=tp.idcategory "
+					+ "where tp.name='" + s + "'";
+
+			Cursor topiCursor = db.rawQuery(topicQuery, null);
+			Cursor colorCursor = db.rawQuery(colorQuery, null);
+
+			if (topiCursor.moveToFirst()) {
+				do {
+					Topic t = new Topic();
+					String color = "default";
+
+					if (colorCursor.moveToFirst()) {
+						color = colorCursor.getString(0);
+					}
+
+					t.setName(topiCursor.getString(0));
+					t.setAddress(topiCursor.getString(1));
+					t.setLat(topiCursor.getDouble(2));
+					t.setLng(topiCursor.getDouble(3));
+
+					MapModel mm = new MapModel(t, color);
+					mapModel.add(mm);
+
+				} while (topiCursor.moveToNext());
+			}
+
+		}
+		closeDB();
+		return mapModel;
+	}
 }
