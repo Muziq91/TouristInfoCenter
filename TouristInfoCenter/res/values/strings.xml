@@ -73,5 +73,8 @@
     <!-- Location fragment -->
 
     <string name="goToMap">Go to Map</string>
+    <!--  -->
+    <string name="schedule">Schedule</string>
+    <string name="title_activity_schedule">ScheduleActivity</string>
 
 </resources>

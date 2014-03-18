@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import ro.mmp.tic.R;
 import ro.mmp.tic.activities.streetmap.SelectActivity;
 import ro.mmp.tic.domain.Category;
+import ro.mmp.tic.domain.Presentation;
 import ro.mmp.tic.domain.Topic;
 import ro.mmp.tic.domain.Type;
 import ro.mmp.tic.service.interfaces.UpdateFinishedListener;
@@ -36,19 +37,19 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 		setContentView(R.layout.activity_central);
 
 		loadDialog = new ProgressDialog(this);
-		loadDialog.setTitle("Loading Content...");
+		loadDialog.setTitle("Updating");
 		loadDialog.setMessage("Please wait.");
 		loadDialog.setCancelable(false);
 		loadDialog.setIndeterminate(true);
+
 		try {
 			loadDialog.show();
 		} catch (Exception e) {
-			// WindowManager$BadTokenException will be caught and the app
-			// would not display
-			// the 'Force Close' message
+
 		}
 
 		dbc = new DataBaseConnection(this);
+
 		UpdateDB udb = new UpdateDB(dbc, this);
 		udb.execute("");
 
@@ -69,13 +70,16 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 		super.onActivityResult(requestCode, resultCode, data);
 
 		loadDialog.dismiss();
+
 	}
 
 	@Override
 	public void onFinish() {
 		if (loadDialog != null) {
 			loadDialog.dismiss();
+
 		}
+
 		toastMessage("Update finished");
 	}
 
@@ -104,9 +108,11 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 		private PreparedStatement categoryStatement;
 		private PreparedStatement typeStatement;
 		private PreparedStatement topicStatement;
+		private PreparedStatement presentationStatement;
 		private ResultSet categooryResult;
 		private ResultSet typeResult;
 		private ResultSet topicResult;
+		private ResultSet presentationResult;
 		private DataBaseConnection dbc;
 		private UpdateFinishedListener finished;
 
@@ -123,6 +129,8 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 				ArrayList<Type> types = new ArrayList<Type>(0);
 				ArrayList<Category> categories = new ArrayList<Category>(0);
 				ArrayList<Topic> topics = new ArrayList<Topic>(0);
+				ArrayList<Presentation> presentations = new ArrayList<Presentation>(
+						0);
 
 				Class.forName("com.mysql.jdbc.Driver");
 				connection = DriverManager
@@ -177,7 +185,44 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 
 						}
 
-						dbc.insertTopic(topics);
+					}
+					if (dbc.insertTopic(topics)) {
+
+						Log.d("Central", "Updating presentation");
+
+						String presentaionQuery = "SELECT p.idpresentation,p.idtopic,p.image,p.description FROM `center`.`presentation` p";
+
+						presentationStatement = connection
+								.prepareStatement(presentaionQuery);
+						presentationResult = presentationStatement
+								.executeQuery();
+
+						while (presentationResult.next()) {
+
+							Presentation p = new Presentation();
+
+							p.setIdpresentation(presentationResult
+									.getInt("idpresentation"));
+							p.setIdtopic(presentationResult.getInt("idtopic"));
+
+							p.setImage(presentationResult.getString("image"));
+
+							p.setDescription(presentationResult
+									.getString("description"));
+							Log.d("Central",
+									"Creating the array list "
+											+ p.getIdpresentation());
+
+							presentations.add(p);
+
+						}
+
+						Log.d("Central", "Inserting ");
+
+						dbc.insertPresentation(presentations);
+
+						Log.d("Central", "FINISHED FINISHED");
+
 					}
 				}
 

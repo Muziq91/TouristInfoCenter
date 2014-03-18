@@ -160,8 +160,11 @@ public class SelectActivity extends FragmentActivity implements
 		if (LocationFragment.getSelectedLocation().isEmpty()) {
 			toastMessage("You need to first select a location");
 		} else {
+			Intent i = getIntent();
+			String username = i.getStringExtra("loggedUser");
 			Intent intent = new Intent(getApplicationContext(),
 					StreetMapActivity.class);
+			intent.putExtra("loggedUser", username);
 			startActivity(intent);
 		}
 	}

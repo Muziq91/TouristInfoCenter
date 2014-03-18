@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 import ro.mmp.tic.R;
 import ro.mmp.tic.domain.Like;
+import ro.mmp.tic.domain.Presentation;
 import ro.mmp.tic.domain.Topic;
 import ro.mmp.tic.domain.User;
 import ro.mmp.tic.service.UserService;
@@ -22,10 +23,12 @@ import ro.mmp.tic.service.userservice.UserUpdateLikeService;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,9 +45,7 @@ public class PresentationActivity extends Activity implements
 	private ImageView imageView;
 	private Button likeButton;
 	private Button unlikeButton;
-	private WebView mCharView;
-	private int likeCount;
-	private int unlikeCount;
+	private WebView chartView;
 	private String username;
 	private String topicName;
 	private Like like;
@@ -77,7 +78,7 @@ public class PresentationActivity extends Activity implements
 
 		dataBaseConnection = new DataBaseConnection(this);
 
-		mCharView = (WebView) findViewById(R.id.chartView);
+		chartView = (WebView) findViewById(R.id.chartView);
 		textView = (TextView) findViewById(R.id.textView);
 		imageView = (ImageView) findViewById(R.id.imageView);
 		likeButton = (Button) findViewById(R.id.likeButton);
@@ -89,31 +90,21 @@ public class PresentationActivity extends Activity implements
 
 		setLikeButtons();
 
-		if (topicName.equals("Botanical Garden")) {
+		Log.d("PresentationActivity", "Entering  PresentationActivity");
 
-			setTitle("Botanical Garden");
-			textView.setText(getString(R.string.botanicalText));
-			imageView.setImageResource(R.drawable.botanical);
+		Presentation presentation = dataBaseConnection
+				.getPrensetaion(topicName);
 
-		} else if (topicName.equals("Matei Corvin Statue")) {
+		setTitle(topicName);
+		textView.setText(presentation.getDescription());
 
-			setTitle("Matei Corvin Statue");
-			textView.setText(getString(R.string.statueText));
-			imageView.setImageResource(R.drawable.statue);
+		Log.d("ce am primit sari in ochi ", "" + presentation.getImage());
+		Context context = imageView.getContext();
+		int id = context.getResources().getIdentifier(presentation.getImage(),
+				"drawable", context.getPackageName());
+		imageView.setImageResource(id);
 
-		} else if (topicName.equals("Orthodox Cathedral")) {
-
-			setTitle("Orthodox Cathedral");
-			textView.setText(getString(R.string.cathedralText));
-			imageView.setImageResource(R.drawable.cathedral);
-
-		} else if (topicName.equals("Bastionul Croitorilor")) {
-
-			setTitle("Bastionul Croitorilor");
-			textView.setText(getString(R.string.bastionText));
-			imageView.setImageResource(R.drawable.bastion);
-
-		}
+		Log.d("PresentationActivity", "GUI set up");
 
 		user = new User();
 		user.setUsername(username);
@@ -121,9 +112,9 @@ public class PresentationActivity extends Activity implements
 		topic = new Topic();
 		topic.setName(topicName);
 
-		UserService likeCount = new UserLikeCountService(topic,
+		UserService likeCountService = new UserLikeCountService(topic,
 				getApplicationContext(), this);
-		likeCount.execute("");
+		likeCountService.execute("");
 
 	}
 
@@ -222,7 +213,7 @@ public class PresentationActivity extends Activity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
+
 		super.onActivityResult(requestCode, resultCode, data);
 
 		loadDialog.dismiss();
@@ -261,30 +252,9 @@ public class PresentationActivity extends Activity implements
 		return super.onOptionsItemSelected(item);
 	}
 
-	/*
-	 * @Override public void onTaskFinished(Like like) { this.like = like;
-	 * 
-	 * toastMessage("Am terminat de cautat likeurile " + like.getIdlike());
-	 * 
-	 * if (like.getIdlike() != 0) { exists = true;
-	 * 
-	 * if (like.getLike() == 1) { likeButton.setVisibility(View.GONE);
-	 * unlikeButton.setVisibility(View.VISIBLE); } else if (like.getUnlike() ==
-	 * 1) { unlikeButton.setVisibility(View.GONE);
-	 * likeButton.setVisibility(View.VISIBLE); } else {
-	 * unlikeButton.setVisibility(View.VISIBLE);
-	 * likeButton.setVisibility(View.VISIBLE);
-	 * 
-	 * } } else { likeButton.setVisibility(View.VISIBLE);
-	 * unlikeButton.setVisibility(View.VISIBLE); exists = false; }
-	 * 
-	 * }
-	 */
-
 	@Override
 	public void onTaskFinished(int likeCount, int unlikeCount) {
-		this.likeCount = likeCount;
-		this.unlikeCount = unlikeCount;
+
 		loadDialog.dismiss();
 		// here we load the chart with information from the database about the
 		// number of likes and unlikes
@@ -292,7 +262,7 @@ public class PresentationActivity extends Activity implements
 				// of
 				// graph
 				"chs=500x200&" + // pixel dimension of chart
-				"chd=t:" + this.likeCount + "," + this.unlikeCount + "&" + // data
+				"chd=t:" + likeCount + "," + unlikeCount + "&" + // data
 				// to
 				// display
 				// in
@@ -306,7 +276,7 @@ public class PresentationActivity extends Activity implements
 				"chl=Like|Unlike" + // chart labels
 				"&chco=335423,9011D3&" + // chart color
 				"chdl=Like|Unlike";
-		mCharView.loadUrl(mUrl);
+		chartView.loadUrl(mUrl);
 
 	}
 
@@ -324,9 +294,9 @@ public class PresentationActivity extends Activity implements
 	@Override
 	public void onTaskFinished() {
 		loadDialog.dismiss();
-		UserService likeCount = new UserLikeCountService(topic,
+		UserService likeCountService = new UserLikeCountService(topic,
 				getApplicationContext(), this);
-		likeCount.execute("");
+		likeCountService.execute("");
 
 	}
 

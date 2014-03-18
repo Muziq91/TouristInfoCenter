@@ -10,12 +10,20 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import ro.mmp.tic.R;
+import ro.mmp.tic.activities.ScheduleActivity;
 import ro.mmp.tic.activities.streetmap.fragment.LocationFragment;
 import ro.mmp.tic.adapter.model.MapModel;
+import ro.mmp.tic.domain.Schedule;
 import ro.mmp.tic.metaio.ARViewActivity;
 import ro.mmp.tic.service.sqlite.DataBaseConnection;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,7 +33,12 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.metaio.sdk.SensorsComponentAndroid;
@@ -40,7 +53,9 @@ public class StreetMapActivity extends ARViewActivity implements
 		SensorsComponentAndroid.Callback {
 
 	private final String TAG = "StreetMapActivity";
+	// used to create the street map
 	private ArrayList<MapModel> mapModel;
+	// used to order the elements seen on the street map
 	private IBillboardGroup billboardGroup;
 
 	/**
@@ -48,6 +63,32 @@ public class StreetMapActivity extends ARViewActivity implements
 	 */
 
 	private IRadar radar;
+
+	// Take care of schedule part
+	private int currentPosition;
+
+	// date elements
+	private int year;
+	private int month;
+	private int day;
+
+	// time elements
+	private int hour;
+	private int minute;
+
+	static final int DATE_DIALOG_ID = 100;
+	static final int TIME_DIALOG_ID = 999;
+
+	// alert view elements
+
+	private Button prevButton;
+	private Button nextButton;
+
+	private TextView prevText;
+	private TextView nextText;
+	private TextView dateText;
+	private TextView timeText;
+	private TextView currentText;
 
 	/**
 	 * We override the onCreate method to set up the tracking configuration
@@ -187,7 +228,6 @@ public class StreetMapActivity extends ARViewActivity implements
 			/**
 			 * Create the radar
 			 */
-
 			radar = metaioSDK.createRadar();
 			radar.setBackgroundTexture(AssetsManager
 					.getAssetPath("streetmap/radar.png"));
@@ -265,39 +305,357 @@ public class StreetMapActivity extends ARViewActivity implements
 	@Override
 	protected void onGeometryTouched(IGeometry geometry) {
 
-		Intent i = getIntent();
-		String username = i.getStringExtra("loggedUser");
+		// We create the view
+		LayoutInflater layoutInflater = LayoutInflater.from(this);
+		View dialogView = layoutInflater.inflate(
+				R.layout.schedule_prompt_layout, null);
+		// set up the dialog builder
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+		alertDialogBuilder.setView(dialogView);
 
-		if (geometry.getName().equals("Botanical")) {
-			toastMessage("You accessed the Botanical Garden Page");
-			Intent intent = new Intent(StreetMapActivity.this,
-					PresentationActivity.class);
-			intent.putExtra("loggedUser", username);
-			intent.putExtra("name", "Botanical Garden");
-			startActivity(intent);
+		// setUpAlert(geometry.getName());
+		// say what the buttons do
+		alertDialogBuilder
+				.setCancelable(false)
+				.setPositiveButton("Presentation",
+						new DialogInterface.OnClickListener() {
 
-		} else if (geometry.getName().equals("Statue")) {
-			toastMessage("You accessed the Matei Corvin Statue page");
-			Intent intent = new Intent(StreetMapActivity.this,
-					PresentationActivity.class);
-			intent.putExtra("loggedUser", username);
-			intent.putExtra("name", "Matei Corvin Statue");
-			startActivity(intent);
-		} else if (geometry.getName().equals("Cathedral")) {
-			toastMessage("You accessed the Orthodox Cathedral Page \n Accros from it you can see the National Theatre");
-			Intent intent = new Intent(StreetMapActivity.this,
-					PresentationActivity.class);
-			intent.putExtra("loggedUser", username);
-			intent.putExtra("name", "Orthodox Cathedral");
-			startActivity(intent);
-		} else if (geometry.getName().equals("Bastion")) {
-			toastMessage("You accessed the Bastionul Croitorilor page");
-			Intent intent = new Intent(StreetMapActivity.this,
-					PresentationActivity.class);
-			intent.putExtra("loggedUser", username);
-			intent.putExtra("name", "Bastionul Croitorilor");
-			startActivity(intent);
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								Intent i = getIntent();
+								String username = i
+										.getStringExtra("loggedUser");
+								Intent intent = new Intent(
+										StreetMapActivity.this,
+										PresentationActivity.class);
+								intent.putExtra("loggedUser", username);
+								intent.putExtra("name",
+										mapModel.get(currentPosition)
+												.getTopic().getName());
+								startActivity(intent);
+
+							}
+						})
+				.setNegativeButton("Cancel",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.cancel();
+
+							}
+						});
+
+		initiateDialogViewElements(dialogView);
+		setUpAlert(geometry.getName());
+		setCurrentDate();
+		setCurrentTime();
+
+		// create the alert dialog
+		AlertDialog alert = alertDialogBuilder.create();
+		// display the dialog
+		alert.show();
+
+		/*
+		 * if (geometry.getName().equals("Botanical")) {
+		 * toastMessage("You accessed the Botanical Garden Page"); Intent intent
+		 * = new Intent(StreetMapActivity.this, PresentationActivity.class);
+		 * intent.putExtra("loggedUser", username); intent.putExtra("name",
+		 * "Botanical Garden"); startActivity(intent);
+		 * 
+		 * } else if (geometry.getName().equals("Statue")) {
+		 * toastMessage("You accessed the Matei Corvin Statue page"); Intent
+		 * intent = new Intent(StreetMapActivity.this,
+		 * PresentationActivity.class); intent.putExtra("loggedUser", username);
+		 * intent.putExtra("name", "Matei Corvin Statue");
+		 * startActivity(intent); } else if
+		 * (geometry.getName().equals("Cathedral")) { toastMessage(
+		 * "You accessed the Orthodox Cathedral Page \n Accros from it you can see the National Theatre"
+		 * ); Intent intent = new Intent(StreetMapActivity.this,
+		 * PresentationActivity.class); intent.putExtra("loggedUser", username);
+		 * intent.putExtra("name", "Orthodox Cathedral"); startActivity(intent);
+		 * } else if (geometry.getName().equals("Bastion")) {
+		 * toastMessage("You accessed the Bastionul Croitorilor page"); Intent
+		 * intent = new Intent(StreetMapActivity.this,
+		 * PresentationActivity.class); intent.putExtra("loggedUser", username);
+		 * intent.putExtra("name", "Bastionul Croitorilor");
+		 * startActivity(intent); }
+		 */
+
+	}
+
+	public void setUpAlert(String locatioNname) {
+
+		for (int j = 0; j < mapModel.size(); j++) {
+			if (mapModel.get(j).getTopic().getName().equals(locatioNname)) {
+				currentPosition = j;
+			}
 		}
+
+		currentText
+				.setText(mapModel.get(currentPosition).getTopic().getName()
+						+ " \n"
+						+ mapModel.get(currentPosition).getTopic().getAddress());
+
+		if (mapModel.size() == 1) {
+			prevButton.setVisibility(View.GONE);
+			prevText.setVisibility(View.GONE);
+
+			nextButton.setVisibility(View.GONE);
+			nextText.setVisibility(View.GONE);
+		} else if (mapModel.size() >= 2) {
+
+			if (currentPosition == mapModel.size() - 1) {
+				nextButton.setVisibility(View.GONE);
+				nextText.setVisibility(View.GONE);
+
+				prevButton.setVisibility(View.VISIBLE);
+				prevText.setVisibility(View.VISIBLE);
+
+				prevText.setText(mapModel.get(currentPosition - 1).getTopic()
+						.getName());
+			}
+
+			else if (currentPosition == 0) {
+				prevButton.setVisibility(View.GONE);
+				prevText.setVisibility(View.GONE);
+
+				nextButton.setVisibility(View.VISIBLE);
+				nextText.setVisibility(View.VISIBLE);
+
+				nextText.setText(mapModel.get(currentPosition + 1).getTopic()
+						.getName());
+			}
+
+			else {
+				nextButton.setVisibility(View.VISIBLE);
+				nextText.setVisibility(View.VISIBLE);
+				nextText.setText(mapModel.get(currentPosition + 1).getTopic()
+						.getName());
+				prevButton.setVisibility(View.VISIBLE);
+				prevText.setVisibility(View.VISIBLE);
+				prevText.setText(mapModel.get(currentPosition - 1).getTopic()
+						.getName());
+			}
+		}
+
+	}
+
+	private void initiateDialogViewElements(View dialogView) {
+		prevButton = (Button) dialogView.findViewById(R.id.prevButton);
+		nextButton = (Button) dialogView.findViewById(R.id.nextButton);
+
+		prevText = (TextView) dialogView.findViewById(R.id.prevText);
+		nextText = (TextView) dialogView.findViewById(R.id.nextText);
+		dateText = (TextView) dialogView.findViewById(R.id.dateText);
+		timeText = (TextView) dialogView.findViewById(R.id.timeText);
+		currentText = (TextView) dialogView.findViewById(R.id.currentText);
+
+	}
+
+	// calculates the previouse location and sets up the GUI
+	public void goToPreviouse(View v) {
+
+		int prevPosition = currentPosition - 1;
+		if (prevPosition == 0) {
+
+			prevButton.setVisibility(View.GONE);
+			prevText.setVisibility(View.GONE);
+
+			nextButton.setVisibility(View.VISIBLE);
+			nextText.setVisibility(View.VISIBLE);
+
+			nextText.setText(mapModel.get(prevPosition + 1).getTopic()
+					.getName());
+			currentPosition = prevPosition;
+
+		} else {
+
+			nextButton.setVisibility(View.VISIBLE);
+			nextText.setVisibility(View.VISIBLE);
+			nextText.setText(mapModel.get(prevPosition + 1).getTopic()
+					.getName());
+			prevButton.setVisibility(View.VISIBLE);
+			prevText.setVisibility(View.VISIBLE);
+			prevText.setText(mapModel.get(prevPosition - 1).getTopic()
+					.getName());
+			currentPosition = prevPosition;
+
+		}
+
+		currentText.setText(mapModel.get(prevPosition).getTopic().getName()
+				+ "\n" + mapModel.get(prevPosition).getTopic().getAddress());
+
+	}
+
+	// calculates the next location and sets up the GUI
+	public void goToNext(View v) {
+		int nextPosition = currentPosition + 1;
+		if (nextPosition == mapModel.size() - 1) {
+
+			prevButton.setVisibility(View.VISIBLE);
+			prevText.setVisibility(View.VISIBLE);
+
+			nextButton.setVisibility(View.GONE);
+			nextText.setVisibility(View.GONE);
+
+			prevText.setText(mapModel.get(nextPosition - 1).getTopic()
+					.getName());
+			currentPosition = nextPosition;
+
+		} else {
+
+			nextButton.setVisibility(View.VISIBLE);
+			nextText.setVisibility(View.VISIBLE);
+			nextText.setText(mapModel.get(nextPosition + 1).getTopic()
+					.getName());
+			prevButton.setVisibility(View.VISIBLE);
+			prevText.setVisibility(View.VISIBLE);
+			prevText.setText(mapModel.get(nextPosition - 1).getTopic()
+					.getName());
+			currentPosition = nextPosition;
+
+		}
+
+		currentText.setText(mapModel.get(nextPosition).getTopic().getName()
+				+ "\n" + mapModel.get(nextPosition).getTopic().getAddress());
+	}
+
+	// this method is called when we user showDialog(int id)
+	@Override
+	protected Dialog onCreateDialog(int id) {
+
+		switch (id) {
+		case DATE_DIALOG_ID:
+
+			// set date picker as current date
+
+			return new DatePickerDialog(this, datePickerListener, year, month,
+					day);
+
+		case TIME_DIALOG_ID:
+			return new TimePickerDialog(this, timePickerListener, hour, minute,
+					true);
+
+		}
+
+		return null;
+
+	}
+
+	/**
+	 * SET DATE
+	 * 
+	 * @param view
+	 */
+	@SuppressWarnings("deprecation")
+	public void setDate(View view) {
+
+		showDialog(DATE_DIALOG_ID);
+
+	}
+
+	// we set the current date in the text view
+	public void setCurrentDate() {
+
+		final Calendar calendar = Calendar.getInstance();
+
+		year = calendar.get(Calendar.YEAR);
+		month = calendar.get(Calendar.MONTH);
+		day = calendar.get(Calendar.DAY_OF_MONTH);
+
+		dateText.setText(calendar.get(Calendar.DAY_OF_MONTH) + "/"
+				+ calendar.get(Calendar.MONTH) + "/"
+				+ calendar.get(Calendar.YEAR));
+
+	}
+
+	// the date picker listener
+	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+
+		// when dialog box is closed, below method will be called
+
+		public void onDateSet(DatePicker view, int selectedYear,
+				int selectedMonth, int selectedDay) {
+
+			year = selectedYear;
+			month = selectedMonth;
+			day = selectedDay;
+
+			// set selected date into Text View
+			dateText.setText((month + 1) + "/" + day + "/" + year);
+
+		}
+
+	};
+
+	/**
+	 * SET TIME
+	 * 
+	 * @param view
+	 */
+	@SuppressWarnings("deprecation")
+	public void setTime(View view) {
+
+		showDialog(TIME_DIALOG_ID);
+
+	}
+
+	public void setCurrentTime() {
+
+		final Calendar c = Calendar.getInstance();
+
+		hour = c.get(Calendar.HOUR_OF_DAY);
+		minute = c.get(Calendar.MINUTE);
+
+		// set current time into textview
+
+		if (minute < 10) {
+
+			timeText.setText(hour + ":0" + minute);
+		} else {
+			timeText.setText(hour + ":" + minute);
+		}
+
+	}
+
+	// time picker listener
+	private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
+
+		public void onTimeSet(TimePicker view, int selectedHour,
+				int selectedMinute) {
+
+			hour = selectedHour;
+			minute = selectedMinute;
+
+			// set current time into textview
+
+			timeText.setText(hour + " : " + minute);
+
+		}
+
+	};
+
+	// save schedule
+	public void saveSchedule(View view) {
+
+		Schedule schedule = new Schedule();
+		schedule.setTime(timeText.getText().toString());
+		schedule.setDate(dateText.getText().toString());
+		schedule.setPlace(mapModel.get(currentPosition).getTopic().getName()
+				+ "\n" + mapModel.get(currentPosition).getTopic().getAddress());
+
+		DataBaseConnection dbc = new DataBaseConnection(this);
+		dbc.saveSchedule(schedule);
+	}
+
+	// schedule button
+	public void onScheduleButtonClick(View view) {
+
+		Intent intent = new Intent(this, ScheduleActivity.class);
+		startActivityForResult(intent, 0);
 
 	}
 
@@ -413,6 +771,7 @@ public class StreetMapActivity extends ARViewActivity implements
 	 * 
 	 * @param text
 	 */
+	@SuppressWarnings("unused")
 	private void toastMessage(String text) {
 
 		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();

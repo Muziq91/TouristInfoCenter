@@ -41,7 +41,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		/*DataBaseConnection dbx = new DataBaseConnection(this);
+		DataBaseConnection dbx = new DataBaseConnection(this);
+		dbx.upgrade();
 
 		HashMap<String, String> user = new HashMap<String, String>(0);
 		HashMap<String, String> user1 = new HashMap<String, String>(0);
@@ -58,7 +59,7 @@ public class MainActivity extends Activity {
 		user1.put("country", "b");
 
 		dbx.insertUserAtRegister(user);
-		dbx.insertUserAtRegister(user1);*/
+		dbx.insertUserAtRegister(user1);
 
 		startAgainButton = (Button) findViewById(R.id.startAgainButton);
 		activateInternetAndGps();
@@ -85,7 +86,7 @@ public class MainActivity extends Activity {
 				startAgainButton.setVisibility(View.VISIBLE);
 				toastMessage("Both the internet and GPS are active");
 				Intent nextActivity = new Intent(this,
-						SelectActivity.class);
+						SplashScreenActivity.class);
 				startActivityForResult(nextActivity, 0);
 			}
 		}

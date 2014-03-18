@@ -26,6 +26,7 @@
         <!-- Central activity -->
 
         <LinearLayout
+            android:id="@+id/linearLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/header"
@@ -58,6 +59,7 @@
             <!-- Google map button  ends -->
         </LinearLayout>
         <!-- Central activity  Ends -->
+
     </RelativeLayout>
 
 </ScrollView>

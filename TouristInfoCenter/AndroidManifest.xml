@@ -33,7 +33,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="ro.mmp.tic.activities.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,7 +44,8 @@
         <activity
             android:name="ro.mmp.tic.activities.authenticate.AuthenticationActivity"
             android:label="@string/title_activity_authentication"
-            android:parentActivityName="ro.mmp.tic.activities.MainActivity" >
+            android:parentActivityName="ro.mmp.tic.activities.MainActivity"
+            android:screenOrientation="portrait" >
 
             <!-- The meta-data element is needed for versions lower than 4.1 -->
             <meta-data
@@ -52,12 +54,14 @@
         </activity>
         <activity
             android:name="ro.mmp.tic.activities.SplashScreenActivity"
-            android:label="@string/title_activity_splash_screen" >
+            android:label="@string/title_activity_splash_screen"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="ro.mmp.tic.activities.authenticate.LoginActivity"
             android:label="@string/title_activity_login"
-            android:parentActivityName="ro.mmp.tic.activities.authenticate.AuthenticationActivity" >
+            android:parentActivityName="ro.mmp.tic.activities.authenticate.AuthenticationActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ro.mmp.tic.activities.authenticate.AuthenticationActivity" />
@@ -65,14 +69,16 @@
         <activity
             android:name="ro.mmp.tic.activities.authenticate.RegisterActivity"
             android:label="@string/title_activity_register"
-            android:parentActivityName="ro.mmp.tic.activities.authenticate.AuthenticationActivity" >
+            android:parentActivityName="ro.mmp.tic.activities.authenticate.AuthenticationActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ro.mmp.tic.activities.authenticate.AuthenticationActivity" />
         </activity>
         <activity
             android:name="ro.mmp.tic.activities.CentralActivity"
-            android:label="@string/title_activity_central" >
+            android:label="@string/title_activity_central"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="ro.mmp.tic.activities.streetmap.StreetMapActivity"
@@ -81,7 +87,8 @@
         <activity
             android:name="ro.mmp.tic.activities.streetmap.PresentationActivity"
             android:label="@string/title_activity_presentation"
-            android:parentActivityName="ro.mmp.tic.activities.streetmap.StreetMapActivity" >
+            android:parentActivityName="ro.mmp.tic.activities.streetmap.StreetMapActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ro.mmp.tic.activities.streetmap.StreetMapActivity" />
@@ -89,7 +96,8 @@
         <activity
             android:name="ro.mmp.tic.activities.streetmap.OpinionActivity"
             android:label="@string/title_activity_opinion"
-            android:parentActivityName="ro.mmp.tic.activities.streetmap.PresentationActivity" >
+            android:parentActivityName="ro.mmp.tic.activities.streetmap.PresentationActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ro.mmp.tic.activities.streetmap.PresentationActivity" />
@@ -97,10 +105,16 @@
         <activity
             android:name="ro.mmp.tic.activities.streetmap.SelectActivity"
             android:label="@string/title_activity_select"
-            android:parentActivityName="ro.mmp.tic.activities.CentralActivity" >
+            android:parentActivityName="ro.mmp.tic.activities.CentralActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ro.mmp.tic.activities.CentralActivity" />
+        </activity>
+        <activity
+            android:name="ro.mmp.tic.activities.ScheduleActivity"
+            android:label="@string/title_activity_schedule"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

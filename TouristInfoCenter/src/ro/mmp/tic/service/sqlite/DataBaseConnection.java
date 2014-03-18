@@ -6,9 +6,12 @@ import java.util.HashMap;
 import ro.mmp.tic.adapter.model.MapModel;
 import ro.mmp.tic.domain.Category;
 import ro.mmp.tic.domain.Like;
+import ro.mmp.tic.domain.Presentation;
+import ro.mmp.tic.domain.Schedule;
 import ro.mmp.tic.domain.Topic;
 import ro.mmp.tic.domain.Type;
 import ro.mmp.tic.service.sqlite.sqliteservice.UpdateCategoryService;
+import ro.mmp.tic.service.sqlite.sqliteservice.UpdatePresentationService;
 import ro.mmp.tic.service.sqlite.sqliteservice.UpdateTopicService;
 import ro.mmp.tic.service.sqlite.sqliteservice.UpdateTypeService;
 import android.content.ContentValues;
@@ -36,6 +39,8 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		String commentTable = "create table comment(idcomment integer primary key AUTOINCREMENT, idu integer,idt integer, comment text,FOREIGN KEY(idu) references user(iduser),FOREIGN KEY(idt) references topic(idtopic))";
 		String likeTable = "create table like(idlike integer primary key AUTOINCREMENT, iduser integer, idtopic integer, likes integer,unlikes integer, FOREIGN KEY (iduser) references user(iduser), FOREIGN KEY (idtopic) references topic(idtopic))";
 		String topicTable = "create table topic(idtopic integer primary key AUTOINCREMENT, idcategory integer, idtype integer, name text, address text, lat real, lng,real, FOREIGN KEY (idcategory) references category(idcategory), FOREIGN KEY (idtype) references type(idtype))";
+		String scheduleTable = "create table schedule(idschedule integer primary key AUTOINCREMENT, date text,time text, place text)";
+		String presentationTable = "create table presentation(idpresentation integer primary key AUTOINCREMENT, idtopic integer, image text,description text,  FOREIGN KEY (idtopic) references topic(idtopic))";
 
 		db.execSQL(userTable);
 		db.execSQL(categorytable);
@@ -43,6 +48,8 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		db.execSQL(commentTable);
 		db.execSQL(likeTable);
 		db.execSQL(topicTable);
+		db.execSQL(scheduleTable);
+		db.execSQL(presentationTable);
 
 		closeDB();
 	}
@@ -56,6 +63,8 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		String categoryTable = "DROP TABLE IF EXISTS category";
 		String commentTable = "DROP TABLE IF EXISTS comment";
 		String likeTable = "DROP TABLE IF EXISTS like";
+		String scheduleTable = "DROP TABLE IF EXISTS schedule";
+		String presentationTable = "DROP TABLE IF EXISTS presentation";
 
 		db.execSQL(userTable);
 		db.execSQL(typeTable);
@@ -63,6 +72,8 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		db.execSQL(topicTable);
 		db.execSQL(commentTable);
 		db.execSQL(likeTable);
+		db.execSQL(scheduleTable);
+		db.execSQL(presentationTable);
 
 		onCreate(db);
 		closeDB();
@@ -73,7 +84,9 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		onUpgrade(db, 0, 1);
 	}
 
+	/**************************************************************************************/
 	/**
+	 * REGISTER OPERATIONS
 	 * 
 	 * @param user
 	 */
@@ -119,6 +132,8 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 			db.close();
 		}
 	}
+
+	/**************************************************************************************/
 
 	/**
 	 * Operation on Like table
@@ -180,6 +195,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 
 	}
 
+	/**************************************************************************************/
 	/**
 	 * category tables operations
 	 * 
@@ -221,6 +237,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		return category;
 	}
 
+	/**************************************************************************************/
 	/**
 	 * Type methods
 	 * 
@@ -260,18 +277,21 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		return type;
 	}
 
+	/**************************************************************************************/
 	/**
 	 * Topic methods
 	 * 
 	 * @param topics
 	 */
 
-	public void insertTopic(ArrayList<Topic> topics) {
+	public boolean insertTopic(ArrayList<Topic> topics) {
 		Log.d("DatabaeConnection", "5 incercam din nou sa inseram");
 		db = this.getWritableDatabase();
 		UpdateDataBaseService uds = new UpdateTopicService(db);
 		uds.insertTopic(topics);
 		closeDB();
+
+		return true;
 
 	}
 
@@ -301,6 +321,58 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 
 		return topic;
 	}
+
+	/**************************************************************************************/
+	/**
+	 * Presentation methods
+	 * 
+	 * @param presentations
+	 */
+
+	public void insertPresentation(ArrayList<Presentation> presentations) {
+		Log.d("DatabaeConnection", "5 incercam din nou sa inseram");
+		db = this.getWritableDatabase();
+		UpdateDataBaseService uds = new UpdatePresentationService(db);
+		uds.insertPresentation(presentations);
+		closeDB();
+
+		Log.d("DatabaeConnection", "Finished inserting presentation");
+
+	}
+
+	public Presentation getPrensetaion(String presentationName) {
+		Presentation presentation = new Presentation();
+
+		Log.d("DatabaseConnection", "GETING");
+		db = this.getWritableDatabase();
+
+		String query = "SELECT p.idpresentation,p.idtopic,p.image,p.description FROM presentation p "
+				+ "join topic t on  p.idtopic = t.idtopic "
+				+ "where t.name = '" + presentationName + "'";
+
+		Cursor cursor = db.rawQuery(query, null);
+
+		if (cursor.moveToFirst()) {
+			do {
+
+				presentation.setIdpresentation(cursor.getInt(0));
+				presentation.setIdtopic(cursor.getInt(1));
+				presentation.setImage(cursor.getString(2));
+				presentation.setDescription(cursor.getString(3));
+				Log.d("DatabaseConnection",
+						"WE HAVE SOMETHING " + presentation.getIdpresentation());
+
+			} while (cursor.moveToNext());
+		}
+
+		closeDB();
+
+		return presentation;
+	}
+
+	/**************************************************************************************/
+
+	/* METHODS FOR SELECT ACTIVITY */
 
 	public ArrayList<HashMap<String, String>> getAllCategory() {
 		ArrayList<HashMap<String, String>> allCategories = new ArrayList<HashMap<String, String>>(
@@ -400,6 +472,14 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		return allLocations;
 	}
 
+	/**************************************************************************************/
+
+	/**
+	 * CREATE THE MAP MODEL
+	 * 
+	 * @param selectedLocation
+	 * @return
+	 */
 	public ArrayList<MapModel> getMapModel(ArrayList<String> selectedLocation) {
 
 		db = this.getWritableDatabase();
@@ -439,4 +519,72 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		closeDB();
 		return mapModel;
 	}
+
+	/**************************************************************************************/
+	/**
+	 * Schedule methods
+	 * 
+	 * @param schedule
+	 */
+
+	public void saveSchedule(Schedule schedule) {
+		db = this.getWritableDatabase();
+		String sqlQuery = "Insert into schedule (date,time,place) "
+				+ "VALUES('" + schedule.getDate() + "','" + schedule.getTime()
+				+ "','" + schedule.getPlace() + "')";
+		db.execSQL(sqlQuery);
+
+		closeDB();
+
+	}
+
+	public ArrayList<Schedule> getAllSchedule() {
+
+		ArrayList<Schedule> allSchedule = new ArrayList<Schedule>(0);
+
+		db = this.getWritableDatabase();
+
+		String scheduleQuery = "SELECT s.idschedule,s.date,s.time,s.place FROM schedule s";
+
+		Cursor scheduleCursor = db.rawQuery(scheduleQuery, null);
+
+		if (scheduleCursor.moveToFirst()) {
+			do {
+				Schedule s = new Schedule();
+
+				s.setIdschedule(scheduleCursor.getInt(0));
+				s.setDate(scheduleCursor.getString(1));
+				s.setTime(scheduleCursor.getString(2));
+				s.setPlace(scheduleCursor.getString(3));
+
+				allSchedule.add(s);
+
+			} while (scheduleCursor.moveToNext());
+		}
+
+		closeDB();
+		return allSchedule;
+	}
+
+	public void updateSchedule(Schedule updateSchedule) {
+		db = this.getWritableDatabase();
+		String sqlQuery = "UPDATE schedule SET date='"
+				+ updateSchedule.getDate() + "',time='"
+				+ updateSchedule.getTime() + "',place='"
+				+ updateSchedule.getPlace() + "' WHERE idschedule ='"
+				+ updateSchedule.getIdschedule() + "'";
+		db.execSQL(sqlQuery);
+		closeDB();
+
+	}
+
+	public void deleteSchedule(Schedule schedule) {
+		db = this.getWritableDatabase();
+		String sqlQuery = "DELETE FROM schedule  WHERE idschedule ='"
+				+ schedule.getIdschedule() + "'";
+		db.execSQL(sqlQuery);
+		closeDB();
+
+	}
+
 }
