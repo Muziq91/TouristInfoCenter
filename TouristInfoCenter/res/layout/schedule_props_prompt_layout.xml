@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/navigationLayout"
+        android:layout_marginTop="20dp"
+        android:background="#c0c0c0" />
+
+    <EditText
+        android:id="@+id/placeUpdateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/timeUpdateText"
+        android:layout_below="@+id/timeUpdateText"
+        android:layout_marginTop="33dp"
+        android:ems="10" />
+
+    <Button
+        android:id="@+id/updateButton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/placeUpdateText"
+        android:layout_below="@+id/placeUpdateText"
+        android:layout_marginTop="43dp"
+        android:background="@drawable/smallbuttonback"
+        android:onClick="onUpdateButtonClick"
+        android:text="Update" />
+
+    <Button
+        android:id="@+id/deleteButton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/updateButton"
+        android:layout_alignBottom="@+id/updateButton"
+        android:layout_alignRight="@+id/placeUpdateText"
+        android:background="@drawable/smallbuttonback"
+        android:onClick="onDeleteButtonClick"
+        android:text="Delete" />
+
+    <EditText
+        android:id="@+id/dateUpdateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
+        android:ems="10"
+        android:inputType="date" />
+
+    <EditText
+        android:id="@+id/timeUpdateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/dateUpdateText"
+        android:layout_below="@+id/dateUpdateText"
+        android:layout_marginTop="48dp"
+        android:ems="10"
+        android:inputType="time" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/updateButton"
+        android:layout_marginTop="25dp"
+        android:background="#c0c0c0" />
+
+</RelativeLayout>

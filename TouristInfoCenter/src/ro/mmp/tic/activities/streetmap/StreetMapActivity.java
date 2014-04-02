@@ -9,19 +9,27 @@ package ro.mmp.tic.activities.streetmap;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import ro.mmp.tic.R;
 import ro.mmp.tic.activities.ScheduleActivity;
 import ro.mmp.tic.activities.streetmap.fragment.LocationFragment;
+import ro.mmp.tic.activities.streetmap.util.GoogleImageUtil;
+import ro.mmp.tic.activities.streetmap.util.StreetMapUtil;
 import ro.mmp.tic.adapter.model.MapModel;
 import ro.mmp.tic.domain.Schedule;
 import ro.mmp.tic.metaio.ARViewActivity;
 import ro.mmp.tic.service.sqlite.DataBaseConnection;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,14 +38,16 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -53,8 +63,13 @@ public class StreetMapActivity extends ARViewActivity implements
 		SensorsComponentAndroid.Callback {
 
 	private final String TAG = "StreetMapActivity";
+
+	// database connection
+	private DataBaseConnection dbc;
+
 	// used to create the street map
 	private ArrayList<MapModel> mapModel;
+
 	// used to order the elements seen on the street map
 	private IBillboardGroup billboardGroup;
 
@@ -64,31 +79,31 @@ public class StreetMapActivity extends ARViewActivity implements
 
 	private IRadar radar;
 
-	// Take care of schedule part
-	private int currentPosition;
-
-	// date elements
-	private int year;
-	private int month;
-	private int day;
-
-	// time elements
-	private int hour;
-	private int minute;
-
 	static final int DATE_DIALOG_ID = 100;
 	static final int TIME_DIALOG_ID = 999;
 
-	// alert view elements
+	// alert display
+	private boolean displayAlertOnce = false;
 
-	private Button prevButton;
-	private Button nextButton;
+	// util
+	private GoogleImageUtil googleUtil;
+	private StreetMapUtil streetMapUtil;
+	private File googleImagefilePath;
+	private String streetMapFile;
+	// variables for downloading the image
+	private Display display;
+	private Point size;
+	private int width;
+	private int height;
+	private double lat;
+	private double lng;
+	private static final int ZOOM = 14;
 
-	private TextView prevText;
-	private TextView nextText;
-	private TextView dateText;
-	private TextView timeText;
-	private TextView currentText;
+	// radar options
+	private float x1, x2;
+	private float y1, y2;
+	private boolean radarType = true;
+	private boolean hasChanged = false;
 
 	/**
 	 * We override the onCreate method to set up the tracking configuration
@@ -98,12 +113,12 @@ public class StreetMapActivity extends ARViewActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		/**
-		 * The gps tracking configuration will be set on the user interface
-		 * thread
-		 */
+		// gesture
 
-		// create directories before extracting the assets
+		/**
+		 * Create connection to database
+		 */
+		dbc = new DataBaseConnection(this);
 
 		/**
 		 * We need first to extract all assets so we can access them. Otherwise
@@ -118,13 +133,16 @@ public class StreetMapActivity extends ARViewActivity implements
 			AssetsManager.extractAllAssets(getApplicationContext(),
 					"streetmap", true);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
+		// map model
 		mapModel = new ArrayList<MapModel>(0);
-		DataBaseConnection dbc = new DataBaseConnection(this);
 		mapModel = dbc.getMapModel(LocationFragment.getSelectedLocation());
+
+		// create the StreetMapUtil object
+		streetMapUtil = new StreetMapUtil();
 
 	}
 
@@ -159,11 +177,112 @@ public class StreetMapActivity extends ARViewActivity implements
 	}
 
 	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+
+	}
+
+	@Override
+	public void onSurfaceCreated() {
+		// TODO Auto-generated method stub
+		super.onSurfaceCreated();
+
+	}
+
+	@Override
 	public void onLocationSensorChanged(LLACoordinate location) {
 		/**
 		 * we update the activity when location changes
 		 */
 		updateGeometriesLocation(mSensors.getLocation());
+
+	}
+
+	@Override
+	public void onDrawFrame() {
+		// TODO Auto-generated method stub
+		super.onDrawFrame();
+		/*
+		 * Log.d("StreetMap", "Entered lat:" + lat + " lng:" + lng +
+		 * " sensorLant:" + mSensors.getLocation().getLatitude() +
+		 * " sensorLong:" + mSensors.getLocation().getLongitude());
+		 */
+
+		// download map based on lcoation lat and lng
+		if (radar != null
+				&& (lat != mSensors.getLocation().getLatitude() || lng != mSensors
+						.getLocation().getLongitude())) {
+			Log.d("StreetMap", "onDrawFrame");
+			Log.d("StreetMapActivity", "Entering3 in onDrawFrame");
+			this.deleteFile("mapImage");
+			width = size.x;
+			height = size.y;
+
+			lat = mSensors.getLocation().getLatitude();
+			lng = mSensors.getLocation().getLongitude();
+
+			Log.d("StreetMapActivity", "Entering3 in onDrawFrame lat:" + lat
+					+ " lng:" + lng);
+
+			googleUtil.downloadImage(lat, lng, width, height, ZOOM);
+			googleImagefilePath = this.getFileStreamPath("mapImage.png");
+			if (googleImagefilePath.getAbsoluteFile() != null) {
+				Log.d("StreetMapActivity", "set background in onDrawFrame");
+				radar.setBackgroundTexture(googleImagefilePath.toString());
+			} else {
+				streetMapFile = AssetsManager
+						.getAssetPath("streetmap/radar.png");
+				radar.setBackgroundTexture(streetMapFile);
+
+			}
+
+		}
+		// set up the radar or map based on user click choice
+		if (radar != null && hasChanged) {
+			if (radarType) {
+				googleImagefilePath = this.getFileStreamPath("mapImage.png");
+				if (googleImagefilePath.getAbsoluteFile() != null) {
+					Log.d("StreetMapActivity", "set background in onDrawFrame");
+					radar.setBackgroundTexture(googleImagefilePath.toString());
+				}
+
+			} else {
+				streetMapFile = AssetsManager
+						.getAssetPath("streetmap/radar.png");
+				radar.setBackgroundTexture(streetMapFile);
+
+				/**
+				 * add geometries to the radar
+				 */
+
+				ArrayList<Schedule> schedules = dbc.getAllSchedule();
+
+				for (MapModel m : mapModel) {
+
+					if (isInSchedule(m, schedules)) {
+
+						m.setColor("green");
+						streetMapFile = AssetsManager
+								.getAssetPath("streetmap/green.png");
+						radar.setObjectTexture(m.getGeometry(), streetMapFile);
+
+					} else {
+
+						streetMapFile = AssetsManager.getAssetPath("streetmap/"
+								+ m.getColor() + ".png");
+						radar.setObjectTexture(m.getGeometry(), streetMapFile);
+
+					}
+					m.getGeometry().setVisible(true);
+					m.getGeometry().setPickingEnabled(true);
+
+				}
+				googleUtil.setMapModel(mapModel);
+			}
+
+			hasChanged = false;
+		}
 	}
 
 	@Override
@@ -178,6 +297,7 @@ public class StreetMapActivity extends ARViewActivity implements
 	@Override
 	protected IMetaioSDKCallback getMetaioSDKCallbackHandler() {
 		// TODO Auto-generated method stub
+
 		return null;
 	}
 
@@ -198,20 +318,19 @@ public class StreetMapActivity extends ARViewActivity implements
 	 * This method will load all geometrical coordinates and the necessary GPS
 	 * content
 	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 	private void loadGPSInformation() {
 
 		try {
 
-			/**
-			 * set the sign for each geometry
-			 */
-
+			// set up the bilboard in order for geometries not to overlap
 			billboardGroup = metaioSDK.createBillboardGroup(720, 850);
 			billboardGroup.setBillboardExpandFactors(1, 5, 30);
 			metaioSDK.setRendererClippingPlaneLimits(50, 100000000);
 			metaioSDK.setLLAObjectRenderingLimits(10, 10000); // to reduce
 																// flickering
 
+			// create geometry
 			for (MapModel m : mapModel) {
 
 				m.setGeometry(metaioSDK.createGeometryFromImage(createSign(m
@@ -228,26 +347,41 @@ public class StreetMapActivity extends ARViewActivity implements
 			/**
 			 * Create the radar
 			 */
-			radar = metaioSDK.createRadar();
-			radar.setBackgroundTexture(AssetsManager
-					.getAssetPath("streetmap/radar.png"));
 
-			radar.setRelativeToScreen(IGeometry.ANCHOR_TL);
+			Log.d("StreetMapActivity",
+					"Create googleUtil object in loadGPSInformation");
+			googleUtil = new GoogleImageUtil(mapModel, this);
 
-			/**
-			 * add geometries to the radar
-			 */
+			display = getWindowManager().getDefaultDisplay();
+			size = new Point();
+			display.getSize(size);
+			width = size.x;
+			height = size.y;
 
+			lat = mSensors.getLocation().getLatitude();
+			lng = mSensors.getLocation().getLongitude();
+			// st up the color for those lcoations that are in the schedule
+			ArrayList<Schedule> schedules = dbc.getAllSchedule();
 			for (MapModel m : mapModel) {
-				radar.add(m.getGeometry());
-
-				String file = AssetsManager.getAssetPath("streetmap/"
-						+ m.getColor() + ".png");
-				radar.setObjectTexture(m.getGeometry(), file);
-
-				m.getGeometry().setVisible(false);
-
+				if (isInSchedule(m, schedules)) {
+					m.setColor("green");
+				}
 			}
+
+			// download the first map from google maps
+			googleUtil.downloadImage(lat, lng, width, height, ZOOM);
+			Log.d("StreetMap", "Saved image");
+			googleImagefilePath = this.getFileStreamPath("mapImage.png");
+
+			// ccreate the radar
+			radar = metaioSDK.createRadar();
+			Log.d("StreetMapActivity",
+					"set background in loadGPSInformation lat:" + lat + "lng:"
+							+ lng);
+			// set radar background
+			radar.setBackgroundTexture(googleImagefilePath.toString());
+			radar.setRelativeToScreen(IGeometry.ANCHOR_TL);
+			radar.setVisible(true);
 
 			Log.i(TAG, "Set up everything ");
 
@@ -255,25 +389,22 @@ public class StreetMapActivity extends ARViewActivity implements
 
 		}
 
-	}
-
-	/**
-	 * When the user click on the gps button we make everything visible
-	 * 
-	 * @param view
-	 */
-
-	public void onGPSBUttonClick(View view) {
-
+		// set up the tracking configuration
 		@SuppressWarnings("unused")
 		boolean result = metaioSDK.setTrackingConfiguration("GPS");
 
-		radar.setVisible(true);
+	}
 
-		for (MapModel m : mapModel) {
-			m.getGeometry().setVisible(true);
+	// detect if a specific lcoation is set up in schedule
+	private boolean isInSchedule(MapModel m, ArrayList<Schedule> schedules) {
+
+		for (Schedule s : schedules) {
+			if (s.getPlace().contains(m.getGeometry().getName())) {
+				return true;
+			}
 		}
 
+		return false;
 	}
 
 	/**
@@ -282,6 +413,7 @@ public class StreetMapActivity extends ARViewActivity implements
 	 * 
 	 * @param location
 	 */
+	@SuppressLint("NewApi")
 	private void updateGeometriesLocation(LLACoordinate location) {
 
 		Log.i(TAG, "Update geometry locations ");
@@ -302,228 +434,108 @@ public class StreetMapActivity extends ARViewActivity implements
 
 	}
 
+	// we display the alert diualog prompt for setting schedules when the user
+	// presses on the geometry
+
 	@Override
 	protected void onGeometryTouched(IGeometry geometry) {
 
-		// We create the view
-		LayoutInflater layoutInflater = LayoutInflater.from(this);
-		View dialogView = layoutInflater.inflate(
-				R.layout.schedule_prompt_layout, null);
-		// set up the dialog builder
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-		alertDialogBuilder.setView(dialogView);
+		if (displayAlertOnce) {
 
-		// setUpAlert(geometry.getName());
-		// say what the buttons do
-		alertDialogBuilder
-				.setCancelable(false)
-				.setPositiveButton("Presentation",
-						new DialogInterface.OnClickListener() {
+			Log.d("StreetMap", "Enter onGeometry Touched");
+			// We create the view
+			LayoutInflater layoutInflater = LayoutInflater.from(this);
+			View dialogView = layoutInflater.inflate(
+					R.layout.schedule_prompt_layout, null); // set up the dialog
+															// builder
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+					this);
+			alertDialogBuilder.setView(dialogView);
 
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								Intent i = getIntent();
-								String username = i
-										.getStringExtra("loggedUser");
-								Intent intent = new Intent(
-										StreetMapActivity.this,
-										PresentationActivity.class);
-								intent.putExtra("loggedUser", username);
-								intent.putExtra("name",
-										mapModel.get(currentPosition)
-												.getTopic().getName());
-								startActivity(intent);
+			alertDialogBuilder.setInverseBackgroundForced(true);
 
-							}
-						})
-				.setNegativeButton("Cancel",
-						new DialogInterface.OnClickListener() {
+			Log.d("StreetMap", "set the view");
 
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.cancel();
+			// setUpAlert(geometry.getName()); // say what the buttons do
+			alertDialogBuilder
+					.setCancelable(true)
+					// set the presenation button
+					.setPositiveButton("Presentation",
+							new DialogInterface.OnClickListener() {
 
-							}
-						});
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									Intent i = getIntent();
+									String username = i
+											.getStringExtra("loggedUser");
+									Intent intent = new Intent(
+											StreetMapActivity.this,
+											PresentationActivity.class);
+									intent.putExtra("loggedUser", username);
+									intent.putExtra(
+											"name",
+											mapModel.get(
+													streetMapUtil
+															.getCurrentPosition())
+													.getTopic().getName());
+									startActivityForResult(intent, 0);
 
-		initiateDialogViewElements(dialogView);
-		setUpAlert(geometry.getName());
-		setCurrentDate();
-		setCurrentTime();
+								}
+							})
+					// set the cancel button
+					.setNegativeButton("Cancel",
+							new DialogInterface.OnClickListener() {
 
-		// create the alert dialog
-		AlertDialog alert = alertDialogBuilder.create();
-		// display the dialog
-		alert.show();
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.cancel();
 
-		/*
-		 * if (geometry.getName().equals("Botanical")) {
-		 * toastMessage("You accessed the Botanical Garden Page"); Intent intent
-		 * = new Intent(StreetMapActivity.this, PresentationActivity.class);
-		 * intent.putExtra("loggedUser", username); intent.putExtra("name",
-		 * "Botanical Garden"); startActivity(intent);
-		 * 
-		 * } else if (geometry.getName().equals("Statue")) {
-		 * toastMessage("You accessed the Matei Corvin Statue page"); Intent
-		 * intent = new Intent(StreetMapActivity.this,
-		 * PresentationActivity.class); intent.putExtra("loggedUser", username);
-		 * intent.putExtra("name", "Matei Corvin Statue");
-		 * startActivity(intent); } else if
-		 * (geometry.getName().equals("Cathedral")) { toastMessage(
-		 * "You accessed the Orthodox Cathedral Page \n Accros from it you can see the National Theatre"
-		 * ); Intent intent = new Intent(StreetMapActivity.this,
-		 * PresentationActivity.class); intent.putExtra("loggedUser", username);
-		 * intent.putExtra("name", "Orthodox Cathedral"); startActivity(intent);
-		 * } else if (geometry.getName().equals("Bastion")) {
-		 * toastMessage("You accessed the Bastionul Croitorilor page"); Intent
-		 * intent = new Intent(StreetMapActivity.this,
-		 * PresentationActivity.class); intent.putExtra("loggedUser", username);
-		 * intent.putExtra("name", "Bastionul Croitorilor");
-		 * startActivity(intent); }
-		 */
+								}
+							});
 
-	}
+			// set up the schedule alert prompt gui
+			streetMapUtil.initiateDialogViewElements(dialogView);
+			streetMapUtil.setUpAlertDialogBox(mapModel, geometry.getName(),
+					getDistance());
+			streetMapUtil.setCurrentDate();
+			streetMapUtil.setCurrentTime();
 
-	public void setUpAlert(String locatioNname) {
-
-		for (int j = 0; j < mapModel.size(); j++) {
-			if (mapModel.get(j).getTopic().getName().equals(locatioNname)) {
-				currentPosition = j;
-			}
-		}
-
-		currentText
-				.setText(mapModel.get(currentPosition).getTopic().getName()
-						+ " \n"
-						+ mapModel.get(currentPosition).getTopic().getAddress());
-
-		if (mapModel.size() == 1) {
-			prevButton.setVisibility(View.GONE);
-			prevText.setVisibility(View.GONE);
-
-			nextButton.setVisibility(View.GONE);
-			nextText.setVisibility(View.GONE);
-		} else if (mapModel.size() >= 2) {
-
-			if (currentPosition == mapModel.size() - 1) {
-				nextButton.setVisibility(View.GONE);
-				nextText.setVisibility(View.GONE);
-
-				prevButton.setVisibility(View.VISIBLE);
-				prevText.setVisibility(View.VISIBLE);
-
-				prevText.setText(mapModel.get(currentPosition - 1).getTopic()
-						.getName());
-			}
-
-			else if (currentPosition == 0) {
-				prevButton.setVisibility(View.GONE);
-				prevText.setVisibility(View.GONE);
-
-				nextButton.setVisibility(View.VISIBLE);
-				nextText.setVisibility(View.VISIBLE);
-
-				nextText.setText(mapModel.get(currentPosition + 1).getTopic()
-						.getName());
-			}
-
-			else {
-				nextButton.setVisibility(View.VISIBLE);
-				nextText.setVisibility(View.VISIBLE);
-				nextText.setText(mapModel.get(currentPosition + 1).getTopic()
-						.getName());
-				prevButton.setVisibility(View.VISIBLE);
-				prevText.setVisibility(View.VISIBLE);
-				prevText.setText(mapModel.get(currentPosition - 1).getTopic()
-						.getName());
-			}
+			// create the alert dialog
+			AlertDialog alert = alertDialogBuilder.create();
+			// display the dialog
+			Log.d("StreetMap", "Show dialog");
+			alert.show();
+			displayAlertOnce = false;
 		}
 
 	}
 
-	private void initiateDialogViewElements(View dialogView) {
-		prevButton = (Button) dialogView.findViewById(R.id.prevButton);
-		nextButton = (Button) dialogView.findViewById(R.id.nextButton);
-
-		prevText = (TextView) dialogView.findViewById(R.id.prevText);
-		nextText = (TextView) dialogView.findViewById(R.id.nextText);
-		dateText = (TextView) dialogView.findViewById(R.id.dateText);
-		timeText = (TextView) dialogView.findViewById(R.id.timeText);
-		currentText = (TextView) dialogView.findViewById(R.id.currentText);
-
+	private String getDistance() {
+		LLACoordinate target = new LLACoordinate();
+		target.setLatitude(mSensors.getLocation().getLatitude());
+		target.setLongitude(mSensors.getLocation().getLongitude());
+		double distance = mapModel.get(streetMapUtil.getCurrentPosition())
+				.getCoordinate().distanceTo(target);
+		distance = (double) distance / 1000;
+		String result = "";
+		result = new DecimalFormat("##.##").format(distance) + " KM";
+		return result;
 	}
 
 	// calculates the previouse location and sets up the GUI
 	public void goToPreviouse(View v) {
 
-		int prevPosition = currentPosition - 1;
-		if (prevPosition == 0) {
-
-			prevButton.setVisibility(View.GONE);
-			prevText.setVisibility(View.GONE);
-
-			nextButton.setVisibility(View.VISIBLE);
-			nextText.setVisibility(View.VISIBLE);
-
-			nextText.setText(mapModel.get(prevPosition + 1).getTopic()
-					.getName());
-			currentPosition = prevPosition;
-
-		} else {
-
-			nextButton.setVisibility(View.VISIBLE);
-			nextText.setVisibility(View.VISIBLE);
-			nextText.setText(mapModel.get(prevPosition + 1).getTopic()
-					.getName());
-			prevButton.setVisibility(View.VISIBLE);
-			prevText.setVisibility(View.VISIBLE);
-			prevText.setText(mapModel.get(prevPosition - 1).getTopic()
-					.getName());
-			currentPosition = prevPosition;
-
-		}
-
-		currentText.setText(mapModel.get(prevPosition).getTopic().getName()
-				+ "\n" + mapModel.get(prevPosition).getTopic().getAddress());
-
+		streetMapUtil.goToPreviouse(mapModel, getDistance());
 	}
 
 	// calculates the next location and sets up the GUI
 	public void goToNext(View v) {
-		int nextPosition = currentPosition + 1;
-		if (nextPosition == mapModel.size() - 1) {
-
-			prevButton.setVisibility(View.VISIBLE);
-			prevText.setVisibility(View.VISIBLE);
-
-			nextButton.setVisibility(View.GONE);
-			nextText.setVisibility(View.GONE);
-
-			prevText.setText(mapModel.get(nextPosition - 1).getTopic()
-					.getName());
-			currentPosition = nextPosition;
-
-		} else {
-
-			nextButton.setVisibility(View.VISIBLE);
-			nextText.setVisibility(View.VISIBLE);
-			nextText.setText(mapModel.get(nextPosition + 1).getTopic()
-					.getName());
-			prevButton.setVisibility(View.VISIBLE);
-			prevText.setVisibility(View.VISIBLE);
-			prevText.setText(mapModel.get(nextPosition - 1).getTopic()
-					.getName());
-			currentPosition = nextPosition;
-
-		}
-
-		currentText.setText(mapModel.get(nextPosition).getTopic().getName()
-				+ "\n" + mapModel.get(nextPosition).getTopic().getAddress());
+		streetMapUtil.goToNext(mapModel, getDistance());
 	}
 
-	// this method is called when we user showDialog(int id)
+	// this method is called when the user uses showDialog(int id)
 	@Override
 	protected Dialog onCreateDialog(int id) {
 
@@ -532,12 +544,13 @@ public class StreetMapActivity extends ARViewActivity implements
 
 			// set date picker as current date
 
-			return new DatePickerDialog(this, datePickerListener, year, month,
-					day);
+			return new DatePickerDialog(this, datePickerListener,
+					streetMapUtil.getYear(), streetMapUtil.getMonth(),
+					streetMapUtil.getDay());
 
 		case TIME_DIALOG_ID:
-			return new TimePickerDialog(this, timePickerListener, hour, minute,
-					true);
+			return new TimePickerDialog(this, timePickerListener,
+					streetMapUtil.getHour(), streetMapUtil.getMinute(), true);
 
 		}
 
@@ -557,21 +570,6 @@ public class StreetMapActivity extends ARViewActivity implements
 
 	}
 
-	// we set the current date in the text view
-	public void setCurrentDate() {
-
-		final Calendar calendar = Calendar.getInstance();
-
-		year = calendar.get(Calendar.YEAR);
-		month = calendar.get(Calendar.MONTH);
-		day = calendar.get(Calendar.DAY_OF_MONTH);
-
-		dateText.setText(calendar.get(Calendar.DAY_OF_MONTH) + "/"
-				+ calendar.get(Calendar.MONTH) + "/"
-				+ calendar.get(Calendar.YEAR));
-
-	}
-
 	// the date picker listener
 	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 
@@ -580,16 +578,19 @@ public class StreetMapActivity extends ARViewActivity implements
 		public void onDateSet(DatePicker view, int selectedYear,
 				int selectedMonth, int selectedDay) {
 
-			year = selectedYear;
-			month = selectedMonth;
-			day = selectedDay;
-
-			// set selected date into Text View
-			dateText.setText((month + 1) + "/" + day + "/" + year);
+			streetMapUtil.setSelectedDate(selectedYear, selectedMonth,
+					selectedDay);
 
 		}
 
 	};
+
+	// we set the current date in the text view
+	public void setCurrentDate() {
+
+		streetMapUtil.setCurrentDate();
+
+	}
 
 	/**
 	 * SET TIME
@@ -603,52 +604,60 @@ public class StreetMapActivity extends ARViewActivity implements
 
 	}
 
-	public void setCurrentTime() {
-
-		final Calendar c = Calendar.getInstance();
-
-		hour = c.get(Calendar.HOUR_OF_DAY);
-		minute = c.get(Calendar.MINUTE);
-
-		// set current time into textview
-
-		if (minute < 10) {
-
-			timeText.setText(hour + ":0" + minute);
-		} else {
-			timeText.setText(hour + ":" + minute);
-		}
-
-	}
-
 	// time picker listener
 	private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
 
 		public void onTimeSet(TimePicker view, int selectedHour,
 				int selectedMinute) {
 
-			hour = selectedHour;
-			minute = selectedMinute;
-
-			// set current time into textview
-
-			timeText.setText(hour + " : " + minute);
-
+			streetMapUtil.setSelectedTime(selectedHour, selectedMinute);
 		}
 
 	};
 
+	public void setCurrentTime() {
+		streetMapUtil.setCurrentTime();
+
+	}
+
 	// save schedule
 	public void saveSchedule(View view) {
 
-		Schedule schedule = new Schedule();
-		schedule.setTime(timeText.getText().toString());
-		schedule.setDate(dateText.getText().toString());
-		schedule.setPlace(mapModel.get(currentPosition).getTopic().getName()
-				+ "\n" + mapModel.get(currentPosition).getTopic().getAddress());
+		
 
-		DataBaseConnection dbc = new DataBaseConnection(this);
+		Schedule schedule = new Schedule();
+		schedule.setTime(streetMapUtil.getTimeText().getText().toString());
+		schedule.setDate(streetMapUtil.getDateText().getText().toString());
+		schedule.setPlace(mapModel.get(streetMapUtil.getCurrentPosition())
+				.getTopic().getName()
+				+ "\n"
+				+ mapModel.get(streetMapUtil.getCurrentPosition()).getTopic()
+						.getAddress());
+
+		streetMapUtil.setScheduledAllarm(getApplicationContext(),schedule);
+		toastMessage("date: " + schedule.getDate() + " time: "
+				+ schedule.getTime() + " place " + schedule.getPlace());
+
 		dbc.saveSchedule(schedule);
+		mapModel.get(streetMapUtil.getCurrentPosition()).setColor("green");
+
+		if (radarType) {
+			radar.remove(mapModel.get(streetMapUtil.getCurrentPosition())
+					.getGeometry());
+		} else {
+			radar.remove(mapModel.get(streetMapUtil.getCurrentPosition())
+					.getGeometry());
+			radar.add(mapModel.get(streetMapUtil.getCurrentPosition())
+					.getGeometry());
+			streetMapFile = AssetsManager.getAssetPath("streetmap/green.png");
+			radar.setObjectTexture(
+					mapModel.get(streetMapUtil.getCurrentPosition())
+							.getGeometry(), streetMapFile);
+
+		}
+
+		googleUtil.setMapModel(mapModel);
+
 	}
 
 	// schedule button
@@ -659,6 +668,114 @@ public class StreetMapActivity extends ARViewActivity implements
 
 	}
 
+	// legend button
+	public void onLegendButtonClick(View view) {
+
+		streetMapUtil.setUpLegendAlertDialog(this);
+
+	}
+
+	@Override
+	public void onGravitySensorChanged(float[] translation) {
+
+	}
+
+	@Override
+	public void onHeadingSensorChanged(float[] orientation) {
+
+	}
+
+	/**
+	 * Creates andSends a Toast message
+	 * 
+	 * @param text
+	 */
+
+	private void toastMessage(String text) {
+
+		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT)
+				.show();
+
+	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+
+		super.onTouch(v, event);
+
+		switch (event.getAction()) { // when user first touches the screen we
+										// get x and y coordinate
+		case MotionEvent.ACTION_DOWN:
+
+			x1 = event.getX();
+			y1 = event.getY();
+
+			break;
+
+		case MotionEvent.ACTION_UP:
+
+			x2 = event.getX();
+			y2 = event.getY();
+			IGeometry geometry = metaioSDK.getGeometryFromScreenCoordinates(
+					(int) x1, (int) y1, false);
+			// if UP to Down sweep event on screen
+			if (y2 - y1 > 300) {
+
+				radar.setScale(CONTEXT_RESTRICTED);
+				radar.setTranslation(mapModel.get(0).getGeometry()
+						.getTranslation());
+
+			}
+
+			// if Down to UP sweep event on screen
+			else if (y1 - y2 > 300) {
+
+				radar.setScale(RESULT_FIRST_USER);
+				radar.setTranslation(mapModel.get(0).getGeometry()
+						.getTranslation());
+			} else if (x2 < 155 && y2 < 152) {
+
+				if (radarType) {
+
+					for (MapModel m : mapModel) {
+						radar.add(m.getGeometry());
+					}
+
+					radarType = false;
+				} else {
+
+					for (MapModel m : mapModel) {
+						radar.remove(m.getGeometry());
+					}
+
+					radarType = true;
+				}
+				hasChanged = true;
+
+			}
+
+			else if (geometry != null) {
+				try {
+					Log.d("StreetMap", "On touch we detect geometry");
+
+					Log.d("StreetMap",
+							"Geometry is not null we call on geometery touched");
+					displayAlertOnce = true;
+					onGeometryTouched(geometry);
+
+				} catch (Exception e) {
+
+				}
+			}
+
+			break;
+
+		}
+
+		return true;
+	}
+
 	/**
 	 * This method creates the sign the suer sees on the device screen while
 	 * using this activity
@@ -666,7 +783,7 @@ public class StreetMapActivity extends ARViewActivity implements
 	 * @param title
 	 * @return
 	 */
-	private String createSign(String title) {
+	public String createSign(String title) {
 
 		try {
 
@@ -751,30 +868,6 @@ public class StreetMapActivity extends ARViewActivity implements
 			return null;
 		}
 		return null;
-
-	}
-
-	@Override
-	public void onGravitySensorChanged(float[] arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onHeadingSensorChanged(float[] orientation) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/**
-	 * Creates andSends a Toast message
-	 * 
-	 * @param text
-	 */
-	@SuppressWarnings("unused")
-	private void toastMessage(String text) {
-
-		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
 
 	}
 

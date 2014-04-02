@@ -70,7 +70,7 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 		super.onActivityResult(requestCode, resultCode, data);
 
 		loadDialog.dismiss();
-
+		this.deleteFile("mapImage.png");
 	}
 
 	@Override

@@ -165,8 +165,17 @@ public class SelectActivity extends FragmentActivity implements
 			Intent intent = new Intent(getApplicationContext(),
 					StreetMapActivity.class);
 			intent.putExtra("loggedUser", username);
-			startActivity(intent);
+
+			startActivityForResult(intent, 0);
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(arg0, arg1, arg2);
+
+		this.deleteFile("mapImage.png");
+		this.deleteFile("mapImageEnlarge.png");
+	}
 }

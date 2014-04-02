@@ -76,5 +76,8 @@
     <!--  -->
     <string name="schedule">Schedule</string>
     <string name="title_activity_schedule">ScheduleActivity</string>
+    <string name="legend">Legend</string>
+    <string name="title_activity_alarm">AlarmActivity</string>
+    <string name="stop_alarm">StopAlarm</string>
 
 </resources>

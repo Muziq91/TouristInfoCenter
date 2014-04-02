@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 import ro.mmp.tic.R;
 import ro.mmp.tic.activities.streetmap.SelectActivity;
-import ro.mmp.tic.activities.streetmap.StreetMapActivity;
 import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -40,7 +39,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+/*
 		DataBaseConnection dbx = new DataBaseConnection(this);
 		dbx.upgrade();
 
@@ -60,7 +59,7 @@ public class MainActivity extends Activity {
 
 		dbx.insertUserAtRegister(user);
 		dbx.insertUserAtRegister(user1);
-
+*/
 		startAgainButton = (Button) findViewById(R.id.startAgainButton);
 		activateInternetAndGps();
 
@@ -86,7 +85,7 @@ public class MainActivity extends Activity {
 				startAgainButton.setVisibility(View.VISIBLE);
 				toastMessage("Both the internet and GPS are active");
 				Intent nextActivity = new Intent(this,
-						SplashScreenActivity.class);
+						SelectActivity.class);
 				startActivityForResult(nextActivity, 0);
 			}
 		}

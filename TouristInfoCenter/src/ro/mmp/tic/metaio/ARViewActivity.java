@@ -37,6 +37,7 @@ import com.metaio.tools.SystemInfo;
  */
 public abstract class ARViewActivity extends Activity implements
 		MetaioSurfaceView.Callback, OnTouchListener {
+
 	private static boolean nativeLibsLoaded;
 
 	static {
@@ -180,7 +181,7 @@ public abstract class ARViewActivity extends Activity implements
 				startCamera();
 
 			// Set up GL surface view
-			mSurfaceView = new MetaioSurfaceView(this,null);
+			mSurfaceView = new MetaioSurfaceView(this, null);
 			mSurfaceView.registerCallback(this);
 			mSurfaceView.setKeepScreenOn(true);
 			mSurfaceView.setOnTouchListener(this);

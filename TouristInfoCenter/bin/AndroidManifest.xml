@@ -14,12 +14,14 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- GPS permission -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <!-- Camera permission -->
     <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- Storage location -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <!-- Debugging permissions -->
@@ -115,6 +117,10 @@
             android:name="ro.mmp.tic.activities.ScheduleActivity"
             android:label="@string/title_activity_schedule"
             android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="ro.mmp.tic.activities.streetmap.AlarmActivity"
+            android:label="@string/title_activity_alarm" >
         </activity>
     </application>
 

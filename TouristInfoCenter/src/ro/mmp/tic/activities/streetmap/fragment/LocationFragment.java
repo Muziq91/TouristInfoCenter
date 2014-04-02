@@ -91,7 +91,7 @@ public class LocationFragment extends Fragment implements
 	 */
 	private void toastMessage(String text) {
 
-		Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
 
 	}
 

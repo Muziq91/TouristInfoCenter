@@ -77,7 +77,7 @@ public class CategoryFragment extends Fragment {
 	private void toastMessage(String text) {
 
 		Toast.makeText(getActivity().getApplicationContext(), text,
-				Toast.LENGTH_LONG).show();
+				Toast.LENGTH_SHORT).show();
 
 	}
 
