@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -23,7 +24,7 @@
         android:layout_alignLeft="@+id/stopAlarm"
         android:layout_marginBottom="34dp"
         android:layout_marginLeft="58dp"
-        android:text="Informatio"
+        android:text="@string/alarmInfoTextString"
         android:textSize="16sp" />
 
 </RelativeLayout>

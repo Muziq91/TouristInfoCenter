@@ -16,6 +16,14 @@
     <string name="register">Register</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_register">RegisterActivity</string>
+    <string name="countrySpinner">Choose a country</string>
+
+    <string-array name="countrySpinnerArray">
+        <item> Country</item>
+        <item> Romania</item>
+        <item> England</item>
+        <item> France</item>
+    </string-array>
 
     <!-- Registration form hit values -->
     <string name="name">Name</string>
@@ -29,12 +37,19 @@
 
     <!-- For the central activity -->
     <string name="streetMap">Street Map</string>
-    <string name="googleMap">Google Map</string>
+    <string name="customMap">Custom Map</string>
 
     <!-- Metaio strings -->
 
     <string name="mySdkSignature">Vvt9sk3kKKEX/cz1Xxy2S+faVyTQ6k7tv1NjBDPJSy0=</string>
     <string name="gps">GPS</string>
+    <string name="customLocation">Add</string>
+    <string name="prevText">Prev</string>
+    <string name="nextText">Next</string>
+    <string name="currentText">Current</string>
+    <string name="timeText">Time</string>
+    <string name="dateText">Date</string>
+    <string name="saveText">Save</string>
 
     <!-- Presentation Activities String -->
 
@@ -66,18 +81,32 @@
 
     <!-- Comment Section -->
 
-    <string name="submitComment">Submit Comment</string>
+    <string name="submitComment">Submit</string>
     <string name="commentText">Comment</string>
     <string name="title_activity_select">SelectActivity</string>
 
     <!-- Location fragment -->
 
     <string name="goToMap">Go to Map</string>
-    <!--  -->
+
+    <!-- Schedule -->
     <string name="schedule">Schedule</string>
+    <string name="scheduleUpdateButton">Update</string>
+    <string name="scheduleDeleteButton">Delete</string>
     <string name="title_activity_schedule">ScheduleActivity</string>
     <string name="legend">Legend</string>
+
+    <!-- Alarm -->
     <string name="title_activity_alarm">AlarmActivity</string>
+    <string name="alarmInfoTextString">Information</string>
     <string name="stop_alarm">StopAlarm</string>
+
+    <!-- Custom map -->
+    <string name="title_activity_custom_map">CustomMapActivity</string>
+    <string name="addButton">Add</string>
+    <string name="latTextString">Lat</string>
+    <string name="LngTextString">Lng</string>
+    <string name="nameTextString">Name</string>
+    <string name="descriptionTextString">Description</string>
 
 </resources>

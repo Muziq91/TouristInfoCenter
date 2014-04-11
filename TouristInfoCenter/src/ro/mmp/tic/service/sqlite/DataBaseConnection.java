@@ -1,3 +1,10 @@
+/**
+ * @author Matei Mircea
+ * 
+ * 
+ * This class helps with the creation and maintenaince of the sqlite database
+ */
+
 package ro.mmp.tic.service.sqlite;
 
 import java.util.ArrayList;
@@ -41,6 +48,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		String topicTable = "create table topic(idtopic integer primary key AUTOINCREMENT, idcategory integer, idtype integer, name text, address text, lat real, lng,real, FOREIGN KEY (idcategory) references category(idcategory), FOREIGN KEY (idtype) references type(idtype))";
 		String scheduleTable = "create table schedule(idschedule integer primary key AUTOINCREMENT, date text,time text, place text)";
 		String presentationTable = "create table presentation(idpresentation integer primary key AUTOINCREMENT, idtopic integer, image text,description text,  FOREIGN KEY (idtopic) references topic(idtopic))";
+		String userTopicTable = "create table usertopic(idusertopic integer primary key AUTOINCREMENT, iduser integer, name text, image text,description text, lat real, lng,real,  FOREIGN KEY (iduser) references user(iduser))";
 
 		db.execSQL(userTable);
 		db.execSQL(categorytable);
@@ -50,6 +58,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		db.execSQL(topicTable);
 		db.execSQL(scheduleTable);
 		db.execSQL(presentationTable);
+		db.execSQL(userTopicTable);
 
 		closeDB();
 	}
@@ -65,6 +74,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		String likeTable = "DROP TABLE IF EXISTS like";
 		String scheduleTable = "DROP TABLE IF EXISTS schedule";
 		String presentationTable = "DROP TABLE IF EXISTS presentation";
+		String userTopicTable = "DROP TABLE IF EXISTS usertopic";
 
 		db.execSQL(userTable);
 		db.execSQL(typeTable);
@@ -74,6 +84,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		db.execSQL(likeTable);
 		db.execSQL(scheduleTable);
 		db.execSQL(presentationTable);
+		db.execSQL(userTopicTable);
 
 		onCreate(db);
 		closeDB();
@@ -541,7 +552,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 	public ArrayList<Schedule> getAllSchedule() {
 
 		ArrayList<Schedule> allSchedule = new ArrayList<Schedule>(0);
-
+		allSchedule.clear();
 		db = this.getWritableDatabase();
 
 		String scheduleQuery = "SELECT s.idschedule,s.date,s.time,s.place FROM schedule s";

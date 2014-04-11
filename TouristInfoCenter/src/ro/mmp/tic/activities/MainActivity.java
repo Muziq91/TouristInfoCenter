@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 import ro.mmp.tic.R;
 import ro.mmp.tic.activities.streetmap.SelectActivity;
+import ro.mmp.tic.activities.streetmap.custommap.CustomMapActivity;
 import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -39,27 +40,21 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-/*
-		DataBaseConnection dbx = new DataBaseConnection(this);
-		dbx.upgrade();
-
-		HashMap<String, String> user = new HashMap<String, String>(0);
-		HashMap<String, String> user1 = new HashMap<String, String>(0);
-		user.put("name", "a");
-		user.put("username", "a");
-		user.put("password", "a");
-		user.put("email", "a");
-		user.put("country", "a");
-
-		user1.put("name", "b");
-		user1.put("username", "b");
-		user1.put("password", "b");
-		user1.put("email", "b");
-		user1.put("country", "b");
-
-		dbx.insertUserAtRegister(user);
-		dbx.insertUserAtRegister(user1);
-*/
+		/*
+		 * DataBaseConnection dbx = new DataBaseConnection(this); dbx.upgrade();
+		 * 
+		 * HashMap<String, String> user = new HashMap<String, String>(0);
+		 * HashMap<String, String> user1 = new HashMap<String, String>(0);
+		 * user.put("name", "a"); user.put("username", "a");
+		 * user.put("password", "a"); user.put("email", "a");
+		 * user.put("country", "a");
+		 * 
+		 * user1.put("name", "b"); user1.put("username", "b");
+		 * user1.put("password", "b"); user1.put("email", "b");
+		 * user1.put("country", "b");
+		 * 
+		 * dbx.insertUserAtRegister(user); dbx.insertUserAtRegister(user1);
+		 */
 		startAgainButton = (Button) findViewById(R.id.startAgainButton);
 		activateInternetAndGps();
 
@@ -84,8 +79,7 @@ public class MainActivity extends Activity {
 				back++;
 				startAgainButton.setVisibility(View.VISIBLE);
 				toastMessage("Both the internet and GPS are active");
-				Intent nextActivity = new Intent(this,
-						SelectActivity.class);
+				Intent nextActivity = new Intent(this, CustomMapActivity.class);
 				startActivityForResult(nextActivity, 0);
 			}
 		}

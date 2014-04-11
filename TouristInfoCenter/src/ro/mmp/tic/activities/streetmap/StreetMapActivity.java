@@ -11,7 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import ro.mmp.tic.R;
 import ro.mmp.tic.activities.ScheduleActivity;
@@ -24,12 +23,9 @@ import ro.mmp.tic.metaio.ARViewActivity;
 import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -113,7 +109,7 @@ public class StreetMapActivity extends ARViewActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// gesture
+	
 
 		/**
 		 * Create connection to database

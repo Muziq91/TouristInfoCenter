@@ -120,7 +120,13 @@
         </activity>
         <activity
             android:name="ro.mmp.tic.activities.streetmap.AlarmActivity"
-            android:label="@string/title_activity_alarm" >
+            android:label="@string/title_activity_alarm"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="ro.mmp.tic.activities.streetmap.custommap.CustomMapActivity"
+            android:label="@string/title_activity_custom_map"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

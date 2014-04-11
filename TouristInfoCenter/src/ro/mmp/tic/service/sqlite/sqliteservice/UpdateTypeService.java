@@ -1,3 +1,9 @@
+/**
+ * @author Matei Mircea
+ * 
+ * this class extends UpdateDataBaseService  and overrides the insert Type method
+ */
+
 package ro.mmp.tic.service.sqlite.sqliteservice;
 
 import java.util.ArrayList;
@@ -14,6 +20,8 @@ public class UpdateTypeService extends UpdateDataBaseService {
 		this.db = db;
 	}
 
+	
+	@Override
 	public void insertType(ArrayList<Type> types) {
 
 		for (Type t : types) {

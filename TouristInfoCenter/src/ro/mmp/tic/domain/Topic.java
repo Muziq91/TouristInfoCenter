@@ -1,3 +1,8 @@
+/**
+ * @author Matei Mircea
+ * 
+ * Domain model of the topic
+ */
 package ro.mmp.tic.domain;
 
 public class Topic {

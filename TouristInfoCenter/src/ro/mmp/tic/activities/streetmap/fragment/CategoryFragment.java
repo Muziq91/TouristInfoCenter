@@ -1,3 +1,10 @@
+/**
+ * @author Matei Mircea
+ * 
+ * This fragment is responsible for displaying all the categories.
+ * The user should select a  category in order to select a type and after selecting the type, the
+ * user can select a lcoation
+ */
 package ro.mmp.tic.activities.streetmap.fragment;
 
 import java.util.ArrayList;
@@ -13,8 +20,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -30,6 +35,10 @@ public class CategoryFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
+		// clear other array lists
+		TypeFragment.getSeletedType().clear();
+		LocationFragment.getSelectedLocation().clear();
 
 		View rootView = inflater.inflate(R.layout.fragment_category_layout,
 				container, false);

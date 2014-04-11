@@ -118,7 +118,6 @@ public class SelectActivity extends FragmentActivity implements
 
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction arg1) {
-		// TODO Auto-generated method stub
 
 	}
 

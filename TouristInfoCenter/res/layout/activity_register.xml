@@ -89,13 +89,19 @@
 
             <!-- Country textfield -->
 
-            <EditText
-                android:id="@+id/country"
-                android:layout_width="fill_parent"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:hint="@string/country"
-                android:singleLine="true" />
+                android:gravity="center_horizontal"
+                android:text="@string/country" />
+
+            <Spinner
+                android:id="@+id/countrySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/countrySpinnerArray"
+                android:gravity="center_horizontal"
+                android:prompt="@string/countrySpinner" />
 
             <!-- Register Button -->
 

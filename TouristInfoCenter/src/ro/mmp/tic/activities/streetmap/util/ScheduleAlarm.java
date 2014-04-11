@@ -1,3 +1,9 @@
+/**
+ * @author Matei Mircea
+ * 
+ * Helps plan the schedule for the user
+ */
+
 package ro.mmp.tic.activities.streetmap.util;
 
 import ro.mmp.tic.activities.streetmap.AlarmActivity;

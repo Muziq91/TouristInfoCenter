@@ -1,3 +1,10 @@
+/**
+ * @author Matei Mircea
+ * 
+ * 
+ * used as part of the strategy design pattern and is used to get all the comments
+ */
+
 package ro.mmp.tic.service.userservice.strategy.comment;
 
 import java.sql.Connection;

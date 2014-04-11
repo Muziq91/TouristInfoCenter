@@ -10,7 +10,8 @@
         android:id="@+id/navigationLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:paddingTop="4dp" >
 
         <Button
             android:id="@+id/prevButton"
@@ -32,7 +33,7 @@
             android:layout_alignBottom="@+id/nextText"
             android:layout_alignRight="@+id/prevButton"
             android:layout_below="@id/prevButton"
-            android:text="Prev" />
+            android:text="@string/prevText" />
 
         <Button
             android:id="@+id/nextButton"
@@ -52,18 +53,19 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/nextButton"
             android:layout_below="@+id/nextButton"
-            android:text="Next" />
+            android:text="@string/nextText" />
 
         <TextView
             android:id="@+id/currentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_alignBottom="@+id/prevButton"
+            android:layout_toLeftOf="@+id/nextButton"
+            android:layout_toRightOf="@+id/prevButton"
             android:background="@drawable/rectangle"
-            android:paddingTop="4dp"
-            android:text="Current"
-            android:textSize="16sp"
+            android:paddingTop="3dp"
+            android:text="@string/currentText"
+            android:textSize="14sp"
             android:textStyle="bold" />
     </RelativeLayout>
 
@@ -82,36 +84,71 @@
         android:layout_marginTop="57dp"
         android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/timeButton"
-            style="?android:attr/buttonStyleSmall"
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/saveButton"
+            android:background="#c0c0c0" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="#c0c0c0" />
+
+        <TextView
+            android:id="@+id/timeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/timeButton"
+            android:layout_alignBottom="@+id/timeButton"
             android:layout_alignLeft="@+id/saveButton"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="70dp"
-            android:background="@drawable/time"
-            android:onClick="setTime" />
+            android:background="@drawable/rectangle"
+            android:text="@string/timeText" />
 
         <Button
             android:id="@+id/saveButton"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/dateButton"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/buttonback"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/smallbuttonback"
             android:onClick="saveSchedule"
-            android:text="Save Schedule" />
+            android:text="@string/saveText" />
+
+        <Button
+            android:id="@+id/timeButton"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/dateButton"
+            android:layout_below="@+id/view2"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/time"
+            android:onClick="setTime" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/timeButton"
+            android:layout_marginTop="16dp"
+            android:background="#c0c0c0" />
 
         <Button
             android:id="@+id/dateButton"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/saveButton"
-            android:layout_alignLeft="@+id/timeButton"
-            android:layout_marginBottom="16dp"
+            android:layout_below="@+id/view1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="21dp"
             android:background="@drawable/date"
             android:onClick="setDate" />
 
@@ -123,32 +160,7 @@
             android:layout_alignBottom="@+id/dateButton"
             android:layout_alignLeft="@+id/saveButton"
             android:background="@drawable/rectangle"
-            android:text="Date" />
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dp"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/saveButton"
-            android:background="#c0c0c0" />
-
-        <TextView
-            android:id="@+id/timeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/timeButton"
-            android:layout_alignBottom="@+id/timeButton"
-            android:layout_alignRight="@+id/dateText"
-            android:background="@drawable/rectangle"
-            android:text="Time" />
+            android:text="@string/dateText" />
     </RelativeLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/navigationLayout"
-        android:layout_marginTop="20dp"
-        android:background="#c0c0c0" />
 
 </RelativeLayout>

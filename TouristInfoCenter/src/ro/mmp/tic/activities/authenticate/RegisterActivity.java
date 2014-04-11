@@ -26,7 +26,10 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class RegisterActivity extends Activity implements
@@ -37,8 +40,10 @@ public class RegisterActivity extends Activity implements
 	private EditText password;
 	private EditText repassword;
 	private EditText email;
+	private String userCountry;
+	private boolean countrySelected = false;
 	private ProgressDialog loadDialog;
-	private EditText country;
+	private Spinner countrySpinner;
 
 	private boolean canRegister = false;
 	private DataBaseConnection dataBaseConnection;
@@ -77,7 +82,7 @@ public class RegisterActivity extends Activity implements
 		user.setUsername(username.getText().toString());
 		user.setPassword(password.getText().toString());
 		user.setEmail(email.getText().toString());
-		user.setCountry(country.getText().toString());
+		user.setCountry(userCountry);
 
 		return user;
 	}
@@ -90,7 +95,27 @@ public class RegisterActivity extends Activity implements
 		password = (EditText) findViewById(R.id.password);
 		repassword = (EditText) findViewById(R.id.repassword);
 		email = (EditText) findViewById(R.id.email);
-		country = (EditText) findViewById(R.id.country);
+		countrySpinner = (Spinner) findViewById(R.id.countrySpinner);
+
+		countrySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> adapterView, View view,
+					int position, long id) {
+
+				userCountry = countrySpinner.getItemAtPosition(position)
+						.toString();
+
+				countrySelected = true;
+
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				countrySelected = false;
+
+			}
+		});
 
 		if (name.getText().toString().matches("")) {
 			toastMessage("Name can not be empty");
@@ -102,11 +127,13 @@ public class RegisterActivity extends Activity implements
 			toastMessage("Please re type the password");
 		} else if (email.getText().toString().matches("")) {
 			toastMessage("Email can not be empty");
-		} else if (country.getText().toString().matches("")) {
-			toastMessage("Country can not be empty");
-		} else if (!password.getText().toString()
+		}
+		if (!password.getText().toString()
 				.equals(repassword.getText().toString())) {
 			toastMessage("Passwords must match");
+		} else if (countrySelected == false) {
+			toastMessage("You must select a country");
+
 		} else {
 
 			loadDialog.setTitle("Loading Content...");
@@ -117,12 +144,12 @@ public class RegisterActivity extends Activity implements
 			try {
 				loadDialog.show();
 			} catch (Exception e) {
-				// WindowManager$BadTokenException will be caught and the app
-				// would not display
-				// the 'Force Close' message
+
 			}
+
 			canRegister = true;
 		}
+
 	}
 
 	/**

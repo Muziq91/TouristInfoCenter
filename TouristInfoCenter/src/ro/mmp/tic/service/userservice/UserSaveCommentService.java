@@ -1,3 +1,10 @@
+/**
+ * @author Matei Mircea
+ * 
+ * 
+ * extends User service and is used to update the comment table
+ */
+
 package ro.mmp.tic.service.userservice;
 
 import java.sql.SQLException;

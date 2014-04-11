@@ -1,31 +1,34 @@
+/**
+ * @author Matei Mircea
+ * 
+ * this is the schedule activity which allows the user to see his schedule items, update or
+ * delete them
+ */
+
 package ro.mmp.tic.activities;
 
 import java.util.ArrayList;
-
-import org.w3c.dom.Text;
+import java.util.HashMap;
+import java.util.List;
 
 import ro.mmp.tic.R;
 import ro.mmp.tic.domain.Schedule;
 import ro.mmp.tic.service.sqlite.DataBaseConnection;
-import ro.mmp.tic.service.sqlite.UpdateDataBaseService;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.DatabaseErrorHandler;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ScheduleActivity extends ListActivity {
+public class ScheduleActivity extends Activity {
 
 	private ListView listView;
 	private ArrayList<Schedule> allSchedule;
@@ -33,7 +36,7 @@ public class ScheduleActivity extends ListActivity {
 	private TextView timeUpdateText;
 	private TextView dateUpdateText;
 	private int clickPosition;
-	AlertDialog scheduleAlertDialog;
+	private AlertDialog scheduleAlertDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,28 +44,37 @@ public class ScheduleActivity extends ListActivity {
 		setContentView(R.layout.activity_schedule);
 
 		allSchedule = new ArrayList<Schedule>(0);
+		ArrayList<String> allStringSchedule = new ArrayList<String>(0);
+		allSchedule.clear();
 		allSchedule = getAllSchedule();
-		// create an ArrayAdaptar from the String Array
-		ArrayAdapter<Schedule> dataAdapter = new ScheduleArrayAdapter(
-				getApplicationContext(), R.layout.activity_schedule,
-				allSchedule);
 
-		/*
-		 * listView = (ListView) getActivity().findViewById( R.id.listView1);
-		 */
+		for (Schedule s : allSchedule) {
+			String text = s.getPlace() + "\n" + s.getDate() + "\n"
+					+ s.getTime();
+			allStringSchedule.add(text);
+		}
 
-		listView = (ListView) findViewById(android.R.id.list);
+		listView = (ListView) findViewById(R.id.scheduleListView);
+		final ScheduleArrayAdapter adapter = new ScheduleArrayAdapter(this,
+				android.R.layout.simple_list_item_1, allStringSchedule);
 
-		// Assign adapter to ListView
-		listView.setAdapter(dataAdapter);
+		listView.setAdapter(adapter);
+
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				createDialogView(position);
+
+			}
+
+		});
 
 	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// TODO Auto-generated method stub
-		super.onListItemClick(l, v, position, id);
-
+	private void createDialogView(int position) {
 		this.clickPosition = position;
 		// We create the view
 		LayoutInflater layoutInflater = LayoutInflater.from(this);
@@ -91,6 +103,7 @@ public class ScheduleActivity extends ListActivity {
 		scheduleAlertDialog = alertDialogBuilder.create();
 		// display the dialog
 		scheduleAlertDialog.show();
+
 	}
 
 	private void initiateViewElements(View dialogView) {
@@ -119,16 +132,21 @@ public class ScheduleActivity extends ListActivity {
 
 		dbc.updateSchedule(updateSchedule);
 
+		ArrayList<String> allStringSchedule = new ArrayList<String>(0);
 		allSchedule = new ArrayList<Schedule>(0);
 		allSchedule = getAllSchedule();
 
-		// create an ArrayAdaptar from the String Array
-		ArrayAdapter<Schedule> dataAdapter = new ScheduleArrayAdapter(
-				getApplicationContext(), R.layout.activity_schedule,
-				allSchedule);
+		for (Schedule s : allSchedule) {
+			String text = s.getPlace() + "\n" + s.getDate() + "\n"
+					+ s.getTime();
+			allStringSchedule.add(text);
+		}
 
-		// Assign adapter to ListView
-		listView.setAdapter(dataAdapter);
+		listView = (ListView) findViewById(R.id.scheduleListView);
+		final ScheduleArrayAdapter adapter = new ScheduleArrayAdapter(this,
+				android.R.layout.simple_list_item_1, allStringSchedule);
+
+		listView.setAdapter(adapter);
 
 		scheduleAlertDialog.cancel();
 
@@ -139,16 +157,21 @@ public class ScheduleActivity extends ListActivity {
 
 		dbc.deleteSchedule(allSchedule.get(clickPosition));
 
+		ArrayList<String> allStringSchedule = new ArrayList<String>(0);
 		allSchedule = new ArrayList<Schedule>(0);
 		allSchedule = getAllSchedule();
 
-		// create an ArrayAdaptar from the String Array
-		ArrayAdapter<Schedule> dataAdapter = new ScheduleArrayAdapter(
-				getApplicationContext(), R.layout.activity_schedule,
-				allSchedule);
+		for (Schedule s : allSchedule) {
+			String text = s.getPlace() + "\n" + s.getDate() + "\n"
+					+ s.getTime();
+			allStringSchedule.add(text);
+		}
 
-		// Assign adapter to ListView
-		listView.setAdapter(dataAdapter);
+		listView = (ListView) findViewById(R.id.scheduleListView);
+		final ScheduleArrayAdapter adapter = new ScheduleArrayAdapter(this,
+				android.R.layout.simple_list_item_1, allStringSchedule);
+
+		listView.setAdapter(adapter);
 
 		scheduleAlertDialog.cancel();
 
@@ -173,50 +196,29 @@ public class ScheduleActivity extends ListActivity {
 
 	}
 
-	private class ScheduleArrayAdapter extends ArrayAdapter<Schedule> {
+	private class ScheduleArrayAdapter extends ArrayAdapter<String> {
 
-		private ArrayList<Schedule> scheduleList;
+		HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
 
 		public ScheduleArrayAdapter(Context context, int textViewResourceId,
-				ArrayList<Schedule> scheduleList) {
-			super(context, textViewResourceId, scheduleList);
-			this.scheduleList = new ArrayList<Schedule>();
-			this.scheduleList.addAll(scheduleList);
-		}
-
-		private class ViewHolder {
-			TextView text;
-
+				List<String> objects) {
+			super(context, textViewResourceId, objects);
+			for (int i = 0; i < objects.size(); ++i) {
+				mIdMap.put(objects.get(i), i);
+			}
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-
-			ViewHolder holder = null;
-
-			Log.v("ConvertView", String.valueOf(position));
-
-			if (convertView == null) {
-
-				LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-				convertView = vi.inflate(R.layout.schedule_row_layout, null);
-
-				holder = new ViewHolder();
-				holder.text = (TextView) convertView
-						.findViewById(R.id.scheduleLocation);
-
-				convertView.setTag(holder);
-
-				Schedule state = scheduleList.get(position);
-
-				String text = state.getPlace() + "\n" + state.getDate() + "\n"
-						+ state.getTime();
-				holder.text.setText(text);
-
-			}
-			return convertView;
+		public long getItemId(int position) {
+			String item = getItem(position);
+			return mIdMap.get(item);
 		}
+
+		@Override
+		public boolean hasStableIds() {
+			return true;
+		}
+
 	}
 
 }

@@ -1,3 +1,8 @@
+/**
+ *@author Matei Mircea
+ *
+ * The domain model of the like table
+ */
 package ro.mmp.tic.domain;
 
 public class Like {

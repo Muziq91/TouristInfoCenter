@@ -1,3 +1,9 @@
+/**
+ * @author Matei Mircea
+ * 
+ * This class extends the UpdateDataBaseService and overrides theinsertCategory method
+ */
+
 package ro.mmp.tic.service.sqlite.sqliteservice;
 
 import java.util.ArrayList;
@@ -14,6 +20,7 @@ public class UpdateCategoryService extends UpdateDataBaseService {
 		this.db = db;
 	}
 
+	@Override
 	public void insertCategory(ArrayList<Category> categories) {
 
 		for (Category c : categories) {

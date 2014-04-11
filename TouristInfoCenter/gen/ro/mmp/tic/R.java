@@ -8,6 +8,9 @@
 package ro.mmp.tic;
 
 public final class R {
+    public static final class array {
+        public static final int countrySpinnerArray=0x7f0a0000;
+    }
     public static final class attr {
     }
     public static final class color {
@@ -121,150 +124,165 @@ public final class R {
         public static final int web_stop_pressed=0x7f020051;
     }
     public static final class id {
-        public static final int actionButtonContainer=0x7f060040;
-        public static final int action_settings=0x7f060063;
+        public static final int actionButtonContainer=0x7f06004c;
+        public static final int action_settings=0x7f06006f;
+        public static final int addButton=0x7f060037;
         public static final int alarmInfoText=0x7f060008;
         public static final int audioButton=0x7f060002;
-        public static final int buttonClose=0x7f060031;
-        public static final int buttonShare=0x7f06005e;
-        public static final int buttonWebBack=0x7f06005f;
-        public static final int buttonWebForward=0x7f060062;
-        public static final int buttonWebReload=0x7f060061;
-        public static final int buttonWebStop=0x7f060060;
+        public static final int buttonClose=0x7f06003d;
+        public static final int buttonShare=0x7f06006a;
+        public static final int buttonWebBack=0x7f06006b;
+        public static final int buttonWebForward=0x7f06006e;
+        public static final int buttonWebReload=0x7f06006d;
+        public static final int buttonWebStop=0x7f06006c;
         public static final int callButton=0x7f060005;
-        public static final int category=0x7f060028;
-        public static final int chartView=0x7f06001d;
-        public static final int checkCategory=0x7f060029;
-        public static final int checkLocation=0x7f060035;
-        public static final int checkType=0x7f060059;
-        public static final int comment=0x7f06002b;
-        public static final int commentButton=0x7f060016;
-        public static final int commentText=0x7f060015;
-        public static final int country=0x7f060021;
-        public static final int currentText=0x7f060047;
-        public static final int dateButton=0x7f06004b;
-        public static final int dateText=0x7f06004c;
-        public static final int dateUpdateText=0x7f060053;
-        public static final int deleteButton=0x7f060052;
-        public static final int details=0x7f060041;
-        public static final int email=0x7f060020;
+        public static final int category=0x7f06002b;
+        public static final int chartView=0x7f060021;
+        public static final int checkCategory=0x7f06002c;
+        public static final int checkLocation=0x7f060041;
+        public static final int checkType=0x7f060065;
+        public static final int comment=0x7f06002e;
+        public static final int commentButton=0x7f06001a;
+        public static final int commentText=0x7f060019;
+        public static final int countrySpinner=0x7f060025;
+        public static final int currentText=0x7f060053;
+        public static final int customMap=0x7f06000f;
+        public static final int dateButton=0x7f060059;
+        public static final int dateText=0x7f06005b;
+        public static final int dateUpdateText=0x7f060060;
+        public static final int deleteButton=0x7f06005f;
+        public static final int descriptionText=0x7f060030;
+        public static final int details=0x7f06004d;
+        public static final int email=0x7f060024;
         public static final int emailButton=0x7f060006;
-        public static final int goToMap=0x7f06002e;
-        public static final int googleMap=0x7f06000e;
+        public static final int goToMap=0x7f06003a;
         public static final int header=0x7f060009;
         public static final int homePageButton=0x7f060000;
-        public static final int html5viewcontainer=0x7f060032;
-        public static final int imageAttribution=0x7f060038;
+        public static final int html5viewcontainer=0x7f06003e;
+        public static final int imageAttribution=0x7f060044;
         public static final int imageButton=0x7f060001;
-        public static final int imagePOIThumbnail=0x7f060037;
-        public static final int imagePointer=0x7f06003a;
-        public static final int imageView=0x7f060019;
-        public static final int layoutRotated=0x7f060036;
-        public static final int layoutToast=0x7f060056;
-        public static final int legendButton=0x7f060027;
-        public static final int legendText=0x7f060033;
-        public static final int likeButton=0x7f06001c;
+        public static final int imageButtonTakePicture=0x7f060036;
+        public static final int imagePOIThumbnail=0x7f060043;
+        public static final int imagePointer=0x7f060046;
+        public static final int imageView=0x7f06001d;
+        public static final int imageViewReturnPicture=0x7f060035;
+        public static final int latText=0x7f060032;
+        public static final int layoutRotated=0x7f060042;
+        public static final int layoutToast=0x7f060062;
+        public static final int legendButton=0x7f06002a;
+        public static final int legendText=0x7f06003f;
+        public static final int likeButton=0x7f060020;
         public static final int linearLayout1=0x7f06000c;
-        public static final int linearlayout=0x7f06002c;
-        public static final int listView1=0x7f06002d;
-        public static final int listView2=0x7f060030;
-        public static final int listView3=0x7f06002f;
-        public static final int location=0x7f060034;
-        public static final int login=0x7f060011;
+        public static final int linearlayout=0x7f060038;
+        public static final int listView1=0x7f060039;
+        public static final int listView2=0x7f06003c;
+        public static final int listView3=0x7f06003b;
+        public static final int lngText=0x7f060033;
+        public static final int loationLayout=0x7f060031;
+        public static final int location=0x7f060040;
+        public static final int locationButton=0x7f060011;
+        public static final int login=0x7f060015;
         public static final int loginButton=0x7f06000b;
-        public static final int logo=0x7f060024;
-        public static final int name=0x7f06001e;
-        public static final int navigationLayout=0x7f060042;
-        public static final int nextButton=0x7f060046;
-        public static final int nextText=0x7f060045;
-        public static final int pager=0x7f060023;
-        public static final int password=0x7f060010;
-        public static final int placeUpdateText=0x7f06004f;
-        public static final int presentation=0x7f060018;
-        public static final int prevButton=0x7f060043;
-        public static final int prevText=0x7f060044;
-        public static final int progressBar=0x7f06005b;
-        public static final int ratingbar=0x7f06003c;
-        public static final int register=0x7f060022;
+        public static final int logo=0x7f060029;
+        public static final int name=0x7f060022;
+        public static final int nameText=0x7f06002f;
+        public static final int navigationLayout=0x7f06004e;
+        public static final int nextButton=0x7f060052;
+        public static final int nextText=0x7f060051;
+        public static final int pager=0x7f060028;
+        public static final int password=0x7f060014;
+        public static final int placeUpdateText=0x7f06005c;
+        public static final int presentation=0x7f06001c;
+        public static final int prevButton=0x7f06004f;
+        public static final int prevText=0x7f060050;
+        public static final int progressBar=0x7f060067;
+        public static final int ratingbar=0x7f060048;
+        public static final int register=0x7f060026;
         public static final int registerButton=0x7f06000a;
-        public static final int remember=0x7f060012;
-        public static final int repassword=0x7f06001f;
-        public static final int root=0x7f06005c;
+        public static final int remember=0x7f060016;
+        public static final int repassword=0x7f060023;
+        public static final int root=0x7f060068;
         public static final int routeButton=0x7f060004;
-        public static final int saveButton=0x7f06004a;
-        public static final int scheduleButton=0x7f060026;
-        public static final int scheduleLayout=0x7f060048;
-        public static final int scheduleLocation=0x7f060055;
-        public static final int scrollButtonContainer=0x7f06003f;
-        public static final int scrollContainer=0x7f06003d;
-        public static final int startAgainButton=0x7f060013;
+        public static final int saveButton=0x7f060055;
+        public static final int schedule=0x7f06000e;
+        public static final int scheduleButton=0x7f060012;
+        public static final int scheduleLayout=0x7f060054;
+        public static final int scheduleListView=0x7f060027;
+        public static final int scheduleLocation=0x7f060061;
+        public static final int scrollButtonContainer=0x7f06004b;
+        public static final int scrollContainer=0x7f060049;
+        public static final int startAgainButton=0x7f060017;
         public static final int stopAlarm=0x7f060007;
         public static final int streetMap=0x7f06000d;
-        public static final int streetMapLayout=0x7f060025;
-        public static final int tableRow1=0x7f060014;
-        public static final int tableRow2=0x7f060017;
-        public static final int textPOIDescription=0x7f06003e;
-        public static final int textPOILocation=0x7f06003b;
-        public static final int textPOIName=0x7f060039;
-        public static final int textToast=0x7f060057;
-        public static final int textView=0x7f06001a;
-        public static final int timeButton=0x7f060049;
-        public static final int timeText=0x7f06004d;
-        public static final int timeUpdateText=0x7f060050;
-        public static final int type=0x7f060058;
-        public static final int unlikeButton=0x7f06001b;
-        public static final int updateButton=0x7f060051;
-        public static final int userName=0x7f06002a;
-        public static final int username=0x7f06000f;
+        public static final int streetMapLayout=0x7f060010;
+        public static final int tableRow1=0x7f060018;
+        public static final int tableRow2=0x7f06001b;
+        public static final int takePictureLayout=0x7f060034;
+        public static final int textPOIDescription=0x7f06004a;
+        public static final int textPOILocation=0x7f060047;
+        public static final int textPOIName=0x7f060045;
+        public static final int textToast=0x7f060063;
+        public static final int textView=0x7f06001e;
+        public static final int timeButton=0x7f060058;
+        public static final int timeText=0x7f060057;
+        public static final int timeUpdateText=0x7f06005d;
+        public static final int type=0x7f060064;
+        public static final int unlikeButton=0x7f06001f;
+        public static final int updateButton=0x7f06005e;
+        public static final int userName=0x7f06002d;
+        public static final int username=0x7f060013;
         public static final int videoButton=0x7f060003;
-        public static final int view1=0x7f06004e;
-        public static final int view2=0x7f060054;
-        public static final int webBottomBar=0x7f06005d;
-        public static final int webView=0x7f06005a;
+        public static final int view1=0x7f06005a;
+        public static final int view2=0x7f060056;
+        public static final int webBottomBar=0x7f060069;
+        public static final int webView=0x7f060066;
     }
     public static final class layout {
         public static final int activity_alarm=0x7f030000;
         public static final int activity_authentication=0x7f030001;
         public static final int activity_central=0x7f030002;
-        public static final int activity_login=0x7f030003;
-        public static final int activity_main=0x7f030004;
-        public static final int activity_opinion=0x7f030005;
-        public static final int activity_presentation=0x7f030006;
-        public static final int activity_register=0x7f030007;
-        public static final int activity_schedule=0x7f030008;
-        public static final int activity_select=0x7f030009;
-        public static final int activity_splash_screen=0x7f03000a;
-        public static final int activity_streetmap=0x7f03000b;
-        public static final int button_action_detail=0x7f03000c;
-        public static final int category_row_layout=0x7f03000d;
-        public static final int comment_list_layout=0x7f03000e;
-        public static final int fragment_category_layout=0x7f03000f;
-        public static final int fragment_location_layout=0x7f030010;
-        public static final int fragment_type_layout=0x7f030011;
-        public static final int html5container=0x7f030012;
-        public static final int legend_prompt_layout=0x7f030013;
-        public static final int location_row_layout=0x7f030014;
-        public static final int poidetaildialog=0x7f030015;
-        public static final int schedule_prompt_layout=0x7f030016;
-        public static final int schedule_props_prompt_layout=0x7f030017;
-        public static final int schedule_row_layout=0x7f030018;
-        public static final int toast=0x7f030019;
-        public static final int type_row_layout=0x7f03001a;
-        public static final int webview=0x7f03001b;
-        public static final int webviewnav=0x7f03001c;
+        public static final int activity_custom_map=0x7f030003;
+        public static final int activity_login=0x7f030004;
+        public static final int activity_main=0x7f030005;
+        public static final int activity_opinion=0x7f030006;
+        public static final int activity_presentation=0x7f030007;
+        public static final int activity_register=0x7f030008;
+        public static final int activity_schedule=0x7f030009;
+        public static final int activity_select=0x7f03000a;
+        public static final int activity_splash_screen=0x7f03000b;
+        public static final int activity_streetmap=0x7f03000c;
+        public static final int button_action_detail=0x7f03000d;
+        public static final int category_row_layout=0x7f03000e;
+        public static final int comment_list_layout=0x7f03000f;
+        public static final int custom_map_prompt_layout=0x7f030010;
+        public static final int fragment_category_layout=0x7f030011;
+        public static final int fragment_location_layout=0x7f030012;
+        public static final int fragment_type_layout=0x7f030013;
+        public static final int html5container=0x7f030014;
+        public static final int legend_prompt_layout=0x7f030015;
+        public static final int location_row_layout=0x7f030016;
+        public static final int poidetaildialog=0x7f030017;
+        public static final int schedule_prompt_layout=0x7f030018;
+        public static final int schedule_props_prompt_layout=0x7f030019;
+        public static final int schedule_row_layout=0x7f03001a;
+        public static final int toast=0x7f03001b;
+        public static final int type_row_layout=0x7f03001c;
+        public static final int webview=0x7f03001d;
+        public static final int webviewnav=0x7f03001e;
     }
     public static final class menu {
-        public static final int alarm=0x7f0a0000;
-        public static final int authentication=0x7f0a0001;
-        public static final int central=0x7f0a0002;
-        public static final int login=0x7f0a0003;
-        public static final int main=0x7f0a0004;
-        public static final int opinion=0x7f0a0005;
-        public static final int presentation=0x7f0a0006;
-        public static final int register=0x7f0a0007;
-        public static final int schedule=0x7f0a0008;
-        public static final int select=0x7f0a0009;
-        public static final int splash_screen=0x7f0a000a;
+        public static final int alarm=0x7f0b0000;
+        public static final int authentication=0x7f0b0001;
+        public static final int central=0x7f0b0002;
+        public static final int custom_map=0x7f0b0003;
+        public static final int login=0x7f0b0004;
+        public static final int main=0x7f0b0005;
+        public static final int opinion=0x7f0b0006;
+        public static final int presentation=0x7f0b0007;
+        public static final int register=0x7f0b0008;
+        public static final int schedule=0x7f0b0009;
+        public static final int select=0x7f0b000a;
+        public static final int splash_screen=0x7f0b000b;
     }
     public static final class raw {
         public static final int success=0x7f040000;
@@ -753,6 +771,7 @@ public final class R {
         /**  e.g. 10m away or 4yd away. 
          */
         public static final int LBL_X_AWAY=0x7f070097;
+        public static final int LngTextString=0x7f070146;
         /**  Menu item for the context menu that appears on the web view to open an image in the browser app 
          */
         public static final int MENU_OPEN_IMG_EXTERNAL=0x7f07010b;
@@ -1072,70 +1091,101 @@ public final class R {
          */
         public static final int MSG_TITLE_WARNING=0x7f0700ab;
         public static final int action_settings=0x7f07010d;
+        public static final int addButton=0x7f070144;
+        public static final int alarmInfoTextString=0x7f070141;
         public static final int app_name=0x7f07010c;
-        public static final int bastion=0x7f070129;
-        public static final int bastionText=0x7f07012a;
-        public static final int botanical=0x7f070123;
-        public static final int botanicalText=0x7f070124;
-        public static final int cathedral=0x7f070127;
-        public static final int cathedralText=0x7f070128;
-        public static final int comment=0x7f07012d;
-        public static final int commentText=0x7f070130;
-        public static final int country=0x7f07011b;
-        public static final int email=0x7f07011a;
+        public static final int bastion=0x7f070131;
+        public static final int bastionText=0x7f070132;
+        public static final int botanical=0x7f07012b;
+        public static final int botanicalText=0x7f07012c;
+        public static final int cathedral=0x7f07012f;
+        public static final int cathedralText=0x7f070130;
+        public static final int comment=0x7f070135;
+        public static final int commentText=0x7f070138;
+        public static final int country=0x7f07011c;
+        public static final int countrySpinner=0x7f070116;
+        public static final int currentText=0x7f070126;
+        public static final int customLocation=0x7f070123;
+        public static final int customMap=0x7f070120;
+        public static final int dateText=0x7f070128;
+        public static final int descriptionTextString=0x7f070148;
+        public static final int email=0x7f07011b;
         /**  Location fragment 
+ Location fragment 
          */
-        public static final int goToMap=0x7f070132;
-        public static final int googleMap=0x7f07011f;
-        public static final int gps=0x7f070121;
+        public static final int goToMap=0x7f07013a;
+        public static final int googleMap=0x7f070149;
+        public static final int gps=0x7f070122;
         public static final int hello_world=0x7f07010e;
-        public static final int legend=0x7f070135;
+        public static final int latTextString=0x7f070145;
+        public static final int legend=0x7f07013f;
         /**  Like and unlike buttons 
+ Like and unlike buttons 
          */
-        public static final int like=0x7f07012b;
+        public static final int like=0x7f070133;
         /**  Login and Register buttons 
+ Login and Register buttons 
          */
         public static final int login=0x7f070112;
         public static final int metaioSDKSignature=0x7f070000;
         /**  Metaio strings 
+ Metaio strings 
          */
-        public static final int mySdkSignature=0x7f070120;
+        public static final int mySdkSignature=0x7f070121;
         /**  Registration form hit values 
+ Registration form hit values 
          */
-        public static final int name=0x7f070116;
-        public static final int password=0x7f070118;
+        public static final int name=0x7f070117;
+        public static final int nameTextString=0x7f070147;
+        public static final int nextText=0x7f070125;
+        public static final int password=0x7f070119;
+        public static final int prevText=0x7f070124;
         public static final int register=0x7f070113;
-        public static final int remember=0x7f07011c;
-        public static final int repassword=0x7f070119;
-        /**   
+        public static final int remember=0x7f07011d;
+        public static final int repassword=0x7f07011a;
+        public static final int saveText=0x7f070129;
+        /**  Schedule 
+  
          */
-        public static final int schedule=0x7f070133;
+        public static final int schedule=0x7f07013b;
+        public static final int scheduleDeleteButton=0x7f07013d;
+        public static final int scheduleUpdateButton=0x7f07013c;
         /**  When the user goes to the first screen but wants to go back and not exit 
+ When the user goes to the first screen but wants to go back and not exit 
          */
         public static final int startAgain=0x7f070111;
-        public static final int statue=0x7f070125;
-        public static final int statueText=0x7f070126;
-        public static final int stop_alarm=0x7f070137;
+        public static final int statue=0x7f07012d;
+        public static final int statueText=0x7f07012e;
+        public static final int stop_alarm=0x7f070142;
         /**  For the central activity 
+ For the central activity 
          */
-        public static final int streetMap=0x7f07011e;
+        public static final int streetMap=0x7f07011f;
         /**  Comment Section 
+ Comment Section 
          */
-        public static final int submitComment=0x7f07012f;
-        public static final int title_activity_alarm=0x7f070136;
+        public static final int submitComment=0x7f070137;
+        public static final int timeText=0x7f070127;
+        /**  Alarm 
+         */
+        public static final int title_activity_alarm=0x7f070140;
         public static final int title_activity_authentication=0x7f07010f;
-        public static final int title_activity_central=0x7f07011d;
-        public static final int title_activity_login=0x7f070114;
-        public static final int title_activity_opinion=0x7f07012e;
-        /**  Presentation Activities String 
+        public static final int title_activity_central=0x7f07011e;
+        /**  Custom map 
          */
-        public static final int title_activity_presentation=0x7f070122;
+        public static final int title_activity_custom_map=0x7f070143;
+        public static final int title_activity_login=0x7f070114;
+        public static final int title_activity_opinion=0x7f070136;
+        /**  Presentation Activities String 
+ Presentation Activities String 
+         */
+        public static final int title_activity_presentation=0x7f07012a;
         public static final int title_activity_register=0x7f070115;
-        public static final int title_activity_schedule=0x7f070134;
-        public static final int title_activity_select=0x7f070131;
+        public static final int title_activity_schedule=0x7f07013e;
+        public static final int title_activity_select=0x7f070139;
         public static final int title_activity_splash_screen=0x7f070110;
-        public static final int unlike=0x7f07012c;
-        public static final int username=0x7f070117;
+        public static final int unlike=0x7f070134;
+        public static final int username=0x7f070118;
     }
     public static final class style {
         /** 

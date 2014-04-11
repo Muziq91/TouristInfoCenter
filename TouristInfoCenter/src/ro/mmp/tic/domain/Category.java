@@ -1,3 +1,8 @@
+/**
+ *@author Matei Mircea
+ * 
+ * Domain model of the category table
+ */
 package ro.mmp.tic.domain;
 
 public class Category {
@@ -5,6 +10,7 @@ public class Category {
 	private int idcategory;
 	private String category;
 	private String color;
+
 	public Category() {
 
 	}

@@ -1,3 +1,10 @@
+/**
+ * @author Matei Mircea
+ * 
+ * Used as part of the strategy design pattern and saves the comments
+ * 
+ */
+
 package ro.mmp.tic.service.userservice.strategy.comment;
 
 import java.sql.Connection;

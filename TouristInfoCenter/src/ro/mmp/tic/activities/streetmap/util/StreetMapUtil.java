@@ -1,3 +1,9 @@
+/**
+ * @author Matei Mircea
+ * 
+ * helps with the streetmap functionality
+ */
+
 package ro.mmp.tic.activities.streetmap.util;
 
 import java.util.ArrayList;

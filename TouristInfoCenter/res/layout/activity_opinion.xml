@@ -6,7 +6,8 @@
     <TableRow
         android:id="@+id/tableRow1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:weightSum="100" >
 
         <!-- Comment Text -->
 
@@ -15,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dip"
+            android:layout_weight="70"
             android:hint="@string/commentText"
             android:inputType="text"
             android:singleLine="true" />
@@ -25,7 +27,8 @@
             android:id="@+id/commentButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/buttonback"
+            android:layout_weight="30"
+            android:background="@drawable/smallbuttonback"
             android:onClick="sendComment"
             android:text="@string/submitComment" />
     </TableRow>

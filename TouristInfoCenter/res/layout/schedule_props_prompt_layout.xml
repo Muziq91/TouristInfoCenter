@@ -9,7 +9,6 @@
         android:layout_width="fill_parent"
         android:layout_height="2dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/navigationLayout"
         android:layout_marginTop="20dp"
         android:background="#c0c0c0" />
 
@@ -32,7 +31,7 @@
         android:layout_marginTop="43dp"
         android:background="@drawable/smallbuttonback"
         android:onClick="onUpdateButtonClick"
-        android:text="Update" />
+        android:text="@string/scheduleUpdateButton" />
 
     <Button
         android:id="@+id/deleteButton"
@@ -44,7 +43,7 @@
         android:layout_alignRight="@+id/placeUpdateText"
         android:background="@drawable/smallbuttonback"
         android:onClick="onDeleteButtonClick"
-        android:text="Delete" />
+        android:text="@string/scheduleDeleteButton" />
 
     <EditText
         android:id="@+id/dateUpdateText"

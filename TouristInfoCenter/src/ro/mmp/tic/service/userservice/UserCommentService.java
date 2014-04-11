@@ -1,3 +1,10 @@
+/**
+ * @author Matei Mircea
+ * 
+ * extends User service and is used to get all comments
+ * 
+ */
+
 package ro.mmp.tic.service.userservice;
 
 import java.sql.SQLException;

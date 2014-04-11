@@ -1,3 +1,8 @@
+/**
+ * @author Matei Mircea
+ * 
+ * This class extends UpdateDataBaseService and overrides the insertTopic method
+ */
 package ro.mmp.tic.service.sqlite.sqliteservice;
 
 import java.util.ArrayList;
@@ -7,7 +12,6 @@ import ro.mmp.tic.domain.Topic;
 import ro.mmp.tic.service.sqlite.UpdateDataBaseService;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 public class UpdateTopicService extends UpdateDataBaseService {
 
@@ -16,6 +20,7 @@ public class UpdateTopicService extends UpdateDataBaseService {
 		this.db = db;
 	}
 
+	@Override
 	public void insertTopic(ArrayList<Topic> topics) {
 
 		for (Topic t : topics) {

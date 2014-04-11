@@ -1,3 +1,9 @@
+/**
+ * @author Matei Mircea
+ * 
+ * 
+ * Domain mdoel of the schedule
+ */
 package ro.mmp.tic.domain;
 
 public class Schedule {

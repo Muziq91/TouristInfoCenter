@@ -41,22 +41,35 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
                 android:background="@drawable/buttonback"
-                android:onClick="displayStreetMap"
+                android:onClick="onStreetMapButtonClick"
                 android:text="@string/streetMap" />
             <!-- Street map button  ends -->
 
 
-            <!-- Google map button -->
+            <!-- Schedule button -->
 
             <Button
-                android:id="@+id/googleMap"
+                android:id="@+id/schedule"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
                 android:background="@drawable/buttonback"
-                android:onClick="displayGoogleMap"
-                android:text="@string/googleMap" />
-            <!-- Google map button  ends -->
+                android:onClick="onScheduleButtonClick"
+                android:text="@string/schedule" />
+            <!-- Schedule button  ends -->
+
+
+            <!-- CustomMap button -->
+
+            <Button
+                android:id="@+id/customMap"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/buttonback"
+                android:onClick="onCustomMapButtonClick"
+                android:text="@string/customMap" />
+            <!-- CustomMap button  ends -->
         </LinearLayout>
         <!-- Central activity  Ends -->
 

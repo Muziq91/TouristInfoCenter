@@ -1,8 +1,15 @@
+/**
+ * @author Matei Mircea
+ * 
+ * The alarm activity is displayed when the ana larm goes of for a aschedule item
+ */
+
 package ro.mmp.tic.activities.streetmap;
 
 import java.io.IOException;
 
 import ro.mmp.tic.R;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -21,10 +28,13 @@ import android.widget.TextView;
 public class AlarmActivity extends Activity {
 	private MediaPlayer mMediaPlayer;
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTitle("TouristInfoCenter Alarm");
+
+		this.setFinishOnTouchOutside(false);
 
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);

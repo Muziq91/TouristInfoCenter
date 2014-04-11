@@ -1,3 +1,8 @@
+/**
+ * @author Matei Mircea
+ * This Fragment is responsible for displaying all availbale types based on the already 
+ * selected categories
+ */
 package ro.mmp.tic.activities.streetmap.fragment;
 
 import java.util.ArrayList;
@@ -32,12 +37,15 @@ public class TypeFragment extends Fragment implements TypeSelectListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+		// clear other array list
+
+		LocationFragment.getSelectedLocation().clear();
+
 		View rootView = inflater.inflate(R.layout.fragment_type_layout,
 				container, false);
 		context = getActivity().getApplicationContext();
 		listView = (ListView) rootView.findViewById(R.id.listView2);
 
-		
 		// create an ArrayAdaptar from the String Array
 		ArrayAdapter<TypeModel> dataAdapter = new TypeArrayAdapter(context,
 				R.layout.fragment_type_layout, getAllTypeModel());
@@ -54,6 +62,8 @@ public class TypeFragment extends Fragment implements TypeSelectListener {
 				.getAllTypes(CategoryFragment.getSelectedCategory());
 
 		ArrayList<TypeModel> allTypes = new ArrayList<TypeModel>(0);
+
+		allTypes.clear();
 
 		for (HashMap<String, String> t : types) {
 			TypeModel tm = new TypeModel();

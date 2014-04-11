@@ -1,3 +1,8 @@
+/**
+ * @author Matei Mircea
+ * 
+ * Domain model of the type table
+ */
 package ro.mmp.tic.domain;
 
 public class Type {

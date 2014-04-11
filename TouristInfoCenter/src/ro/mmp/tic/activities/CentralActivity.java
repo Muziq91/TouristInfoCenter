@@ -1,3 +1,9 @@
+/**
+ * @author Matei Mircea
+ * 
+ * The central activity will display all the availbale options to the user
+ */
+
 package ro.mmp.tic.activities;
 
 import java.sql.Connection;
@@ -9,6 +15,7 @@ import java.util.ArrayList;
 
 import ro.mmp.tic.R;
 import ro.mmp.tic.activities.streetmap.SelectActivity;
+import ro.mmp.tic.activities.streetmap.custommap.CustomMapActivity;
 import ro.mmp.tic.domain.Category;
 import ro.mmp.tic.domain.Presentation;
 import ro.mmp.tic.domain.Topic;
@@ -57,10 +64,25 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 		username = i.getStringExtra("loggedUser");
 	}
 
-	public void displayStreetMap(View view) {
+	public void onStreetMapButtonClick(View view) {
 		Intent intent = new Intent(CentralActivity.this, SelectActivity.class);
 		intent.putExtra("loggedUser", username);
 		startActivityForResult(intent, 0);
+
+	}
+
+	public void onScheduleButtonClick(View view) {
+		Intent intent = new Intent(CentralActivity.this, ScheduleActivity.class);
+		intent.putExtra("loggedUser", username);
+		startActivityForResult(intent, 1);
+
+	}
+
+	public void onCustomMapButtonClick(View view) {
+		Intent intent = new Intent(CentralActivity.this,
+				CustomMapActivity.class);
+		intent.putExtra("loggedUser", username);
+		startActivityForResult(intent, 1);
 
 	}
 

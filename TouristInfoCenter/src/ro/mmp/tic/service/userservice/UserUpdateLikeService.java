@@ -1,3 +1,10 @@
+/**
+ * @author Matei Mircea
+ * 
+ * 
+ * extends UserService and is used to update the user like table
+ */
+
 package ro.mmp.tic.service.userservice;
 
 import java.sql.SQLException;

@@ -1,3 +1,8 @@
+/**
+ * @author Matei Mircea
+ * 
+ * This class extends the UpdateDataBaseService and overrides the inserPresentation method
+ */
 package ro.mmp.tic.service.sqlite.sqliteservice;
 
 import java.util.ArrayList;

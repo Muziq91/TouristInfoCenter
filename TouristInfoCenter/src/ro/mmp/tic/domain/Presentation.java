@@ -1,6 +1,11 @@
+/**
+ *@author Matei Mircea
+ *
+ *Domain model of the presentation
+ * 
+ * 
+ */
 package ro.mmp.tic.domain;
-
-import android.graphics.Bitmap;
 
 public class Presentation {
 
@@ -52,7 +57,5 @@ public class Presentation {
 	public void setImage(String image) {
 		this.image = image;
 	}
-
-	
 
 }

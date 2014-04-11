@@ -1,15 +1,18 @@
+/**
+ * @author Matei Mircea
+ * 
+ * Thos fragment is responsible on selecting the locations based on the  types
+ */
 package ro.mmp.tic.activities.streetmap.fragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import ro.mmp.tic.R;
-import ro.mmp.tic.activities.streetmap.StreetMapActivity;
 import ro.mmp.tic.activities.streetmap.listeners.LocationSelectListener;
 import ro.mmp.tic.adapter.model.LocationModel;
 import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -58,6 +61,7 @@ public class LocationFragment extends Fragment implements
 
 		ArrayList<LocationModel> allLocations = new ArrayList<LocationModel>(0);
 
+		allLocations.clear();
 		for (HashMap<String, String> l : locations) {
 			LocationModel lm = new LocationModel();
 

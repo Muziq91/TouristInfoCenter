@@ -1,3 +1,10 @@
+/**
+ * @author Matei Mircea
+ * 
+ * This class is an abstract class  that helps with the insert of categories, types,topics and presentation
+ * when entering the central activity
+ */
+
 package ro.mmp.tic.service.sqlite;
 
 import java.util.ArrayList;

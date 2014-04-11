@@ -1,3 +1,9 @@
+/**
+ * @author Matei Mircea
+ * 
+ * Used to help with the download of the google iamge
+ */
+
 package ro.mmp.tic.activities.streetmap.util;
 
 import java.io.File;
@@ -69,7 +75,7 @@ public class GoogleImageUtil {
 			int zoom) {
 
 		try {
-			String url = "http://maps.google.com/maps/api/staticmap?markers="
+			String url = "http://maps.google.com/maps/api/staticmap?center="
 					+ createMarkers(lat, lng) + "&zoom=" + zoom + "&size="
 					+ width + "x" + height
 					+ "&maptype=roadmap&sensor=false&path="
@@ -112,7 +118,7 @@ public class GoogleImageUtil {
 
 	private String createMarkers(double lat, double lng) {
 
-		String markers = "color:blue%7Clabel:M%7C" + lat + "," + lng;
+		String markers = lat + "," + lng;
 
 		for (MapModel m : mapModel) {
 			markers = markers + "&markers=color:" + m.getColor() + "%7Clabel:"
