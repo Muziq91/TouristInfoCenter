@@ -155,8 +155,8 @@ public final class R {
         public static final int customMapNameLat=0x7f060048;
         public static final int customMapNameLng=0x7f060049;
         public static final int customMapNameLocation=0x7f060046;
-        public static final int dateButton=0x7f06006b;
-        public static final int dateText=0x7f06006d;
+        public static final int dateButton=0x7f060069;
+        public static final int dateText=0x7f06006c;
         public static final int dateUpdateText=0x7f060070;
         public static final int deleteButton=0x7f06003f;
         public static final int descriptionText=0x7f060032;
@@ -241,7 +241,7 @@ public final class R {
         public static final int textToast=0x7f060073;
         public static final int textView=0x7f060020;
         public static final int timeButton=0x7f06006a;
-        public static final int timeText=0x7f060069;
+        public static final int timeText=0x7f06006d;
         public static final int timeUpdateText=0x7f06006f;
         public static final int type=0x7f060074;
         public static final int unlikeButton=0x7f060021;
@@ -249,7 +249,7 @@ public final class R {
         public static final int userName=0x7f06002f;
         public static final int username=0x7f060014;
         public static final int videoButton=0x7f060003;
-        public static final int view1=0x7f06006c;
+        public static final int view1=0x7f06006b;
         public static final int view2=0x7f060068;
         public static final int webBottomBar=0x7f060079;
         public static final int webView=0x7f060076;

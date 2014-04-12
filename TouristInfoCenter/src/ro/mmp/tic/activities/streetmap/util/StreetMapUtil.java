@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import ro.mmp.tic.R;
+import ro.mmp.tic.adapter.model.CustomMapModel;
 import ro.mmp.tic.adapter.model.MapModel;
 import ro.mmp.tic.domain.Schedule;
 import android.app.AlertDialog;
@@ -104,6 +105,68 @@ public class StreetMapUtil {
 
 	}
 
+	public void setUpAlertDialogBoxCustomMap(
+			ArrayList<CustomMapModel> customMapModel, String locatioNname,
+			String distance) {
+		// get the position in the array list of the geoemrty the user touched
+		for (int j = 0; j < customMapModel.size(); j++) {
+			if (customMapModel.get(j).getUserTopic().getName()
+					.equals(locatioNname)) {
+				currentPosition = j;
+			}
+		}
+
+		// set up the current text
+
+		currentText.setText(customMapModel.get(currentPosition).getUserTopic()
+				.getName()
+				+ " \n" + "Distance:" + distance);
+
+		// set up the next and previouse buttons
+		if (customMapModel.size() == 1) {
+			prevButton.setVisibility(View.GONE);
+			prevText.setVisibility(View.GONE);
+
+			nextButton.setVisibility(View.GONE);
+			nextText.setVisibility(View.GONE);
+		} else if (customMapModel.size() >= 2) {
+
+			if (currentPosition == customMapModel.size() - 1) {
+				nextButton.setVisibility(View.GONE);
+				nextText.setVisibility(View.GONE);
+
+				prevButton.setVisibility(View.VISIBLE);
+				prevText.setVisibility(View.VISIBLE);
+
+				prevText.setText(customMapModel.get(currentPosition - 1)
+						.getUserTopic().getName());
+			}
+
+			else if (currentPosition == 0) {
+				prevButton.setVisibility(View.GONE);
+				prevText.setVisibility(View.GONE);
+
+				nextButton.setVisibility(View.VISIBLE);
+				nextText.setVisibility(View.VISIBLE);
+
+				nextText.setText(customMapModel.get(currentPosition + 1)
+						.getUserTopic().getName());
+			}
+
+			else {
+				nextButton.setVisibility(View.VISIBLE);
+				nextText.setVisibility(View.VISIBLE);
+				nextText.setText(customMapModel.get(currentPosition + 1)
+						.getUserTopic().getName());
+				prevButton.setVisibility(View.VISIBLE);
+				prevText.setVisibility(View.VISIBLE);
+				prevText.setText(customMapModel.get(currentPosition - 1)
+						.getUserTopic().getName());
+			}
+		}
+
+	}
+
 	public void goToPreviouse(ArrayList<MapModel> mapModel, String distance) {
 		int prevPosition = currentPosition - 1;
 		if (prevPosition == 0) {
@@ -168,6 +231,78 @@ public class StreetMapUtil {
 
 		currentText.setText(mapModel.get(nextPosition).getTopic().getName()
 				+ "\n" + mapModel.get(nextPosition).getTopic().getAddress()
+				+ "\n" + "Distance:" + distance);
+
+	}
+
+	public void goToPreviouseCustomMapModel(
+			ArrayList<CustomMapModel> customMapModel, String distance) {
+
+		int prevPosition = currentPosition - 1;
+		if (prevPosition == 0) {
+
+			prevButton.setVisibility(View.GONE);
+			prevText.setVisibility(View.GONE);
+
+			nextButton.setVisibility(View.VISIBLE);
+			nextText.setVisibility(View.VISIBLE);
+
+			nextText.setText(customMapModel.get(prevPosition + 1)
+					.getUserTopic().getName());
+			currentPosition = prevPosition;
+
+		} else {
+
+			nextButton.setVisibility(View.VISIBLE);
+			nextText.setVisibility(View.VISIBLE);
+			nextText.setText(customMapModel.get(prevPosition + 1)
+					.getUserTopic().getName());
+			prevButton.setVisibility(View.VISIBLE);
+			prevText.setVisibility(View.VISIBLE);
+			prevText.setText(customMapModel.get(prevPosition - 1)
+					.getUserTopic().getName());
+			currentPosition = prevPosition;
+
+		}
+
+		currentText.setText(customMapModel.get(prevPosition).getUserTopic()
+				.getName()
+				+ "\n" + "Distance:" + distance);
+
+	}
+
+	public void goToNextCustomMapModel(
+			ArrayList<CustomMapModel> customMapModel, String distance) {
+		int nextPosition = currentPosition + 1;
+		if (nextPosition == customMapModel.size() - 1) {
+
+			prevButton.setVisibility(View.VISIBLE);
+			prevText.setVisibility(View.VISIBLE);
+
+			nextButton.setVisibility(View.GONE);
+			nextText.setVisibility(View.GONE);
+
+			prevText.setText(customMapModel.get(nextPosition - 1)
+					.getUserTopic().getName());
+			currentPosition = nextPosition;
+
+		} else {
+
+			nextButton.setVisibility(View.VISIBLE);
+			nextText.setVisibility(View.VISIBLE);
+			nextText.setText(customMapModel.get(nextPosition + 1)
+					.getUserTopic().getName());
+			prevButton.setVisibility(View.VISIBLE);
+			prevText.setVisibility(View.VISIBLE);
+			prevText.setText(customMapModel.get(nextPosition - 1)
+					.getUserTopic().getName());
+			currentPosition = nextPosition;
+
+		}
+
+		currentText.setText(customMapModel.get(nextPosition).getUserTopic()
+				.getName()
+
 				+ "\n" + "Distance:" + distance);
 
 	}

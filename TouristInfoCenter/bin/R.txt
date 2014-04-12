@@ -128,8 +128,8 @@ int id customMapNameDescription 0x7f060047
 int id customMapNameLat 0x7f060048
 int id customMapNameLng 0x7f060049
 int id customMapNameLocation 0x7f060046
-int id dateButton 0x7f06006b
-int id dateText 0x7f06006d
+int id dateButton 0x7f060069
+int id dateText 0x7f06006c
 int id dateUpdateText 0x7f060070
 int id deleteButton 0x7f06003f
 int id descriptionText 0x7f060032
@@ -214,7 +214,7 @@ int id textPOIName 0x7f060057
 int id textToast 0x7f060073
 int id textView 0x7f060020
 int id timeButton 0x7f06006a
-int id timeText 0x7f060069
+int id timeText 0x7f06006d
 int id timeUpdateText 0x7f06006f
 int id type 0x7f060074
 int id unlikeButton 0x7f060021
@@ -222,7 +222,7 @@ int id updateButton 0x7f06003d
 int id userName 0x7f06002f
 int id username 0x7f060014
 int id videoButton 0x7f060003
-int id view1 0x7f06006c
+int id view1 0x7f06006b
 int id view2 0x7f060068
 int id webBottomBar 0x7f060079
 int id webView 0x7f060076

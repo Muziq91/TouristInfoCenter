@@ -99,16 +99,6 @@
             android:layout_alignParentTop="true"
             android:background="#c0c0c0" />
 
-        <TextView
-            android:id="@+id/timeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/timeButton"
-            android:layout_alignBottom="@+id/timeButton"
-            android:layout_alignLeft="@+id/saveButton"
-            android:background="@drawable/rectangle"
-            android:text="@string/timeText" />
-
         <Button
             android:id="@+id/saveButton"
             style="?android:attr/buttonStyleSmall"
@@ -158,9 +148,20 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/dateButton"
             android:layout_alignBottom="@+id/dateButton"
-            android:layout_alignLeft="@+id/saveButton"
+            android:layout_toLeftOf="@+id/saveButton"
             android:background="@drawable/rectangle"
             android:text="@string/dateText" />
+
+        <TextView
+            android:id="@+id/timeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/timeButton"
+            android:layout_alignBottom="@+id/timeButton"
+            android:layout_alignRight="@+id/dateText"
+            android:background="@drawable/rectangle"
+            android:text="@string/timeText" />
+
     </RelativeLayout>
 
 </RelativeLayout>
