@@ -108,5 +108,19 @@
     <string name="LngTextString">Lng</string>
     <string name="nameTextString">Name</string>
     <string name="descriptionTextString">Description</string>
+    <string name="manage">Manage</string>
+
+    <string-array name="customColorArray">
+        <item> Default</item>
+        <item> Blue</item>
+        <item> Red</item>
+        <item> Yellow</item>
+    </string-array>
+
+    <string name="customColor">Color</string>
+    <string name="customMapSubmitButton">Submit</string>
+    <string name="customMapDeleteButton">Delete</string>
+    <string name="customMapUpdateButton">Update</string>
+    <string name="title_activity_manage_custom_map">ManageCustomMapActivity</string>
 
 </resources>

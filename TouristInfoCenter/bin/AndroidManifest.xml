@@ -84,7 +84,8 @@
         </activity>
         <activity
             android:name="ro.mmp.tic.activities.streetmap.StreetMapActivity"
-            android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen" >
+            android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="ro.mmp.tic.activities.streetmap.PresentationActivity"
@@ -127,6 +128,10 @@
             android:name="ro.mmp.tic.activities.streetmap.custommap.CustomMapActivity"
             android:label="@string/title_activity_custom_map"
             android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="ro.mmp.tic.activities.streetmap.custommap.ManageCustomMapActivity"
+            android:label="@string/title_activity_manage_custom_map" >
         </activity>
     </application>
 

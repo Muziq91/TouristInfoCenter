@@ -83,7 +83,8 @@ public class ScheduleActivity extends Activity {
 		// set up the dialog builder
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 		alertDialogBuilder.setView(dialogView);
-
+		alertDialogBuilder.setTitle("Update Schedule");
+		alertDialogBuilder.setIcon(R.drawable.ic_launcher);
 		// setUpAlert(geometry.getName());
 		// say what the buttons do
 		alertDialogBuilder.setCancelable(false)

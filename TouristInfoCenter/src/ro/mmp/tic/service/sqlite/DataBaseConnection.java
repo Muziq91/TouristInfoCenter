@@ -10,6 +10,7 @@ package ro.mmp.tic.service.sqlite;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ro.mmp.tic.adapter.model.CustomMapModel;
 import ro.mmp.tic.adapter.model.MapModel;
 import ro.mmp.tic.domain.Category;
 import ro.mmp.tic.domain.Like;
@@ -17,6 +18,7 @@ import ro.mmp.tic.domain.Presentation;
 import ro.mmp.tic.domain.Schedule;
 import ro.mmp.tic.domain.Topic;
 import ro.mmp.tic.domain.Type;
+import ro.mmp.tic.domain.UserTopic;
 import ro.mmp.tic.service.sqlite.sqliteservice.UpdateCategoryService;
 import ro.mmp.tic.service.sqlite.sqliteservice.UpdatePresentationService;
 import ro.mmp.tic.service.sqlite.sqliteservice.UpdateTopicService;
@@ -48,7 +50,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		String topicTable = "create table topic(idtopic integer primary key AUTOINCREMENT, idcategory integer, idtype integer, name text, address text, lat real, lng,real, FOREIGN KEY (idcategory) references category(idcategory), FOREIGN KEY (idtype) references type(idtype))";
 		String scheduleTable = "create table schedule(idschedule integer primary key AUTOINCREMENT, date text,time text, place text)";
 		String presentationTable = "create table presentation(idpresentation integer primary key AUTOINCREMENT, idtopic integer, image text,description text,  FOREIGN KEY (idtopic) references topic(idtopic))";
-		String userTopicTable = "create table usertopic(idusertopic integer primary key AUTOINCREMENT, iduser integer, name text, image text,description text, lat real, lng,real,  FOREIGN KEY (iduser) references user(iduser))";
+		String userTopicTable = "create table usertopic(idusertopic integer primary key AUTOINCREMENT, iduser integer, name text, description text, image text, color text, lat real, lng,real,  FOREIGN KEY (iduser) references user(iduser))";
 
 		db.execSQL(userTable);
 		db.execSQL(categorytable);
@@ -529,6 +531,151 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		}
 		closeDB();
 		return mapModel;
+	}
+
+	/**
+	 * CREATE THE CUSTOM MAP MODEL
+	 * 
+	 * @param selectedLocation
+	 * @return
+	 */
+	public ArrayList<CustomMapModel> getCustomMapModel() {
+
+		db = this.getWritableDatabase();
+		ArrayList<CustomMapModel> customMapModel = new ArrayList<CustomMapModel>(
+				0);
+
+		String customMapQuery = "SELECT ut.idusertopic, ut.iduser, ut.name, ut.description, ut.image,ut.color, ut.lat, ut.lng FROM usertopic ut";
+
+		Cursor customMapCursor = db.rawQuery(customMapQuery, null);
+
+		if (customMapCursor.moveToFirst()) {
+			do {
+				UserTopic t = new UserTopic();
+
+				t.setIdusertopic(customMapCursor.getInt(0));
+				t.setIduser(customMapCursor.getInt(1));
+				t.setName(customMapCursor.getString(2));
+				t.setDescription(customMapCursor.getString(3));
+				t.setImage(customMapCursor.getString(4));
+				t.setColor(customMapCursor.getString(5));
+				t.setLat(customMapCursor.getDouble(6));
+				t.setLng(customMapCursor.getDouble(7));
+
+				CustomMapModel cm = new CustomMapModel(t);
+				customMapModel.add(cm);
+				Log.d("CustomMapModel", "Getting " + t.getName());
+			} while (customMapCursor.moveToNext());
+		}
+
+		closeDB();
+
+		Log.d("CustomMapModel", "Finished");
+		return customMapModel;
+	}
+
+	public ArrayList<CustomMapModel> getUserCustomMapModel(String username) {
+		db = this.getWritableDatabase();
+		ArrayList<CustomMapModel> customMapModel = new ArrayList<CustomMapModel>(
+				0);
+
+		String customMapQuery = "SELECT ut.idusertopic, ut.iduser, ut.name, ut.description, ut.image,ut.color, ut.lat, ut.lng FROM usertopic ut join user u ON u.iduser = ut.iduser where u.username='"
+				+ username + "'";
+
+		Cursor customMapCursor = db.rawQuery(customMapQuery, null);
+
+		if (customMapCursor.moveToFirst()) {
+			do {
+				UserTopic t = new UserTopic();
+
+				t.setIdusertopic(customMapCursor.getInt(0));
+				t.setIduser(customMapCursor.getInt(1));
+				t.setName(customMapCursor.getString(2));
+				t.setDescription(customMapCursor.getString(3));
+				t.setImage(customMapCursor.getString(4));
+				t.setColor(customMapCursor.getString(5));
+				t.setLat(customMapCursor.getDouble(6));
+				t.setLng(customMapCursor.getDouble(7));
+
+				CustomMapModel cm = new CustomMapModel(t);
+				customMapModel.add(cm);
+				Log.d("CustomMapModel", "Getting " + t.getName());
+			} while (customMapCursor.moveToNext());
+		}
+
+		closeDB();
+
+		Log.d("CustomMapModel", "Finished");
+		return customMapModel;
+	}
+
+	public void insertUserTopic(UserTopic ut, String username) {
+		db = this.getWritableDatabase();
+
+		Log.d("Inserting", "here isnerting");
+		String sqlQuery = "Insert into usertopic (iduser,name,description,image,color,lat,lng) "
+				+ "VALUES( (Select u.iduser from user u  where u.username='"
+				+ username
+				+ "'),"
+				+ "'"
+				+ ut.getName()
+				+ "','"
+				+ ut.getDescription()
+				+ "','"
+				+ ut.getImage()
+				+ "','"
+				+ ut.getColor()
+				+ "','"
+				+ ut.getLat()
+				+ "','"
+				+ ut.getLng()
+				+ "')";
+
+		Log.d("Inserting", sqlQuery);
+
+		db.execSQL(sqlQuery);
+		Log.d("CustomMapModel", "Inserting " + ut.getName());
+
+		closeDB();
+
+		ArrayList<CustomMapModel> customMapModel = new ArrayList<CustomMapModel>(
+				0);
+		customMapModel = getCustomMapModel();
+
+		for (CustomMapModel cm : customMapModel) {
+			Log.d("CustomMapModel", "Getting "
+					+ cm.getUserTopic().getIdusertopic() + " "
+					+ cm.getUserTopic().getIduser() + " "
+					+ cm.getUserTopic().getName() + " "
+					+ cm.getUserTopic().getDescription() + " "
+					+ cm.getUserTopic().getImage() + " "
+					+ cm.getUserTopic().getColor() + " "
+					+ cm.getUserTopic().getLat() + " "
+					+ cm.getUserTopic().getLng());
+		}
+
+	}
+
+	public void updateCustomMap(HashMap<String, String> clickPosition) {
+		db = this.getWritableDatabase();
+		String sqlQuery = "UPDATE usertopic SET name='"
+				+ clickPosition.get("NAME") + "',description='"
+				+ clickPosition.get("DESCRIPTION") + "',lat='"
+				+ clickPosition.get("LAT") + "',lng='"
+				+ clickPosition.get("LNG") + "' WHERE idusertopic ='"
+				+ clickPosition.get("IDUSERTOPIC") + "'";
+		db.execSQL(sqlQuery);
+		closeDB();
+
+	}
+
+	public void deleteCustomMap(HashMap<String, String> clickPosition) {
+		db = this.getWritableDatabase();
+		String sqlQuery = "DELETE FROM usertopic  WHERE idusertopic ='"
+				+ clickPosition.get("IDUSERTOPIC") + "'";
+		db.execSQL(sqlQuery);
+		closeDB();
+
 	}
 
 	/**************************************************************************************/

@@ -11,6 +11,9 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+
 import ro.mmp.tic.domain.Like;
 import ro.mmp.tic.domain.User;
 
@@ -51,4 +54,24 @@ public abstract class Strategy {
 
 	}
 
+	// used by OperationAddUserTopic
+	public void execute(HashMap<String, String> location, Bitmap image,
+			String username, Connection connection) {
+		// TODO Auto-generated method stub
+
+	}
+
+	// used by OperationVerifUserTopic
+	public boolean execute(HashMap<String, String> location, String username,
+			Connection connection) {
+		return false;
+		// TODO Auto-generated method stub
+
+	}
+
+	// used by OperationGetUserTopic
+	public ArrayList<HashMap<String, String>> execute(Connection connection,
+			Context context) {
+		return null;
+	}
 }

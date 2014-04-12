@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <View
-        android:id="@+id/view1"
+        android:id="@+id/firstView"
         android:layout_width="fill_parent"
         android:layout_height="2dp"
         android:layout_alignParentLeft="true"
@@ -49,7 +49,7 @@
         android:id="@+id/dateUpdateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/view1"
+        android:layout_below="@+id/firstView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="29dp"
         android:ems="10"
@@ -66,7 +66,7 @@
         android:inputType="time" />
 
     <View
-        android:id="@+id/view2"
+        android:id="@+id/secondView"
         android:layout_width="fill_parent"
         android:layout_height="2dp"
         android:layout_alignParentLeft="true"
