@@ -1,0 +1,95 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".QuestionnaireActivity" >
+
+    <TextView
+        android:id="@+id/favFoodText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="@string/favFoodSpinner"
+        android:textStyle="bold"
+        android:typeface="monospace" />
+
+    <Spinner
+        android:id="@+id/favFoodSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/favFoodText"
+        android:entries="@array/favFoodSpinnerArray"
+        android:gravity="center_horizontal"
+        android:paddingBottom="15dp"
+        android:prompt="@string/favFoodSpinner" />
+
+    <TextView
+        android:id="@+id/favActivityText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/favFoodSpinner"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="@string/favActivitySpinner"
+        android:textStyle="bold"
+        android:typeface="monospace" />
+
+    <Spinner
+        android:id="@+id/favActivitySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/favActivityText"
+        android:entries="@array/favActivitySpinnerArray"
+        android:gravity="center_horizontal"
+        android:paddingBottom="15dp"
+        android:prompt="@string/favActivitySpinner" />
+
+    <TextView
+        android:id="@+id/likeHistoryText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/favActivitySpinner"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="@string/likeHistorytext"
+        android:textStyle="bold"
+        android:typeface="monospace" />
+
+    <RadioGroup
+        android:id="@+id/radioHistory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/likeHistoryText"
+        android:paddingBottom="15dp" >
+
+        <RadioButton
+            android:id="@+id/radioLikeHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/radioLikeHistory" />
+
+        <RadioButton
+            android:id="@+id/radioUnlikeHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/radioUnlikeHistory" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/submitQuestionnaire"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/radioHistory"
+        android:layout_marginTop="10dip"
+        android:background="@drawable/buttonback"
+        android:onClick="onSubmitQuestionnaierButtonClick"
+        android:text="@string/submitQuestionnaire" />
+
+</RelativeLayout>
