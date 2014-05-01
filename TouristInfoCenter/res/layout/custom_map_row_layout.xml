@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100" >
+
+    <ImageView
+        android:id="@+id/customMapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="30"
+        android:background="@drawable/ic_launcher"
+        android:paddingTop="10dp" />
+
+    <TextView
+        android:id="@+id/customMapNameLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:text="Name"
+        android:textColor="#444444"
+        android:textSize="25sp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/customMapNameDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="40"
+        android:text="Descr"
+        android:textColor="#444444"
+        android:textSize="25sp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/customMapNameLat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:text="Lat"
+        android:textColor="#444444"
+        android:textSize="25sp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/customMapNameLng"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:text="Lng"
+        android:textColor="#444444"
+        android:textSize="25sp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/customMapNamecolor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:text="Color"
+        android:textColor="#444444"
+        android:textSize="25sp" >
+    </TextView>
+
+</LinearLayout>

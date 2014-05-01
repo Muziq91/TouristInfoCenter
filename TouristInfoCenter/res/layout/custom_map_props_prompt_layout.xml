@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <View
+        android:id="@+id/firstView"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="20dp"
+        android:background="#c0c0c0" />
+
+    <View
+        android:id="@+id/secondView"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/updateButton"
+        android:layout_marginTop="25dp"
+        android:background="#c0c0c0" />
+
+    <Button
+        android:id="@+id/submitButton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/deleteButton"
+        android:layout_alignBottom="@+id/deleteButton"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/smallbuttonback"
+        android:onClick="onSubmitButtonClick"
+        android:text="@string/customMapSubmitButton" />
+
+    <LinearLayout
+        android:id="@+id/locationLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/descriptionUpdateText"
+        android:layout_marginTop="32dp"
+        android:orientation="horizontal"
+        android:weightSum="100" >
+
+        <EditText
+            android:id="@+id/latUpdateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:layout_weight="50"
+            android:ems="10" />
+
+        <EditText
+            android:id="@+id/lngUpdateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:layout_weight="50"
+            android:ems="10" />
+    </LinearLayout>
+
+    <Spinner
+        android:id="@+id/customColorSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/locationLayout"
+        android:entries="@array/customColorArray"
+        android:gravity="center_horizontal"
+        android:prompt="@string/customColor" />
+
+    <EditText
+        android:id="@+id/descriptionUpdateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/nameUpdateText"
+        android:layout_below="@+id/nameUpdateText"
+        android:layout_marginTop="61dp"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/nameUpdateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/firstView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="42dp"
+        android:ems="10" />
+
+    <Button
+        android:id="@+id/deleteButton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/customColorSpinner"
+        android:layout_toLeftOf="@+id/submitButton"
+        android:background="@drawable/smallbuttonback"
+        android:onClick="onDeleteButtonClick"
+        android:text="@string/customMapDeleteButton" />
+
+    <Button
+        android:id="@+id/updateButton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/deleteButton"
+        android:layout_alignBottom="@+id/deleteButton"
+        android:layout_toLeftOf="@+id/deleteButton"
+        android:background="@drawable/smallbuttonback"
+        android:onClick="onUpdateButtonClick"
+        android:text="@string/customMapUpdateButton" />
+
+</RelativeLayout>

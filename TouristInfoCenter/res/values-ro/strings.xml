@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <string name="app_name">TouristInfoCenter</string>
+    <string name="action_settings">Setari</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_authentication">Autenticare</string>
+    <string name="title_activity_splash_screen">Bine ati venit in Cluj</string>
+
+    <!-- When the user goes to the first screen but wants to go back and not exit -->
+    <string name="startAgain">Refresh</string>
+
+    <!-- Login and Register buttons -->
+
+    <string name="login">Logare</string>
+    <string name="register">Inregistrare</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_register">Register</string>
+    <string name="countrySpinner">Selectati o tara</string>
+
+    <string-array name="countrySpinnerArray">
+        <item> Country</item>
+        <item> Romania</item>
+        <item> Anglia</item>
+        <item> Franta</item>
+    </string-array>
+
+    <!-- Registration form hit values -->
+    <string name="name">Nume</string>
+    <string name="username">Nume de utilizator</string>
+    <string name="password">Parola</string>
+    <string name="repassword">Re-scrieti parola</string>
+    <string name="email">Email</string>
+    <string name="country">Tara</string>
+    <string name="remember">Aminteste Utilizator si Parola</string>
+    <string name="title_activity_central">CentralActivity</string>
+
+    <!-- For the central activity -->
+    <string name="streetMap">Harta de strada</string>
+    <string name="googleMap">Harta Google</string>
+
+    <!-- Metaio strings -->
+
+    <string name="mySdkSignature">Vvt9sk3kKKEX/cz1Xxy2S+faVyTQ6k7tv1NjBDPJSy0=</string>
+    <string name="gps">GPS</string>
+
+    <!-- Presentation Activities String -->
+
+    <string name="title_activity_presentation">Presentarea locatiei</string>
+
+    <!-- Like and unlike buttons -->
+    <string name="like">Like</string>
+    <string name="unlike">Unlike</string>
+    <string name="comment">Sectie de comentarii</string>
+    <string name="title_activity_opinion">OpinionActivity</string>
+
+    <!-- Comment Section -->
+
+    <string name="submitComment">Salveaza comentariu</string>
+    <string name="commentText">Comentariu</string>
+    <string name="title_activity_select">Selectati locatiile</string>
+
+    <!-- Location fragment -->
+
+    <string name="goToMap">Dute la harta</string>
+    <!--  -->
+    <string name="schedule">Orar</string>
+    <string name="title_activity_schedule">Orar</string>
+    <string name="legend">Legenda</string>
+    <string name="title_activity_alarm">Alarma</string>
+    <string name="stop_alarm">Opreste alarama</string>
+
+    <string-array name="customColorArray">
+        <item> Default</item>
+        <item> Blue</item>
+        <item> Red</item>
+        <item> Yellow</item>
+    </string-array>
+
+    <string name="customColor">Culoare</string>
+    <string name="customMapSubmitButton">Submit</string>
+    <string name="customMapDeleteButton">Sterge</string>
+    <string name="customMapUpdateButton">Updateaza</string>
+    <string name="title_activity_manage_custom_map">Ingrijeste harta personalizata</string>
+    <string name="title_activity_manage_user_locations">Ingeijeste topicul userilor</string>
+    <string name="title_activity_user_custom_topic">Harta create din user topic</string>
+
+</resources>

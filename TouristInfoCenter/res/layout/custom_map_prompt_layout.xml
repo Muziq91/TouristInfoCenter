@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/nameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="45dp"
+            android:ems="10"
+            android:hint="@string/nameTextString" />
+
+        <EditText
+            android:id="@+id/descriptionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/nameText"
+            android:layout_below="@+id/nameText"
+            android:layout_marginTop="50dp"
+            android:ems="10"
+            android:hint="@string/descriptionTextString"
+            android:inputType="textMultiLine" >
+
+            <requestFocus />
+        </EditText>
+
+        <LinearLayout
+            android:id="@+id/loationLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/descriptionText"
+            android:layout_marginTop="29dp"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/latText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:ems="10"
+                android:hint="@string/latTextString"
+                android:inputType="numberSigned" />
+
+            <EditText
+                android:id="@+id/lngText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:ems="10"
+                android:hint="@string/LngTextString"
+                android:inputType="numberSigned" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/takePictureLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/loationLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:baselineAligned="false"
+            android:orientation="vertical"
+            android:weightSum="100" >
+
+            <ImageView
+                android:id="@+id/imageViewReturnPicture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="50"
+                android:paddingTop="10dp" />
+
+            <ImageButton
+                android:id="@+id/imageButtonTakePicture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="50"
+                android:onClick="onImageButtonClick"
+                android:src="@drawable/ic_launcher" />
+        </LinearLayout>
+
+        <Spinner
+            android:id="@+id/customColorSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/takePictureLayout"
+            android:entries="@array/customColorArray"
+            android:gravity="center_horizontal"
+            android:prompt="@string/customColor" />
+
+        <Button
+            android:id="@+id/addButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/customColorSpinner"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/smallbuttonback"
+            android:onClick="onAddLocationButtonClick"
+            android:text="@string/addButton" />
+    </RelativeLayout>
+
+</ScrollView>
