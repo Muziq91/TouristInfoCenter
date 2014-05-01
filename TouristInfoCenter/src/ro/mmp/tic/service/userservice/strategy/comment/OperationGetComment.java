@@ -30,7 +30,7 @@ public class OperationGetComment extends Strategy {
 
 		try {
 
-			String sqlQuery = "Select c.idcomment,c.idu,c.idt,c.comment,u.username from `center`.`comment` c "
+			String sqlQuery = "Select c.idcomment,c.idu,c.idt, c.idut,c.comment,u.username from `center`.`comment` c "
 					+ "join `center`.`topic` t on c.idt = t.idtopic "
 					+ "join `center`.`user` u on c.idu = u.iduser "
 					+ "where t.name = '"
@@ -48,6 +48,7 @@ public class OperationGetComment extends Strategy {
 				comment.setIdcomment(result.getInt("idcomment"));
 				comment.setIdu(result.getInt("idu"));
 				comment.setIdt(result.getInt("idt"));
+				comment.setIdut(result.getInt("idut"));
 				comment.setComment(result.getString("comment"));
 				String username = result.getString("username");
 
@@ -73,5 +74,4 @@ public class OperationGetComment extends Strategy {
 		}
 		return commentList;
 	}
-
 }

@@ -14,8 +14,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import ro.mmp.tic.R;
+import ro.mmp.tic.activities.defaultschedule.DefaultScheduleActivity;
 import ro.mmp.tic.activities.streetmap.SelectActivity;
-import ro.mmp.tic.activities.streetmap.custommap.CustomMapActivity;
+import ro.mmp.tic.activities.streetmap.custommap.CustomStreetMapActivity;
+import ro.mmp.tic.activities.streetmap.custommap.usertopics.ManageUserTopicsActivity;
 import ro.mmp.tic.domain.Category;
 import ro.mmp.tic.domain.Presentation;
 import ro.mmp.tic.domain.Topic;
@@ -80,10 +82,26 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 
 	public void onCustomMapButtonClick(View view) {
 		Intent intent = new Intent(CentralActivity.this,
-				CustomMapActivity.class);
+				CustomStreetMapActivity.class);
 		intent.putExtra("loggedUser", username);
-		startActivityForResult(intent, 1);
+		startActivityForResult(intent, 2);
 
+	}
+
+	public void onUserTopicButtonClick(View view) {
+
+		Intent intent = new Intent(CentralActivity.this,
+				ManageUserTopicsActivity.class);
+		intent.putExtra("loggedUser", username);
+		startActivityForResult(intent, 3);
+
+	}
+
+	public void onDefaultSchdeuleButtonClick(View view) {
+		Intent intent = new Intent(CentralActivity.this,
+				DefaultScheduleActivity.class);
+		intent.putExtra("loggedUser", username);
+		startActivityForResult(intent, 4);
 	}
 
 	@Override

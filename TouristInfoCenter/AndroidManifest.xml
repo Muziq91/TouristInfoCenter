@@ -125,13 +125,32 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="ro.mmp.tic.activities.streetmap.custommap.CustomMapActivity"
+            android:name="ro.mmp.tic.activities.streetmap.custommap.CustomStreetMapActivity"
             android:label="@string/title_activity_custom_map"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="ro.mmp.tic.activities.streetmap.custommap.ManageCustomMapActivity"
-            android:label="@string/title_activity_manage_custom_map" >
+            android:label="@string/title_activity_manage_custom_map"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="ro.mmp.tic.activities.streetmap.custommap.usertopics.ManageUserTopicsActivity"
+            android:label="@string/title_activity_manage_user_locations"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="ro.mmp.tic.activities.streetmap.custommap.UserTopicStreetMapActivity"
+            android:label="@string/title_activity_user_custom_topic"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="ro.mmp.tic.activities.defaultschedule.DefaultScheduleActivity"
+            android:label="@string/title_activity_default_schedule"
+            android:parentActivityName="ro.mmp.tic.activities.CentralActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ro.mmp.tic.activities.CentralActivity" />
         </activity>
     </application>
 

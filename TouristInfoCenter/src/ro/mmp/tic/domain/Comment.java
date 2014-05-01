@@ -10,16 +10,18 @@ public class Comment {
 	private int idcomment;
 	private int idu;
 	private int idt;
+	private int idut;
 	private String comment;
 
 	public Comment() {
 
 	}
 
-	public Comment(int idcomment, int idu, int idt, String comment) {
+	public Comment(int idcomment, int idu, int idt, int idut, String comment) {
 		this.idcomment = idcomment;
 		this.idu = idu;
 		this.idt = idt;
+		this.idut = idut;
 		this.comment = comment;
 	}
 
@@ -53,6 +55,14 @@ public class Comment {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public int getIdut() {
+		return idut;
+	}
+
+	public void setIdut(int idut) {
+		this.idut = idut;
 	}
 
 }

@@ -17,12 +17,8 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
 public class AuthenticationActivity extends Activity {
-
-	private Button loginButton;
-	private Button registerButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +27,7 @@ public class AuthenticationActivity extends Activity {
 		// Show the Up button in the action bar.
 		setupActionBar();
 
-		// Set the title of the activity
-		setTitle("Autentication");
-
-		loginButton = (Button) findViewById(R.id.loginButton);
-		registerButton = (Button) findViewById(R.id.registerButton);
+	
 
 	}
 

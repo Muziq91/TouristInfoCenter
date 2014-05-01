@@ -10,15 +10,19 @@ package ro.mmp.tic.activities.streetmap;
 import java.util.HashMap;
 
 import ro.mmp.tic.R;
+import ro.mmp.tic.activities.streetmap.util.ImageUtil;
 import ro.mmp.tic.domain.Like;
 import ro.mmp.tic.domain.Presentation;
 import ro.mmp.tic.domain.Topic;
 import ro.mmp.tic.domain.User;
+import ro.mmp.tic.domain.UserTopic;
 import ro.mmp.tic.service.UserService;
 import ro.mmp.tic.service.interfaces.UserLikeCountFinishedListener;
 import ro.mmp.tic.service.interfaces.UserUpdateLikeFinishedListener;
 import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import ro.mmp.tic.service.userservice.UserLikeCountService;
+import ro.mmp.tic.service.userservice.UserTopicLikeCountService;
+import ro.mmp.tic.service.userservice.UserTopicUpdateLikeService;
 import ro.mmp.tic.service.userservice.UserUpdateLikeService;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -41,16 +45,18 @@ import android.widget.Toast;
 public class PresentationActivity extends Activity implements
 		UserLikeCountFinishedListener, UserUpdateLikeFinishedListener {
 
-	private TextView textView;
+	private TextView descriptionText;
 	private ImageView imageView;
 	private Button likeButton;
 	private Button unlikeButton;
 	private WebView chartView;
 	private String username;
 	private String topicName;
+	private String token;
 	private Like like;
 	private User user;
 	private Topic topic;
+	private UserTopic userTopic;
 	private ProgressDialog loadDialog;
 	private boolean exists = false;
 	private DataBaseConnection dataBaseConnection;
@@ -79,42 +85,73 @@ public class PresentationActivity extends Activity implements
 		dataBaseConnection = new DataBaseConnection(this);
 
 		chartView = (WebView) findViewById(R.id.chartView);
-		textView = (TextView) findViewById(R.id.textView);
+		descriptionText = (TextView) findViewById(R.id.descriptionText);
 		imageView = (ImageView) findViewById(R.id.imageView);
 		likeButton = (Button) findViewById(R.id.likeButton);
 		unlikeButton = (Button) findViewById(R.id.unlikeButton);
 
 		Intent intent = getIntent();
+		token = intent.getStringExtra("token");
 		topicName = intent.getStringExtra("name");
 		username = intent.getStringExtra("loggedUser");
 
-		setLikeButtons();
+		if (token.equals("streetmap")) {
+			setLikeButtons();
+			Log.d("PresentationActivity", "Entering  PresentationActivity");
 
-		Log.d("PresentationActivity", "Entering  PresentationActivity");
+			Presentation presentation = dataBaseConnection
+					.getPresentaion(topicName);
 
-		Presentation presentation = dataBaseConnection
-				.getPrensetaion(topicName);
+			setTitle(topicName);
+			descriptionText.setText(presentation.getDescription());
 
-		setTitle(topicName);
-		textView.setText(presentation.getDescription());
+			Log.d("ce am primit sari in ochi ", "" + presentation.getImage());
+			Context context = imageView.getContext();
+			int id = context.getResources().getIdentifier(
+					presentation.getImage(), "drawable",
+					context.getPackageName());
+			imageView.setImageResource(id);
 
-		Log.d("ce am primit sari in ochi ", "" + presentation.getImage());
-		Context context = imageView.getContext();
-		int id = context.getResources().getIdentifier(presentation.getImage(),
-				"drawable", context.getPackageName());
-		imageView.setImageResource(id);
+			Log.d("PresentationActivity", "GUI set up");
 
-		Log.d("PresentationActivity", "GUI set up");
+			user = new User();
+			user.setUsername(username);
 
-		user = new User();
-		user.setUsername(username);
+			topic = new Topic();
+			topic.setName(topicName);
 
-		topic = new Topic();
-		topic.setName(topicName);
+			UserService likeCountService = new UserLikeCountService(topic,
+					getApplicationContext(), this);
+			likeCountService.execute("");
+		} else if (token.equals("userstreetmap")) {
+			toastMessage("Presentation for user streetmap");
 
-		UserService likeCountService = new UserLikeCountService(topic,
-				getApplicationContext(), this);
-		likeCountService.execute("");
+			setUserTopicLikeButtons();
+			Log.d("PresentationActivity", "Entering  PresentationActivity");
+
+			Presentation presentation = dataBaseConnection
+					.getUserTopicPresentaion(topicName);
+
+			setTitle(topicName);
+			descriptionText.setText(presentation.getDescription());
+
+			Log.d("ce am primit sari in ochi ", "" + presentation.getImage());
+			ImageUtil iu = new ImageUtil(this);
+			imageView.setImageBitmap(iu.getThumbnail(presentation.getImage()));
+
+			Log.d("PresentationActivity", "GUI set up");
+
+			user = new User();
+			user.setUsername(username);
+
+			userTopic = new UserTopic();
+			userTopic.setName(topicName);
+
+			UserService likeCountService = new UserTopicLikeCountService(
+					userTopic, getApplicationContext(), this);
+			likeCountService.execute("");
+
+		}
 
 	}
 
@@ -150,27 +187,84 @@ public class PresentationActivity extends Activity implements
 
 	}
 
+	public void setUserTopicLikeButtons() {
+
+		HashMap<String, String> likes = dataBaseConnection.getUserTopicLike(
+				username, topicName);
+		like = new Like();
+		if (likes.get("likes") != null) {
+			exists = true;
+
+			like.setIduser(Integer.parseInt(likes.get("iduser")));
+			like.setIdtopic(Integer.parseInt(likes.get("idtopic")));
+			like.setIdusertopic(Integer.parseInt(likes.get("idusertopic")));
+			like.setLike(Integer.parseInt(likes.get("likes")));
+			like.setUnlike(Integer.parseInt(likes.get("unlikes")));
+
+			toastMessage("iduser:" + like.getIduser() + " idtopic:"
+					+ like.getIdtopic() + " likes:" + like.getLike()
+					+ " unlike:" + like.getUnlike());
+			if (like.getLike() == 1) {
+				likeButton.setVisibility(View.GONE);
+				unlikeButton.setVisibility(View.VISIBLE);
+			} else if (like.getIdlike() == 0) {
+				likeButton.setVisibility(View.VISIBLE);
+				unlikeButton.setVisibility(View.GONE);
+			}
+		} else {
+
+			likeButton.setVisibility(View.VISIBLE);
+			unlikeButton.setVisibility(View.VISIBLE);
+			exists = false;
+
+		}
+
+	}
+
 	/**
 	 * When the user presses the like button
 	 */
 	public void likeTopic(View v) {
+
 		loadDialog.show();
-		likeButton.setVisibility(View.GONE);
-		unlikeButton.setVisibility(View.VISIBLE);
 
-		like.setLike(1);
-		like.setUnlike(0);
-		UserService userUpdateLike = new UserUpdateLikeService(user, topic,
-				getApplicationContext(), like, exists, this);
-		userUpdateLike.execute("");
+		if (token.equals("streetmap")) {
+			likeButton.setVisibility(View.GONE);
+			unlikeButton.setVisibility(View.VISIBLE);
 
-		if (exists == false) {
-			dataBaseConnection.insertLike(username, topicName, like);
-			exists = true;
-		} else {
-			dataBaseConnection.updateLike(username, topicName, like);
+			like.setLike(1);
+			like.setUnlike(0);
+			UserService userUpdateLike = new UserUpdateLikeService(user, topic,
+					getApplicationContext(), like, exists, this);
+			userUpdateLike.execute("");
+
+			if (exists == false) {
+				dataBaseConnection.insertLike(username, topicName, like);
+				exists = true;
+			} else {
+				dataBaseConnection.updateLike(username, topicName, like);
+			}
+			setUserTopicLikeButtons();
+		} else if (token.equals("userstreetmap")) {
+
+			likeButton.setVisibility(View.GONE);
+			unlikeButton.setVisibility(View.VISIBLE);
+
+			like.setLike(1);
+			like.setUnlike(0);
+			UserService userUpdateLike = new UserTopicUpdateLikeService(user,
+					userTopic, getApplicationContext(), like, exists, this);
+			userUpdateLike.execute("");
+
+			if (exists == false) {
+				dataBaseConnection.insertUserTopicLike(username, topicName,
+						like);
+				exists = true;
+			} else {
+				dataBaseConnection.updateLike(username, topicName, like);
+			}
+			setUserTopicLikeButtons();
 		}
-
 	}
 
 	/**
@@ -178,20 +272,44 @@ public class PresentationActivity extends Activity implements
 	 */
 	public void unlikeTopic(View v) {
 		loadDialog.show();
-		unlikeButton.setVisibility(View.GONE);
-		likeButton.setVisibility(View.VISIBLE);
-		like.setLike(0);
-		like.setUnlike(1);
-		UserService userUpdateLike = new UserUpdateLikeService(user, topic,
-				getApplicationContext(), like, exists, this);
 
-		userUpdateLike.execute("");
+		if (token.equals("streetmap")) {
+			unlikeButton.setVisibility(View.GONE);
+			likeButton.setVisibility(View.VISIBLE);
+			like.setLike(0);
+			like.setUnlike(1);
+			UserService userUpdateLike = new UserUpdateLikeService(user, topic,
+					getApplicationContext(), like, exists, this);
 
-		if (exists == false) {
-			dataBaseConnection.insertLike(username, topicName, like);
-			exists = true;
-		} else {
-			dataBaseConnection.updateLike(username, topicName, like);
+			userUpdateLike.execute("");
+
+			if (exists == false) {
+				dataBaseConnection.insertLike(username, topicName, like);
+				exists = true;
+			} else {
+				dataBaseConnection.updateLike(username, topicName, like);
+			}
+			setUserTopicLikeButtons();
+		} else if (token.equals("userstreetmap")) {
+
+			unlikeButton.setVisibility(View.GONE);
+			likeButton.setVisibility(View.VISIBLE);
+
+			like.setLike(0);
+			like.setUnlike(1);
+
+			UserService userUpdateLike = new UserTopicUpdateLikeService(user,
+					userTopic, getApplicationContext(), like, exists, this);
+			userUpdateLike.execute("");
+
+			if (exists == false) {
+				dataBaseConnection.insertUserTopicLike(username, topicName,
+						like);
+				exists = true;
+			} else {
+				dataBaseConnection.updateLike(username, topicName, like);
+			}
+			setUserTopicLikeButtons();
 		}
 
 	}
@@ -203,11 +321,13 @@ public class PresentationActivity extends Activity implements
 	 * @param v
 	 */
 
-	public void displayComment(View v) {
+	public void onCommentButtonPush(View v) {
 		Intent intent = new Intent(PresentationActivity.this,
 				OpinionActivity.class);
+		
 		intent.putExtra("loggedUser", user.getUsername());
 		intent.putExtra("name", topicName);
+		intent.putExtra("token", token);
 		startActivityForResult(intent, 0);
 	}
 
@@ -256,27 +376,53 @@ public class PresentationActivity extends Activity implements
 	public void onTaskFinished(int likeCount, int unlikeCount) {
 
 		loadDialog.dismiss();
+
 		// here we load the chart with information from the database about the
 		// number of likes and unlikes
-		String mUrl = "http://chart.apis.google.com/chart?" + "cht=p3&" + // type
-				// of
-				// graph
-				"chs=500x200&" + // pixel dimension of chart
-				"chd=t:" + likeCount + "," + unlikeCount + "&" + // data
-				// to
-				// display
-				// in
-				// chart
-				"chts=000000,24&" + // specifies the font colour and size of the
-				// title
-				"chtt=Like+Unlike+Chart+of+" + topic.getName() + "&" + // specifies
-				// the title
-				// of the
-				// graph
-				"chl=Like|Unlike" + // chart labels
-				"&chco=335423,9011D3&" + // chart color
-				"chdl=Like|Unlike";
-		chartView.loadUrl(mUrl);
+		if (token.equals("streetmap")) {
+			String mUrl = "http://chart.apis.google.com/chart?" + "cht=p3&" + // type
+					// of
+					// graph
+					"chs=500x200&" + // pixel dimension of chart
+					"chd=t:" + likeCount + "," + unlikeCount + "&" + // data
+					// to
+					// display
+					// in
+					// chart
+					"chts=000000,24&" + // specifies the font colour and size of
+										// the
+					// title
+					"chtt=Like+Unlike+Chart+of+" + topic.getName() + "&" + // specifies
+					// the title
+					// of the
+					// graph
+					"chl=Like|Unlike" + // chart labels
+					"&chco=335423,9011D3&" + // chart color
+					"chdl=Like|Unlike";
+			chartView.loadUrl(mUrl);
+		} else if (token.equals("userstreetmap")) {
+
+			String mUrl = "http://chart.apis.google.com/chart?" + "cht=p3&" + // type
+					// of
+					// graph
+					"chs=500x200&" + // pixel dimension of chart
+					"chd=t:" + likeCount + "," + unlikeCount + "&" + // data
+					// to
+					// display
+					// in
+					// chart
+					"chts=000000,24&" + // specifies the font colour and size of
+										// the
+					// title
+					"chtt=Like+Unlike+Chart+of+" + userTopic.getName() + "&" + // specifies
+					// the title
+					// of the
+					// graph
+					"chl=Like|Unlike" + // chart labels
+					"&chco=335423,9011D3&" + // chart color
+					"chdl=Like|Unlike";
+			chartView.loadUrl(mUrl);
+		}
 
 	}
 
@@ -294,10 +440,16 @@ public class PresentationActivity extends Activity implements
 	@Override
 	public void onTaskFinished() {
 		loadDialog.dismiss();
-		UserService likeCountService = new UserLikeCountService(topic,
-				getApplicationContext(), this);
-		likeCountService.execute("");
 
+		if (token.equals("streetmap")) {
+			UserService likeCountService = new UserLikeCountService(topic,
+					getApplicationContext(), this);
+			likeCountService.execute("");
+		} else if (token.equals("userstreetmap")) {
+			UserService likeCountService = new UserTopicLikeCountService(
+					userTopic, getApplicationContext(), this);
+			likeCountService.execute("");
+		}
 	}
 
 }

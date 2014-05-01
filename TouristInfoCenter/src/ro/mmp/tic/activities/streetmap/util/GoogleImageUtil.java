@@ -43,6 +43,7 @@ public class GoogleImageUtil extends ImageUtil {
 			Bitmap bmp = ((BitmapDrawable) urlImage).getBitmap();
 			Log.d("GoogleimageUtil", "Create bitmap");
 			if (bmp != null) {
+				super.context = context;
 				saveImageToInternalStorage(bmp, "mapImage");
 			}
 			Log.d("GoogleimageUtil", "Save to internal storage");

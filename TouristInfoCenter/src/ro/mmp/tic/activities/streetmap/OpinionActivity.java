@@ -16,6 +16,8 @@ import ro.mmp.tic.service.UserService;
 import ro.mmp.tic.service.interfaces.UserCommentLoadFinishedListener;
 import ro.mmp.tic.service.userservice.UserCommentService;
 import ro.mmp.tic.service.userservice.UserSaveCommentService;
+import ro.mmp.tic.service.userservice.UserTopicCommentService;
+import ro.mmp.tic.service.userservice.UserTopicSaveCommentService;
 import android.annotation.TargetApi;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -36,7 +38,7 @@ public class OpinionActivity extends ListActivity implements
 
 	private User user;
 	private Topic topic;
-
+	private String token;
 	private EditText commentText;
 	private ProgressDialog loadDialog;
 
@@ -65,32 +67,48 @@ public class OpinionActivity extends ListActivity implements
 		commentText = (EditText) findViewById(R.id.commentText);
 
 		Intent intent = getIntent();
-		String username = intent.getStringExtra("loggedUser");
+		token = intent.getStringExtra("token");
 
+		String username = intent.getStringExtra("loggedUser");
 		user = new User();
 		user.setUsername(username);
 
 		String topicName = intent.getStringExtra("name");
-
 		topic = new Topic();
 		topic.setName(topicName);
 
 		setTitle(topicName);
 
-		UserService getComment = new UserCommentService(topic, this);
-		getComment.execute("");
+		if (token.equals("streetmap")) {
+			UserService getComment = new UserCommentService(topic, this);
+			getComment.execute("");
+		} else if (token.equals("userstreetmap")) {
+			UserService getComment = new UserTopicCommentService(topic, this);
+			getComment.execute("");
+		}
 
 	}
 
 	public void sendComment(View v) {
 
 		loadDialog.show();
-		UserService saveComment = new UserSaveCommentService(user, topic,
-				commentText.getText().toString());
-		saveComment.execute("");
+		if (token.equals("streetmap")) {
+			UserService saveComment = new UserSaveCommentService(user, topic,
+					commentText.getText().toString());
+			saveComment.execute("");
 
-		UserService getComment = new UserCommentService(topic, this);
-		getComment.execute("");
+			UserService getComment = new UserCommentService(topic, this);
+			getComment.execute("");
+		} else if (token.equals("userstreetmap")) {
+
+			UserService saveComment = new UserTopicSaveCommentService(user, topic,
+					commentText.getText().toString());
+			saveComment.execute("");
+
+			UserService getComment = new UserTopicCommentService(topic, this);
+			getComment.execute("");
+
+		}
 
 	}
 

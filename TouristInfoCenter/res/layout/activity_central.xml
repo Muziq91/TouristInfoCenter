@@ -70,6 +70,32 @@
                 android:onClick="onCustomMapButtonClick"
                 android:text="@string/customMap" />
             <!-- CustomMap button  ends -->
+
+
+            <!-- User Topic button -->
+
+            <Button
+                android:id="@+id/userTopic"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/buttonback"
+                android:onClick="onUserTopicButtonClick"
+                android:text="@string/userTopic" />
+            <!-- User Topic button  ends -->
+
+
+            <!-- User Topic button -->
+
+            <Button
+                android:id="@+id/defaultSchedule"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/buttonback"
+                android:onClick="onDefaultSchdeuleButtonClick"
+                android:text="@string/defaultSchedule" />
+            <!-- User Topic button  ends -->
         </LinearLayout>
         <!-- Central activity  Ends -->
 

@@ -56,8 +56,6 @@ public class SplashScreenActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash_screen);
 
-		setTitle("Welcome to TouristInfoCenter");
-
 		handler.postDelayed(splashTask, SPLASHTIME);
 	}
 

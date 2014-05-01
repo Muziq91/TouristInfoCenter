@@ -36,9 +36,10 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/descriptionText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/rectangle"
                 android:textSize="16dp" />
 
             <Button
@@ -85,7 +86,7 @@
             android:background="@drawable/buttonback"
             android:minHeight="38dip"
             android:minWidth="24dip"
-            android:onClick="displayComment"
+            android:onClick="onCommentButtonPush"
             android:text="@string/comment" />
     </RelativeLayout>
 

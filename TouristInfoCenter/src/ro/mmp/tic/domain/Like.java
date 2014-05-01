@@ -10,6 +10,7 @@ public class Like {
 	private int idlike;
 	private int iduser;
 	private int idtopic;
+	private int idusertopic;
 	private int like;
 	private int unlike;
 
@@ -17,10 +18,12 @@ public class Like {
 
 	}
 
-	public Like(int idlike, int iduser, int idtopic, int like, int unlike) {
+	public Like(int idlike, int iduser, int idtopic, int idusertopic, int like,
+			int unlike) {
 		this.idlike = idlike;
 		this.iduser = iduser;
 		this.idtopic = idtopic;
+		this.idusertopic = idusertopic;
 		this.like = like;
 		this.unlike = unlike;
 
@@ -64,6 +67,14 @@ public class Like {
 
 	public void setUnlike(int unlike) {
 		this.unlike = unlike;
+	}
+
+	public int getIdusertopic() {
+		return idusertopic;
+	}
+
+	public void setIdusertopic(int idusertopic) {
+		this.idusertopic = idusertopic;
 	}
 
 }

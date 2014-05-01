@@ -21,12 +21,12 @@ public class OperationSaveComment extends Strategy {
 			Connection connection) {
 		try {
 
-			String insertTableSQL = "Insert into `center`.`comment` (idu,idt,comment) "
+			String insertTableSQL = "Insert into `center`.`comment` (idu,idt,idut,comment) "
 					+ "VALUES( (Select u.iduser from `center`.`user` u  where u.username='"
 					+ username
 					+ "'),"
 					+ "(Select t.idtopic from `center`.`topic` t where t.name='"
-					+ topicName + "')," + "'" + comment + "')";
+					+ topicName + "'), 1," + "'" + comment + "')";
 
 			addStatement = connection.createStatement();
 			addStatement.executeUpdate(insertTableSQL);

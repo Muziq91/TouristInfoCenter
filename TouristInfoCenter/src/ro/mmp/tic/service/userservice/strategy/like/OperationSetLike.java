@@ -30,7 +30,7 @@ public class OperationSetLike extends Strategy {
 				Log.d("OperationSetLike",
 						"2 update am ajuns aici " + like.getLike() + " "
 								+ like.getUnlike());
-				
+
 				sqlQuery = "UPDATE `center`.`like` l SET l.likes="
 						+ like.getLike()
 						+ ",l.unlikes="
@@ -43,13 +43,15 @@ public class OperationSetLike extends Strategy {
 				Log.d("OperationSetLike",
 						"2 insert am ajuns aici " + like.getLike() + " "
 								+ like.getUnlike());
-				sqlQuery = "Insert into `center`.`like` (iduser,idtopic,likes,unlikes) "
+				sqlQuery = "Insert into `center`.`like` (iduser,idtopic,idusertopic,likes,unlikes) "
 						+ "VALUES( (Select u.iduser from `center`.`user` u  where u.username='"
 						+ username
 						+ "'),"
 						+ "(Select t.idtopic from `center`.`topic` t where t.name='"
 						+ topic
-						+ "'),"
+						+ "'),'"
+						+ 1
+						+ "',"
 						+ like.getLike()
 						+ ","
 						+ like.getUnlike() + ")";

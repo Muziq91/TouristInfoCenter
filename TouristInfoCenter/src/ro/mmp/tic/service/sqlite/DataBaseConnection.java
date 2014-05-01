@@ -45,8 +45,8 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		String userTable = "create table user(iduser integer primary key AUTOINCREMENT, name text, username text, password text,email text, country text)";
 		String categorytable = "create table category(idcategory integer primary key AUTOINCREMENT, category text, color text)";
 		String typeTable = "create table type(idtype integer primary key AUTOINCREMENT, type text)";
-		String commentTable = "create table comment(idcomment integer primary key AUTOINCREMENT, idu integer,idt integer, comment text,FOREIGN KEY(idu) references user(iduser),FOREIGN KEY(idt) references topic(idtopic))";
-		String likeTable = "create table like(idlike integer primary key AUTOINCREMENT, iduser integer, idtopic integer, likes integer,unlikes integer, FOREIGN KEY (iduser) references user(iduser), FOREIGN KEY (idtopic) references topic(idtopic))";
+		String commentTable = "create table comment(idcomment integer primary key AUTOINCREMENT, idu integer,idt integer, idut integer,comment text,FOREIGN KEY(idu) references user(iduser),FOREIGN KEY(idt) references topic(idtopic),FOREIGN KEY(idut) references usertopic(idusertopic))";
+		String likeTable = "create table like(idlike integer primary key AUTOINCREMENT, iduser integer, idtopic integer, idusertopic integer, likes integer,unlikes integer, FOREIGN KEY (iduser) references user(iduser), FOREIGN KEY (idtopic) references topic(idtopic), FOREIGN KEY (idusertopic) references usertopic(idusertopic))";
 		String topicTable = "create table topic(idtopic integer primary key AUTOINCREMENT, idcategory integer, idtype integer, name text, address text, lat real, lng,real, FOREIGN KEY (idcategory) references category(idcategory), FOREIGN KEY (idtype) references type(idtype))";
 		String scheduleTable = "create table schedule(idschedule integer primary key AUTOINCREMENT, date text,time text, place text)";
 		String presentationTable = "create table presentation(idpresentation integer primary key AUTOINCREMENT, idtopic integer, image text,description text,  FOREIGN KEY (idtopic) references topic(idtopic))";
@@ -185,14 +185,70 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		return likes;
 	}
 
+	public HashMap<String, String> getUserTopicLike(String username,
+			String topicName) {
+
+		HashMap<String, String> likes = new HashMap<String, String>(0);
+		db = this.getWritableDatabase();
+
+		String sqlQuery = "SELECT l.idlike,l.iduser,l.idtopic,l.idusertopic ,l.likes,l.unlikes FROM like l "
+				+ "join user u ON l.iduser = u.iduser "
+				+ "join usertopic ut on l.idusertopic = ut.idusertopic "
+				+ "where u.username='"
+				+ username
+				+ "' "
+				+ "AND ut.name='"
+				+ topicName + "'";
+		Cursor cursor = db.rawQuery(sqlQuery, null);
+		if (cursor.moveToFirst()) {
+			do {
+				likes.put("idlike", cursor.getString(0));
+				likes.put("iduser", cursor.getString(1));
+				likes.put("idtopic", cursor.getString(2));
+				likes.put("idusertopic", cursor.getString(3));
+				likes.put("likes", cursor.getString(4));
+				likes.put("unlikes", cursor.getString(5));
+
+			} while (cursor.moveToNext());
+		}
+
+		closeDB();
+
+		return likes;
+	}
+
+	public void insertUserTopicLike(String username, String topicName, Like like) {
+		db = this.getWritableDatabase();
+		String sqlQuery = "Insert into like (iduser,idtopic, idusertopic,likes,unlikes) "
+				+ "VALUES( (Select u.iduser from user u  where u.username='"
+				+ username
+				+ "'),'"
+				+ 1
+				+ "',"
+				+ "(Select t.idusertopic from usertopic t where t.name='"
+				+ topicName
+				+ "'),'"
+				+ like.getLike()
+				+ "','"
+				+ like.getUnlike() + "')";
+		db.execSQL(sqlQuery);
+		closeDB();
+	}
+
 	public void insertLike(String username, String topicName, Like like) {
 		db = this.getWritableDatabase();
-		String sqlQuery = "Insert into like (iduser,idtopic,likes,unlikes) "
+		String sqlQuery = "Insert into like (iduser,idtopic, idusertopic,likes,unlikes) "
 				+ "VALUES( (Select u.iduser from user u  where u.username='"
-				+ username + "'),"
-				+ "(Select t.idtopic from topic t where t.name='" + topicName
-				+ "')," + "'" + like.getLike() + "','" + like.getUnlike()
-				+ "')";
+				+ username
+				+ "'),"
+				+ "(Select t.idtopic from topic t where t.name='"
+				+ topicName
+				+ "'),'"
+				+ 1
+				+ "','"
+				+ like.getLike()
+				+ "','"
+				+ like.getUnlike() + "')";
 		db.execSQL(sqlQuery);
 		closeDB();
 	}
@@ -353,7 +409,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 
 	}
 
-	public Presentation getPrensetaion(String presentationName) {
+	public Presentation getPresentaion(String presentationName) {
 		Presentation presentation = new Presentation();
 
 		Log.d("DatabaseConnection", "GETING");
@@ -379,6 +435,17 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		}
 
 		closeDB();
+
+		return presentation;
+	}
+
+	public Presentation getUserTopicPresentaion(String topicName) {
+		Presentation presentation = new Presentation();
+		CustomMapModel customMapModel = getCustomMapModel(topicName);
+
+		presentation.setImage(customMapModel.getUserTopic().getImage());
+		presentation.setDescription(customMapModel.getUserTopic()
+				.getDescription());
 
 		return presentation;
 	}
@@ -609,6 +676,41 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		return customMapModel;
 	}
 
+	public CustomMapModel getCustomMapModel(String name) {
+
+		db = this.getWritableDatabase();
+		CustomMapModel cm = null;
+
+		String customMapQuery = "SELECT ut.idusertopic, ut.iduser, ut.name, ut.description, ut.image,ut.color, ut.lat, ut.lng FROM usertopic ut where ut.name='"
+				+ name + "'";
+
+		Cursor customMapCursor = db.rawQuery(customMapQuery, null);
+
+		if (customMapCursor.moveToFirst()) {
+			do {
+				UserTopic t = new UserTopic();
+
+				t.setIdusertopic(customMapCursor.getInt(0));
+				t.setIduser(customMapCursor.getInt(1));
+				t.setName(customMapCursor.getString(2));
+				t.setDescription(customMapCursor.getString(3));
+				t.setImage(customMapCursor.getString(4));
+				t.setColor(customMapCursor.getString(5));
+				t.setLat(customMapCursor.getDouble(6));
+				t.setLng(customMapCursor.getDouble(7));
+
+				cm = new CustomMapModel(t);
+
+				Log.d("CustomMapModel", "Getting " + t.getName());
+			} while (customMapCursor.moveToNext());
+		}
+
+		closeDB();
+
+		Log.d("CustomMapModel", "Finished");
+		return cm;
+	}
+
 	public void insertUserTopic(UserTopic ut, String username) {
 		db = this.getWritableDatabase();
 
@@ -638,21 +740,37 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 
 		closeDB();
 
-		ArrayList<CustomMapModel> customMapModel = new ArrayList<CustomMapModel>(
-				0);
-		customMapModel = getCustomMapModel();
+	}
 
-		for (CustomMapModel cm : customMapModel) {
-			Log.d("CustomMapModel", "Getting "
-					+ cm.getUserTopic().getIdusertopic() + " "
-					+ cm.getUserTopic().getIduser() + " "
-					+ cm.getUserTopic().getName() + " "
-					+ cm.getUserTopic().getDescription() + " "
-					+ cm.getUserTopic().getImage() + " "
-					+ cm.getUserTopic().getColor() + " "
-					+ cm.getUserTopic().getLat() + " "
-					+ cm.getUserTopic().getLng());
-		}
+	public void insertUserTopic(UserTopic ut) {
+		db = this.getWritableDatabase();
+		Log.d("INSERTED USER TOPIC INSIDE DATABSE",
+				"INSERTED USER TOPIC INSIDE DATABSE");
+
+		Log.d("Inserting", "here isnerting");
+		String sqlQuery = "Insert into usertopic (idusertopic,iduser,name,description,image,color,lat,lng) "
+				+ "VALUES('"
+				+ ut.getIdusertopic()
+				+ "','"
+				+ ut.getIduser()
+				+ "','"
+				+ ut.getName()
+				+ "','"
+				+ ut.getDescription()
+				+ "','"
+				+ ut.getImage()
+				+ "','"
+				+ ut.getColor()
+				+ "','"
+				+ ut.getLat()
+				+ "','" + ut.getLng() + "')";
+
+		Log.d("Inserting", sqlQuery);
+
+		db.execSQL(sqlQuery);
+		Log.d("CustomMapModel", "Inserting " + ut.getName());
+
+		closeDB();
 
 	}
 
@@ -662,7 +780,8 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 				+ clickPosition.get("NAME") + "',description='"
 				+ clickPosition.get("DESCRIPTION") + "',lat='"
 				+ clickPosition.get("LAT") + "',lng='"
-				+ clickPosition.get("LNG") + "' WHERE idusertopic ='"
+				+ clickPosition.get("LNG") + "', color='"
+				+ clickPosition.get("COLOR") + "' WHERE idusertopic ='"
 				+ clickPosition.get("IDUSERTOPIC") + "'";
 		db.execSQL(sqlQuery);
 		closeDB();

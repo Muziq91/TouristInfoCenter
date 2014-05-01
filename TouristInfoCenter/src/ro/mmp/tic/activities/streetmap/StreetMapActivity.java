@@ -468,6 +468,7 @@ public class StreetMapActivity extends ARViewActivity implements
 									Intent intent = new Intent(
 											StreetMapActivity.this,
 											PresentationActivity.class);
+									intent.putExtra("token", "streetmap");
 									intent.putExtra("loggedUser", username);
 									intent.putExtra(
 											"name",
