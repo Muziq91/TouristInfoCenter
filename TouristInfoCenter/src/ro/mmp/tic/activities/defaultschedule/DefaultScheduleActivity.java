@@ -1,15 +1,24 @@
 package ro.mmp.tic.activities.defaultschedule;
 
+import java.util.ArrayList;
+
 import ro.mmp.tic.R;
+import ro.mmp.tic.domain.UserPref;
+import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 public class DefaultScheduleActivity extends Activity {
+
+	private static String username;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +26,37 @@ public class DefaultScheduleActivity extends Activity {
 		setContentView(R.layout.activity_default_schedule);
 		// Show the Up button in the action bar.
 		setupActionBar();
+
+		if (username == null) {
+			Intent i = getIntent();
+			username = i.getStringExtra("loggedUser");
+		}
+
+	}
+
+	public void onGoToQuestionnaierButtonClick(View view) {
+
+		Intent intent = new Intent(DefaultScheduleActivity.this,
+				QuestionnaireActivity.class);
+		intent.putExtra("loggedUser", username);
+		startActivityForResult(intent, 1);
+
+	}
+
+	public void onDisplayDefaultScheduleButtonClick(View v) {
+		DataBaseConnection dbc = new DataBaseConnection(this);
+		ArrayList<UserPref> allUserPref = dbc.getAllUserPreferences(username);
+
+		if (allUserPref.get(0).getIduserpref() == 0) {
+			toastMessage("You must first answer the questionnaire");
+		} else {
+
+			Intent intent = new Intent(DefaultScheduleActivity.this,
+					DisplayDefaultScheduleActivity.class);
+			intent.putExtra("loggedUser", username);
+			startActivityForResult(intent, 2);
+		}
+
 	}
 
 	/**
@@ -51,6 +91,17 @@ public class DefaultScheduleActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	/**
+	 * Creates andSends a Toast message
+	 * 
+	 * @param text
+	 */
+	private void toastMessage(String text) {
+
+		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+
 	}
 
 }

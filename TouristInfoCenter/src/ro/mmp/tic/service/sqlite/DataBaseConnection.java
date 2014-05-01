@@ -18,6 +18,7 @@ import ro.mmp.tic.domain.Presentation;
 import ro.mmp.tic.domain.Schedule;
 import ro.mmp.tic.domain.Topic;
 import ro.mmp.tic.domain.Type;
+import ro.mmp.tic.domain.UserPref;
 import ro.mmp.tic.domain.UserTopic;
 import ro.mmp.tic.service.sqlite.sqliteservice.UpdateCategoryService;
 import ro.mmp.tic.service.sqlite.sqliteservice.UpdatePresentationService;
@@ -50,7 +51,8 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		String topicTable = "create table topic(idtopic integer primary key AUTOINCREMENT, idcategory integer, idtype integer, name text, address text, lat real, lng,real, FOREIGN KEY (idcategory) references category(idcategory), FOREIGN KEY (idtype) references type(idtype))";
 		String scheduleTable = "create table schedule(idschedule integer primary key AUTOINCREMENT, date text,time text, place text)";
 		String presentationTable = "create table presentation(idpresentation integer primary key AUTOINCREMENT, idtopic integer, image text,description text,  FOREIGN KEY (idtopic) references topic(idtopic))";
-		String userTopicTable = "create table usertopic(idusertopic integer primary key AUTOINCREMENT, iduser integer, name text, description text, image text, color text, lat real, lng,real,  FOREIGN KEY (iduser) references user(iduser))";
+		String userTopicTable = "create table usertopic(idusertopic integer primary key AUTOINCREMENT, iduser integer, name text, description text, image text, color text, lat real, lng real,  FOREIGN KEY (iduser) references user(iduser))";
+		String userPrefTable = "create table userpref(iduserpref integer primary key AUTOINCREMENT, iduser integer, favfood text, favactivity text, likehistory text,  FOREIGN KEY (iduser) references user(iduser))";
 
 		db.execSQL(userTable);
 		db.execSQL(categorytable);
@@ -61,6 +63,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		db.execSQL(scheduleTable);
 		db.execSQL(presentationTable);
 		db.execSQL(userTopicTable);
+		db.execSQL(userPrefTable);
 
 		closeDB();
 	}
@@ -77,6 +80,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		String scheduleTable = "DROP TABLE IF EXISTS schedule";
 		String presentationTable = "DROP TABLE IF EXISTS presentation";
 		String userTopicTable = "DROP TABLE IF EXISTS usertopic";
+		String userPrefTable = "DROP TABLE IF EXISTS userpref";
 
 		db.execSQL(userTable);
 		db.execSQL(typeTable);
@@ -87,6 +91,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		db.execSQL(scheduleTable);
 		db.execSQL(presentationTable);
 		db.execSQL(userTopicTable);
+		db.execSQL(userPrefTable);
 
 		onCreate(db);
 		closeDB();
@@ -389,6 +394,82 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		closeDB();
 
 		return topic;
+	}
+
+	public ArrayList<HashMap<String, String>> getTopicAfterCategory(
+			String categoryName, boolean likeHistory) {
+		ArrayList<HashMap<String, String>> topics = new ArrayList<HashMap<String, String>>(
+				0);
+
+		db = this.getWritableDatabase();
+		String query;
+		if (likeHistory) {
+			query = "SELECT * FROM topic t "
+					+ "join type ct on t.idtype=ct.idtype "
+					+ "join category c on t.idcategory = c.idcategory where c.category='"
+					+ categoryName + "'";
+		} else {
+			query = "SELECT * FROM topic t "
+					+ "join type ct on t.idtype=ct.idtype "
+					+ "join category c on t.idcategory = c.idcategory where c.category='"
+					+ categoryName + "' and ct.type<>'History'";
+		}
+
+		Cursor cursor = db.rawQuery(query, null);
+
+		if (cursor.moveToFirst()) {
+			do {
+				HashMap<String, String> topic = new HashMap<String, String>(0);
+				topic.put("idtopic", cursor.getString(0));
+				topic.put("idcategory", cursor.getString(1));
+				topic.put("idtype", cursor.getString(2));
+				topic.put("name", cursor.getString(3));
+				topic.put("address", cursor.getString(4));
+				topic.put("lat", cursor.getString(5));
+				topic.put("lng", cursor.getString(6));
+				topics.add(topic);
+
+			} while (cursor.moveToNext());
+		}
+
+		closeDB();
+
+		return topics;
+	}
+
+	public ArrayList<HashMap<String, String>> getTopicAfterType(String typeName) {
+
+		ArrayList<HashMap<String, String>> topics = new ArrayList<HashMap<String, String>>(
+				0);
+
+		db = this.getWritableDatabase();
+
+		String query = "SELECT * FROM topic t "
+				+ "join type ct on t.idtype=ct.idtype "
+				+ "join category c on t.idcategory = c.idcategory "
+				+ "where ct.type='" + typeName + "'";
+
+		Cursor cursor = db.rawQuery(query, null);
+
+		if (cursor.moveToFirst()) {
+			do {
+				HashMap<String, String> topic = new HashMap<String, String>(0);
+				topic.put("idtopic", cursor.getString(0));
+				topic.put("idcategory", cursor.getString(1));
+				topic.put("idtype", cursor.getString(2));
+				topic.put("name", cursor.getString(3));
+				topic.put("address", cursor.getString(4));
+				topic.put("lat", cursor.getString(5));
+				topic.put("lng", cursor.getString(6));
+				topics.add(topic);
+
+			} while (cursor.moveToNext());
+		}
+
+		closeDB();
+
+		return topics;
+
 	}
 
 	/**************************************************************************************/
@@ -864,4 +945,100 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 
 	}
 
+	/**************************************************************************************/
+	/**
+	 * UserPreferecnes methods
+	 * 
+	 * @param up
+	 * @param username
+	 */
+
+	public void saveUserPreferences(UserPref up, String username) {
+
+		db = this.getWritableDatabase();
+		String sqlQuery = "Insert into userpref (iduser,favfood,favactivity,likehistory)"
+				+ "VALUES( (Select u.iduser from user u  where u.username='"
+				+ username
+				+ "'),"
+				+ "'"
+				+ up.getFavFood()
+				+ "','"
+				+ up.getFavActivity() + "','" + up.getLikeHistory() + "')";
+
+		Log.d("DataBaseConenctio", sqlQuery);
+
+		db.execSQL(sqlQuery);
+
+		Log.d("DataBaseConenctio", "Prefrence Inserted");
+		closeDB();
+
+	}
+
+	public ArrayList<UserPref> getAllUserPreferences(String username) {
+
+		ArrayList<UserPref> alluserPref = new ArrayList<UserPref>(0);
+		alluserPref.clear();
+		db = this.getWritableDatabase();
+
+		String scheduleQuery = "SELECT Max(up.iduserpref), up.iduser, up.favfood, up.favactivity, up.likehistory FROM userpref up join user u on up.iduser=u.iduser where u.username='"
+				+ username + "'";
+
+		Cursor userPrefCursor = db.rawQuery(scheduleQuery, null);
+
+		if (userPrefCursor.moveToFirst()) {
+			do {
+				UserPref up = new UserPref();
+
+				up.setIduserpref(userPrefCursor.getInt(0));
+				up.setIduser(userPrefCursor.getInt(1));
+				up.setFavFood(userPrefCursor.getString(2));
+				up.setFavActivity(userPrefCursor.getString(3));
+				up.setLikeHistory(userPrefCursor.getString(4));
+
+				alluserPref.add(up);
+
+			} while (userPrefCursor.moveToNext());
+		}
+
+		closeDB();
+		return alluserPref;
+	}
+
+	public ArrayList<String> getAllDefaultSchedule(
+			ArrayList<UserPref> allUserPref) {
+		boolean likeHistory = false;
+		ArrayList<String> allDefaultSchedule = new ArrayList<String>(0);
+
+		UserPref up = allUserPref.get(0);
+		ArrayList<HashMap<String, String>> allTopicsAfterCategory;
+
+		if (up.getLikeHistory().equals("Yes")) {
+			likeHistory = true;
+		}
+
+		if (up.getFavActivity().equals("Indoor")) {
+			allTopicsAfterCategory = getTopicAfterCategory("Museum",
+					likeHistory);
+
+		} else {
+			allTopicsAfterCategory = getTopicAfterCategory("Landmark",
+					likeHistory);
+		}
+
+		ArrayList<HashMap<String, String>> allTopicsAfterType = getTopicAfterType(up
+				.getFavFood());
+
+		for (HashMap<String, String> p : allTopicsAfterCategory) {
+			String text = p.get("name") + "\n" + p.get("address");
+
+			allDefaultSchedule.add(text);
+		}
+
+		String text = allTopicsAfterType.get(0).get("name") + "\n"
+				+ allTopicsAfterType.get(0).get("address");
+
+		allDefaultSchedule.add(text);
+
+		return allDefaultSchedule;
+	}
 }

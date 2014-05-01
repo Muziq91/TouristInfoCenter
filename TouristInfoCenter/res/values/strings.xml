@@ -109,5 +109,29 @@
     <string name="title_activity_manage_user_locations">Manage User Topic</string>
     <string name="title_activity_user_custom_topic">User Topic StreetMap</string>
     <string name="title_activity_default_schedule">Default Schedule</string>
+    <string name="goToQuestionnaire">Go to Questionnaire</string>
+    <string name="displayDefaultSchedule">See schedule</string>
+    <string name="title_activity_questionnaire">Questionnaire</string>
+    <string name="favFoodSpinner">Choose your favourite food</string>
+
+    <string-array name="favFoodSpinnerArray">
+        <item> Pizza</item>
+        <item> Indian</item>
+        <item> Chinesse</item>
+        <item> Traditional</item>
+    </string-array>
+
+    <string name="favActivitySpinner">Choose your favourite activity</string>
+
+    <string-array name="favActivitySpinnerArray">
+        <item> Indoor</item>
+        <item> Outdoor</item>
+    </string-array>
+
+    <string name="radioLikeHistory">Yes</string>
+    <string name="radioUnlikeHistory">No</string>
+    <string name="likeHistorytext">Do you like history</string>
+    <string name="submitQuestionnaire">Submit Questionnaire</string>
+    <string name="title_activity_display_default_schedule">DisplayDefaultScheduleActivity</string>
 
 </resources>

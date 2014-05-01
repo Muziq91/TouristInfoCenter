@@ -147,10 +147,29 @@
         <activity
             android:name="ro.mmp.tic.activities.defaultschedule.DefaultScheduleActivity"
             android:label="@string/title_activity_default_schedule"
-            android:parentActivityName="ro.mmp.tic.activities.CentralActivity" >
+            android:parentActivityName="ro.mmp.tic.activities.CentralActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ro.mmp.tic.activities.CentralActivity" />
+        </activity>
+        <activity
+            android:name="ro.mmp.tic.activities.defaultschedule.QuestionnaireActivity"
+            android:label="@string/title_activity_questionnaire"
+            android:parentActivityName="ro.mmp.tic.activities.defaultschedule.DefaultScheduleActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ro.mmp.tic.activities.defaultschedule.DefaultScheduleActivity" />
+        </activity>
+        <activity
+            android:name="ro.mmp.tic.activities.defaultschedule.DisplayDefaultScheduleActivity"
+            android:label="@string/title_activity_display_default_schedule"
+            android:parentActivityName="ro.mmp.tic.activities.defaultschedule.DefaultScheduleActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ro.mmp.tic.activities.defaultschedule.DefaultScheduleActivity" />
         </activity>
     </application>
 

@@ -13,6 +13,7 @@ package ro.mmp.tic.activities;
 import java.util.HashMap;
 
 import ro.mmp.tic.R;
+import ro.mmp.tic.activities.defaultschedule.DefaultScheduleActivity;
 import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import android.app.Activity;
 import android.app.AlertDialog;

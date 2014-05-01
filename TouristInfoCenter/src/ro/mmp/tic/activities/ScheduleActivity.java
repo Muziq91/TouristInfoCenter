@@ -26,7 +26,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ScheduleActivity extends Activity {
 
@@ -189,12 +188,6 @@ public class ScheduleActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.schedule, menu);
 		return true;
-	}
-
-	private void toastMessage(String text) {
-
-		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
-
 	}
 
 	private class ScheduleArrayAdapter extends ArrayAdapter<String> {
