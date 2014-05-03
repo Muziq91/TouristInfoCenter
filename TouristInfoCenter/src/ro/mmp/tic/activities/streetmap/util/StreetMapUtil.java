@@ -405,7 +405,7 @@ public class StreetMapUtil {
 		calendar.setTimeInMillis(System.currentTimeMillis());
 		calendar.clear();
 
-		calendar.set(year, month, day, hour, minute, 00);
+		calendar.set(year, month, day, hour-1, minute, 00);
 		Log.d("StreetmapUtil", "Set time by the user " + calendar.getTime()
 				+ " current time: " + currentTime.getTime());
 

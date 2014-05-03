@@ -8,9 +8,30 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".DisplayDefaultScheduleActivity" >
 
-   <ListView
+    <Button
+        android:id="@+id/acceptSchedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:background="@drawable/smallbuttonback"
+        android:onClick="onAcceptScheduleButtonClick"
+        android:text="@string/acceptSchedule" />
+
+    <Button
+        android:id="@+id/refreshSchedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/acceptSchedule"
+        android:layout_alignBottom="@+id/acceptSchedule"
+        android:layout_toRightOf="@+id/acceptSchedule"
+        android:background="@drawable/smallbuttonback"
+        android:onClick="onRefreshScheduleButtonClick"
+        android:text="@string/refreshSchedule" />
+
+    <ListView
         android:id="@+id/defaultScheduleListView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"
+        android:layout_below="@id/refreshSchedule" />
 
 </RelativeLayout>

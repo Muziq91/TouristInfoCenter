@@ -9,6 +9,7 @@ package ro.mmp.tic.service.sqlite;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import ro.mmp.tic.adapter.model.CustomMapModel;
 import ro.mmp.tic.adapter.model.MapModel;
@@ -1028,16 +1029,120 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		ArrayList<HashMap<String, String>> allTopicsAfterType = getTopicAfterType(up
 				.getFavFood());
 
-		for (HashMap<String, String> p : allTopicsAfterCategory) {
-			String text = p.get("name") + "\n" + p.get("address");
+		int poz = 0, newpoz = 0, ok = 0;
+		boolean isSaved = true;
+		Random random = new Random();
+		Log.d("DataBaseConnection", "Incepem inserarea de topicuri in schedule");
+		allDefaultSchedule.clear();
 
-			allDefaultSchedule.add(text);
+		if (allTopicsAfterCategory.size() <= 3) {
+
+			Log.d("DataBaseConnection", "Dimensiunea e mai mica ca 3");
+			for (HashMap<String, String> p : allTopicsAfterCategory) {
+				String text = p.get("name") + "\n" + p.get("address");
+				Log.d("DataBaseConnection", text);
+				allDefaultSchedule.add(text);
+			}
+		} else {
+			Log.d("DataBaseConnection", "Dimensiunea e mai mare ca 3");
+			for (int i = 0; i < 3; i++) {
+				Log.i("DataBaseConnection", "Inseram cate 3 " + i);
+				ok = 0;
+				while (ok != 1) {
+					isSaved = true;
+
+					Log.e("DataBaseConnection", "Intram in while");
+					poz = random.nextInt(allTopicsAfterCategory.size());
+					Log.d("DataBaseConnection", "poz=" + poz);
+					for (String s : allDefaultSchedule) {
+
+						Log.d("DataBaseConnection", "already inserted \n" + s);
+						Log.d("DataBaseConnection",
+								"what we want to insert \n"
+										+ allTopicsAfterCategory.get(poz).get(
+												"name")
+										+ "\n"
+										+ allTopicsAfterCategory.get(poz).get(
+												"address"));
+						if (s.equals(allTopicsAfterCategory.get(poz)
+								.get("name")
+								+ "\n"
+								+ allTopicsAfterCategory.get(poz)
+										.get("address"))) {
+
+							Log.d("DataBaseConnection",
+									"They are already inserted");
+							isSaved = false;
+
+						}
+					}
+
+					if (isSaved) {
+						Log.e("DataBaseConnection",
+								"They are not already isnerted");
+						ok = 1;
+					} else {
+						ok = 0;
+					}
+
+				}
+
+				String text = allTopicsAfterCategory.get(poz).get("name")
+						+ "\n" + allTopicsAfterCategory.get(poz).get("address");
+				allDefaultSchedule.add(text);
+
+				Log.d("DataBaseConnection", "Am adaugat " + text);
+			}
+
 		}
 
-		String text = allTopicsAfterType.get(0).get("name") + "\n"
-				+ allTopicsAfterType.get(0).get("address");
+		if (allTopicsAfterType.size() == 1) {
+			String text = allTopicsAfterType.get(0).get("name") + "\n"
+					+ allTopicsAfterType.get(0).get("address");
 
-		allDefaultSchedule.add(text);
+			allDefaultSchedule.add(text);
+		} else {
+
+			Log.d("DataBaseConnection", "Dimensiunea e mai mare ca 1");
+
+			ok = 0;
+			while (ok != 1) {
+				isSaved = true;
+
+				Log.e("DataBaseConnection", "Intram in while");
+				poz = random.nextInt(allTopicsAfterType.size());
+				Log.d("DataBaseConnection", "poz=" + poz);
+				for (String s : allDefaultSchedule) {
+
+					Log.d("DataBaseConnection", "already inserted \n" + s);
+					Log.d("DataBaseConnection", "what we want to insert \n"
+							+ allTopicsAfterType.get(poz).get("name") + "\n"
+							+ allTopicsAfterType.get(poz).get("address"));
+					if (s.equals(allTopicsAfterType.get(poz).get("name") + "\n"
+							+ allTopicsAfterType.get(poz).get("address"))) {
+
+						Log.d("DataBaseConnection", "They are already inserted");
+						isSaved = false;
+
+					}
+				}
+
+				if (isSaved) {
+					Log.e("DataBaseConnection", "They are not already isnerted");
+					ok = 1;
+				} else {
+					ok = 0;
+				}
+
+			}
+
+			String text = allTopicsAfterType.get(poz).get("name") + "\n"
+					+ allTopicsAfterType.get(poz).get("address");
+			allDefaultSchedule.add(text);
+
+			Log.d("DataBaseConnection", "Am adaugat " + text);
+
+		}
 
 		return allDefaultSchedule;
 	}

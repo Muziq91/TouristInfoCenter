@@ -1,22 +1,30 @@
 package ro.mmp.tic.activities.defaultschedule;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
 import ro.mmp.tic.R;
+import ro.mmp.tic.activities.streetmap.util.ScheduleAlarm;
+import ro.mmp.tic.domain.Schedule;
 import ro.mmp.tic.domain.UserPref;
 import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,6 +35,15 @@ public class DisplayDefaultScheduleActivity extends Activity {
 	private String username;
 	private DataBaseConnection dbc;
 	private ListView listView;
+	private List<String> allStringDefaultSchedule;
+	static final int DATE_DIALOG_ID = 100;
+	// date elements
+	private int year;
+	private int month;
+	private int day;
+	// time elements
+	private int hour;
+	private int minute;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,22 +52,45 @@ public class DisplayDefaultScheduleActivity extends Activity {
 
 		setupActionBar();
 
+		final Calendar c = Calendar.getInstance();
+		year = c.get(Calendar.YEAR);
+		month = c.get(Calendar.MONTH);
+		day = c.get(Calendar.DAY_OF_MONTH);
+
 		Intent i = getIntent();
 		username = i.getStringExtra("loggedUser");
 
 		dbc = new DataBaseConnection(this);
 
 		ArrayList<UserPref> allUserPref = dbc.getAllUserPreferences(username);
-		List<String> allStringDefaultSchedule = dbc
-				.getAllDefaultSchedule(allUserPref);
+		allStringDefaultSchedule = dbc.getAllDefaultSchedule(allUserPref);
 
 		listView = (ListView) findViewById(R.id.defaultScheduleListView);
 
-		DefaultScheduleArrayAdapter adapter = new DefaultScheduleArrayAdapter(this,
-				android.R.layout.simple_list_item_1, allStringDefaultSchedule);
+		DefaultScheduleArrayAdapter adapter = new DefaultScheduleArrayAdapter(
+				this, android.R.layout.simple_list_item_1,
+				allStringDefaultSchedule);
 
 		listView.setAdapter(adapter);
 
+	}
+
+	public void onRefreshScheduleButtonClick(View view) {
+		ArrayList<UserPref> allUserPref = dbc.getAllUserPreferences(username);
+		allStringDefaultSchedule = dbc.getAllDefaultSchedule(allUserPref);
+
+		listView = (ListView) findViewById(R.id.defaultScheduleListView);
+
+		DefaultScheduleArrayAdapter adapter = new DefaultScheduleArrayAdapter(
+				this, android.R.layout.simple_list_item_1,
+				allStringDefaultSchedule);
+
+		listView.setAdapter(adapter);
+
+	}
+
+	public void onAcceptScheduleButtonClick(View view) {
+		showDialog(DATE_DIALOG_ID);
 	}
 
 	/**
@@ -85,6 +125,87 @@ public class DisplayDefaultScheduleActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+
+		switch (id) {
+		case DATE_DIALOG_ID:
+
+			// set date picker as current date
+
+			return new DatePickerDialog(this, datePickerListener, year, month,
+					day);
+
+		}
+
+		return null;
+
+	}
+
+	// the date picker listener
+	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+
+		// when dialog box is closed, below method will be called
+
+		public void onDateSet(DatePicker view, int selectedYear,
+				int selectedMonth, int selectedDay) {
+
+			year = selectedYear;
+			month = selectedMonth + 1;
+			day = selectedDay;
+
+			int scheduleHour = 8;
+			for (String s : allStringDefaultSchedule) {
+				Schedule schedule = new Schedule();
+				schedule.setTime(scheduleHour + ":00");
+				hour = scheduleHour - 1;
+				minute = 0;
+				schedule.setDate(day + "/" + month + "/" + year);
+				schedule.setPlace(s);
+
+				setScheduledAllarm(getApplicationContext(), schedule);
+				toastMessage("date: " + schedule.getDate() + " time: "
+						+ schedule.getTime() + " place " + schedule.getPlace());
+
+				dbc.saveSchedule(schedule);
+				scheduleHour = scheduleHour + 4;
+			}
+
+		}
+
+	};
+
+	public void setScheduledAllarm(Context context, Schedule schedule) {
+
+		Calendar currentTime = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance();
+
+		calendar.setTimeInMillis(System.currentTimeMillis());
+		calendar.clear();
+
+		calendar.set(year, month, day, hour, minute, 00);
+		Log.d("StreetmapUtil", "Set time by the user " + calendar.getTime()
+				+ " current time: " + currentTime.getTime());
+
+		if (calendar.compareTo(currentTime) < 0) {
+			Log.d("StreetmapUtil", "Incorrect time");
+		} else {
+			Log.d("DisplayDefaultSchedule",
+					"time in milis :"
+							+ calendar.getTimeInMillis()
+							+ " currentTime in Milis"
+							+ currentTime.getTimeInMillis()
+							+ " their difference: "
+							+ (calendar.getTimeInMillis() - currentTime
+									.getTimeInMillis()));
+
+			ScheduleAlarm scheduleAlarm = new ScheduleAlarm();
+			scheduleAlarm.setScheduleAllarm(context,
+					calendar.getTimeInMillis(), schedule);
+		}
+
 	}
 
 	/**
@@ -122,4 +243,5 @@ public class DisplayDefaultScheduleActivity extends Activity {
 		}
 
 	}
+
 }

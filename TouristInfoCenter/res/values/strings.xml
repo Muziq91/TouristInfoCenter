@@ -132,6 +132,8 @@
     <string name="radioUnlikeHistory">No</string>
     <string name="likeHistorytext">Do you like history</string>
     <string name="submitQuestionnaire">Submit Questionnaire</string>
-    <string name="title_activity_display_default_schedule">DisplayDefaultScheduleActivity</string>
+    <string name="title_activity_display_default_schedule">Default Schedule</string>
+    <string name="refreshSchedule">Refresh</string>
+    <string name="acceptSchedule">Accept</string>
 
 </resources>
