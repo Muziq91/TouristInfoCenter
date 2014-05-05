@@ -46,7 +46,6 @@ public class UserTopicUpdateLikeService extends UserService {
 
 			connection = super.getConnection();
 
-			Log.d(TAG, "1 am ajuns aici");
 			Strategy getLike = new OperationSetUserTopicLike();
 			getLike.execute(user.getUsername(), userTopic.getName(), like, exists,
 					connection);

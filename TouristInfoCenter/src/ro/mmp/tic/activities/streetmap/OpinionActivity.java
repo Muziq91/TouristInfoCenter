@@ -31,7 +31,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 public class OpinionActivity extends ListActivity implements
 		UserCommentLoadFinishedListener {
@@ -50,6 +49,12 @@ public class OpinionActivity extends ListActivity implements
 		setContentView(R.layout.activity_opinion);
 		// Show the Up button in the action bar.
 		setupActionBar();
+
+		setupInterface();
+
+	}
+
+	private void setupInterface() {
 
 		loadDialog = new ProgressDialog(this);
 		loadDialog.setTitle("Loading Content...");
@@ -79,6 +84,7 @@ public class OpinionActivity extends ListActivity implements
 
 		setTitle(topicName);
 
+		// get all the comments based on which topic is selected
 		if (token.equals("streetmap")) {
 			UserService getComment = new UserCommentService(topic, this);
 			getComment.execute("");
@@ -89,7 +95,12 @@ public class OpinionActivity extends ListActivity implements
 
 	}
 
-	public void sendComment(View v) {
+	
+	/**
+	 * Method used to send a comment
+	 * @param v
+	 */
+	public void onSendCommentButtonClick(View v) {
 
 		loadDialog.show();
 		if (token.equals("streetmap")) {
@@ -101,8 +112,8 @@ public class OpinionActivity extends ListActivity implements
 			getComment.execute("");
 		} else if (token.equals("userstreetmap")) {
 
-			UserService saveComment = new UserTopicSaveCommentService(user, topic,
-					commentText.getText().toString());
+			UserService saveComment = new UserTopicSaveCommentService(user,
+					topic, commentText.getText().toString());
 			saveComment.execute("");
 
 			UserService getComment = new UserTopicCommentService(topic, this);
@@ -146,17 +157,6 @@ public class OpinionActivity extends ListActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
-	/**
-	 * Creates andSends a Toast message
-	 * 
-	 * @param text
-	 */
-	private void toastMessage(String text) {
-
-		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
-
-	}
-
 	@Override
 	public void onTaskFinished(ArrayList<HashMap<String, String>> commentList) {
 		this.commentList = commentList;
@@ -164,6 +164,10 @@ public class OpinionActivity extends ListActivity implements
 		setList();
 	}
 
+	
+	/**
+	 * This method is used to display all the comments in a list
+	 */
 	private void setList() {
 
 		ListAdapter adapter = new SimpleAdapter(OpinionActivity.this,

@@ -1,7 +1,6 @@
 package ro.mmp.tic.activities.streetmap.custommap;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -22,12 +21,6 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -149,14 +142,12 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 
 	}
 
 	@Override
 	public void onSurfaceCreated() {
-		// TODO Auto-generated method stub
 		super.onSurfaceCreated();
 
 	}
@@ -168,7 +159,6 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 
 	@Override
 	public void onLocationSensorChanged(LLACoordinate location) {
-		// TODO Auto-generated method stub
 
 		updateGeometriesLocation(mSensors.getLocation());
 
@@ -176,7 +166,6 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 
 	@Override
 	protected void loadContents() {
-		// TODO Auto-generated method stub
 		Log.d(TAG, "loadContents");
 		loadGPSInformation();
 
@@ -189,7 +178,6 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 
 		this.onResume();
@@ -226,8 +214,9 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 			for (CustomMapModel cm : customMapModel) {
 				Log.d(TAG, "setGeometry " + cm.getUserTopic().getName());
 
-				cm.setGeometry(metaioSDK.createGeometryFromImage(createSign(cm
-						.getUserTopic().getName()), true));
+				cm.setGeometry(metaioSDK.createGeometryFromImage(streetMapUtil
+						.createSign(getApplicationContext(), cm.getUserTopic()
+								.getName()), true));
 				cm.getGeometry().setName(cm.getUserTopic().getName());
 				billboardGroup.addBillboard(cm.getGeometry());
 			}
@@ -319,19 +308,16 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 
 	@Override
 	public void onGravitySensorChanged(float[] arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onHeadingSensorChanged(float[] orientation) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	protected IMetaioSDKCallback getMetaioSDKCallbackHandler() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -426,101 +412,6 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 	private void toastMessage(String text) {
 
 		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
-
-	}
-
-	/**
-	 * This method creates the sign the suer sees on the device screen while
-	 * using this activity
-	 * 
-	 * @param title
-	 * @return
-	 */
-	public String createSign(String title) {
-
-		try {
-
-			final String texture = getCacheDir() + "/" + title + ".png";
-			Paint paint = new Paint();
-			/**
-			 * The background image is POI_bg2
-			 */
-
-			Bitmap sign = null;
-			/**
-			 * Get the image from the assets folder
-			 */
-
-			String file = AssetsManager.getAssetPath("streetmap/POI_bg2.png");
-			Bitmap background = BitmapFactory.decodeFile(file);
-
-			sign = background.copy(Bitmap.Config.ARGB_8888, true);
-
-			Canvas canvas = new Canvas(sign);
-
-			paint.setColor(Color.WHITE);
-			paint.setTextSize(24);
-			paint.setTypeface(Typeface.DEFAULT);
-
-			float x = 30, y = 40;
-			/**
-			 * Now we draw the name onto the sign
-			 */
-
-			if (title.length() > 0) {
-
-				/**
-				 * it removes the white spaces from the initial String
-				 */
-				String trim = title.trim();
-
-				final int width = 200;
-				/**
-				 * we make sure that no text extends outside the rectangle
-				 */
-				int extend = paint.breakText(trim, true, width, null);
-
-				canvas.drawText(trim.substring(0, extend), x, y, paint);
-				/**
-				 * if valid we will draw the second line
-				 */
-
-				if (extend < trim.length()) {
-					trim = trim.substring(extend);
-					y += 20;
-					extend = paint.breakText(trim, true, width, null);
-
-					if (extend < trim.length()) {
-						extend = paint.breakText(trim, true, width - 20, null);
-						canvas.drawText(trim.substring(0, extend) + "...", x,
-								y, paint);
-					} else {
-						canvas.drawText(trim.substring(0, extend), x, y, paint);
-					}
-				}
-
-			}
-			/**
-			 * We will be saving the new texture
-			 */
-
-			try {
-				FileOutputStream outputStream = new FileOutputStream(texture);
-				sign.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
-				return texture;
-
-			} catch (Exception e) {
-
-			}
-
-			sign.recycle();
-			sign = null;
-
-		} catch (Exception e) {
-
-			return null;
-		}
-		return null;
 
 	}
 
@@ -625,6 +516,8 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 	public void saveSchedule(View view) {
 
 		Schedule schedule = new Schedule();
+		ArrayList<Schedule> lastSchedule = dbc.getLastSchedule();
+
 		schedule.setTime(streetMapUtil.getTimeText().getText().toString());
 		schedule.setDate(streetMapUtil.getDateText().getText().toString());
 		schedule.setPlace(customMapModel
@@ -633,6 +526,12 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 				+ "\n"
 				+ customMapModel.get(streetMapUtil.getCurrentPosition())
 						.getUserTopic().getDescription());
+
+		if (lastSchedule.isEmpty()) {
+			schedule.setAlarmnr(1);
+		} else {
+			schedule.setAlarmnr(lastSchedule.get(0).getAlarmnr() + 1);
+		}
 
 		streetMapUtil.setScheduledAllarm(getApplicationContext(), schedule);
 		toastMessage("date: " + schedule.getDate() + " time: "

@@ -1,13 +1,13 @@
 /**
  * @author Matei Mircea
  * 
- * The central activity will display all the availbale options to the user
+ * The central activity will display all the available options to the user. It has the role of updating the sqlite database
+ * with information from the cloud database
  */
 
 package ro.mmp.tic.activities;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,12 +22,12 @@ import ro.mmp.tic.domain.Category;
 import ro.mmp.tic.domain.Presentation;
 import ro.mmp.tic.domain.Topic;
 import ro.mmp.tic.domain.Type;
+import ro.mmp.tic.service.UserService;
 import ro.mmp.tic.service.interfaces.UpdateFinishedListener;
 import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -106,7 +106,6 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 
 		loadDialog.dismiss();
@@ -137,18 +136,27 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 	 */
 	private void toastMessage(String text) {
 
-		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
 
 	}
 
-	private class UpdateDB extends AsyncTask<String, Void, String> {
+	// This is a private inner class used to update the sqlite database with
+	// information from the cloud database
+
+	private class UpdateDB extends UserService {
 
 		private Connection connection;
 
+		// Statement used to update the category database
 		private PreparedStatement categoryStatement;
+		// Statement used to update the type database
 		private PreparedStatement typeStatement;
+		// Statement used to update the topic database
 		private PreparedStatement topicStatement;
+		// Statement used to update the presentation database
 		private PreparedStatement presentationStatement;
+		// Next are the result sets that hold the information from the cloud
+		// database
 		private ResultSet categooryResult;
 		private ResultSet typeResult;
 		private ResultSet topicResult;
@@ -166,23 +174,20 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 		protected String doInBackground(String... arg0) {
 			try {
 
-				ArrayList<Type> types = new ArrayList<Type>(0);
 				ArrayList<Category> categories = new ArrayList<Category>(0);
+				ArrayList<Type> types = new ArrayList<Type>(0);
 				ArrayList<Topic> topics = new ArrayList<Topic>(0);
 				ArrayList<Presentation> presentations = new ArrayList<Presentation>(
 						0);
 
-				Class.forName("com.mysql.jdbc.Driver");
-				connection = DriverManager
-						.getConnection(
-								"jdbc:mysql://ec2-50-19-213-178.compute-1.amazonaws.com:3306/center",
-								"Muziq91", "vasilecaine09");
+				connection = super.getConnection();
 
+				// We get all the categories from the database
 				String categoryQuery = "SELECT c.category,c.color FROM `center`.`category` c";
-
 				categoryStatement = connection.prepareStatement(categoryQuery);
 				categooryResult = categoryStatement.executeQuery();
 
+				// We populate the categories ArrayList
 				while (categooryResult.next()) {
 					Category c = new Category();
 
@@ -191,8 +196,11 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 					categories.add(c);
 				}
 
+				// We insert all the categories in the sqlite databae
 				if (dbc.insertCategory(categories)) {
 
+					// if everything went good and no errors were displayed we
+					// can now move forward and get all types
 					String typeQuery = "SELECT t.type FROM `center`.`type` t";
 					typeStatement = connection.prepareStatement(typeQuery);
 					typeResult = typeStatement.executeQuery();
@@ -206,8 +214,10 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 
 					if (dbc.insertType(types)) {
 
+						// if everything went good and no errors were displayed
+						// we
+						// can now move forward and get all topics
 						String topicQuery = "SELECT t.idcategory,t.idtype,t.name,t.address,t.lat,t.lng FROM `center`.`topic` t";
-
 						topicStatement = connection
 								.prepareStatement(topicQuery);
 						topicResult = topicStatement.executeQuery();
@@ -228,8 +238,8 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 					}
 					if (dbc.insertTopic(topics)) {
 
-						Log.d("Central", "Updating presentation");
-
+						// if everything went good and no errors were displayed
+						// we can now move forward and get all presentations
 						String presentaionQuery = "SELECT p.idpresentation,p.idtopic,p.image,p.description FROM `center`.`presentation` p";
 
 						presentationStatement = connection
@@ -249,19 +259,12 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 
 							p.setDescription(presentationResult
 									.getString("description"));
-							Log.d("Central",
-									"Creating the array list "
-											+ p.getIdpresentation());
 
 							presentations.add(p);
 
 						}
 
-						Log.d("Central", "Inserting ");
-
 						dbc.insertPresentation(presentations);
-
-						Log.d("Central", "FINISHED FINISHED");
 
 					}
 				}
@@ -270,6 +273,7 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 				Log.i("TAG", "ERROR " + e.toString());
 			} finally {
 				try {
+					// we close all statements and the conenctio
 					connection.close();
 					categooryResult.close();
 					categoryStatement.close();
@@ -281,7 +285,6 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 					topicStatement.close();
 
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

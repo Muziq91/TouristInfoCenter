@@ -28,6 +28,17 @@
         android:onClick="onRefreshScheduleButtonClick"
         android:text="@string/refreshSchedule" />
 
+    <Button
+        android:id="@+id/scheduleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_toRightOf="@id/refreshSchedule"
+        android:layout_marginTop="10dip"
+        android:background="@drawable/smallbuttonback"
+        android:onClick="onScheduleButtonClick"
+        android:text="@string/schedule" />
+
     <ListView
         android:id="@+id/defaultScheduleListView"
         android:layout_width="fill_parent"

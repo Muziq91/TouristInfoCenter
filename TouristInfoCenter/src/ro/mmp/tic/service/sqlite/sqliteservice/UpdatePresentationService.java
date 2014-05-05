@@ -11,7 +11,6 @@ import ro.mmp.tic.domain.Presentation;
 import ro.mmp.tic.service.sqlite.UpdateDataBaseService;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 public class UpdatePresentationService extends UpdateDataBaseService {
 
@@ -22,11 +21,9 @@ public class UpdatePresentationService extends UpdateDataBaseService {
 
 	public void insertPresentation(ArrayList<Presentation> presentations) {
 
-		Log.d("UpdatePresentationService", "1 Inserting presentation");
 		for (Presentation p : presentations) {
 
-			if (getPresentaion(p.getIdpresentation(), db).getDescription() == null) {
-				Log.d("UpdatePresentationService", "2 Inserting presentation");
+			if (getPresentaion(p.getIdpresentation()).getDescription() == null) {
 
 				String sqlQuery = "Insert into presentation (idpresentation,idtopic,image,description) "
 						+ "VALUES("
@@ -38,15 +35,13 @@ public class UpdatePresentationService extends UpdateDataBaseService {
 						+ "','"
 						+ p.getDescription() + "')";
 				db.execSQL(sqlQuery);
-				Log.d("UpdatePresentationService", "3 Finished inerting");
 
 			}
 		}
 
 	}
 
-	public Presentation getPresentaion(int idPresentaion, SQLiteDatabase db) {
-		Log.d("UpdatePresentationService", "Verifying presentation");
+	public Presentation getPresentaion(int idPresentaion) {
 		Presentation presentation = new Presentation();
 
 		String query = "Select idpresentation,idtopic,description from presentation where idpresentation="

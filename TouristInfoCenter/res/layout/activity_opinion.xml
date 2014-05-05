@@ -4,7 +4,7 @@
     android:layout_height="fill_parent" >
 
     <TableRow
-        android:id="@+id/tableRow1"
+        android:id="@+id/commentRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="100" >
@@ -29,12 +29,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="30"
             android:background="@drawable/smallbuttonback"
-            android:onClick="sendComment"
+            android:onClick="onSendCommentButtonClick"
             android:text="@string/submitComment" />
     </TableRow>
 
     <TableRow
-        android:id="@+id/tableRow2"
+        android:id="@+id/listRow"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 

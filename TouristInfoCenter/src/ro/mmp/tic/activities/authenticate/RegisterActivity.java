@@ -41,10 +41,14 @@ public class RegisterActivity extends Activity implements
 	private EditText repassword;
 	private EditText email;
 	private String userCountry;
+	// detects if the user has selected a country
 	private boolean countrySelected = false;
+
 	private ProgressDialog loadDialog;
 	private Spinner countrySpinner;
 
+	// If everything is in order the user will be able to register when
+	// canregister is true
 	private boolean canRegister = false;
 	private DataBaseConnection dataBaseConnection;
 
@@ -60,12 +64,12 @@ public class RegisterActivity extends Activity implements
 	}
 
 	/**
-	 * Register account over here
+	 * Register account over here, only when canRegister is true
 	 */
 
-	public void registerAccount(View v) {
+	public void onRegisterAccountButtonClick(View v) {
 
-		intializeEditTextFields();
+		validateInputData();
 		if (canRegister) {
 
 			UserService userRegisterService = new UserRegisterService(
@@ -76,6 +80,8 @@ public class RegisterActivity extends Activity implements
 
 	}
 
+	// this method returns a user object with all the information inputed in the
+	// edit text fields
 	private User getUserFromEdiTextFields() {
 		User user = new User();
 		user.setName(name.getText().toString());
@@ -87,7 +93,9 @@ public class RegisterActivity extends Activity implements
 		return user;
 	}
 
-	private void intializeEditTextFields() {
+	// This method is used to validate the user input such that the user does
+	// not give empty fields, or forget some information
+	private void validateInputData() {
 
 		canRegister = false;
 		name = (EditText) findViewById(R.id.name);
@@ -202,6 +210,8 @@ public class RegisterActivity extends Activity implements
 
 		if (canRegister) {
 
+			// Inserts in the sqlite database when the AsynkTask finishes and if
+			// everything is in order
 			User user = getUserFromEdiTextFields();
 			HashMap<String, String> newUser = new HashMap<String, String>(0);
 			newUser.put("name", user.getName());

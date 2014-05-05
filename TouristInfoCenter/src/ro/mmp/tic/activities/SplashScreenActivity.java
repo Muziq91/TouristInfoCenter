@@ -15,19 +15,14 @@ import android.view.Menu;
 
 public class SplashScreenActivity extends Activity {
 
-	// timer
-	/**
-	 * time it waits until it passes to the next activity
-	 */
+	// time it waits until it passes to the next activity
 	private static int SPLASHTIME = 4000;
 
-	/**
-	 * We use this handler to start the timer
-	 */
+	// We use this handler to start the timer
 	private Handler handler = new Handler();
 
 	/**
-	 * This is the Runnable task we used to send the applciation to the enxt
+	 * This is the Runnable task we used to send the application to the next
 	 * activity
 	 */
 	private Runnable splashTask = new Runnable() {
@@ -61,10 +56,9 @@ public class SplashScreenActivity extends Activity {
 
 	/**
 	 * We need to make sure that the activity returns to the MainActivity when
-	 * the user pushes the back button.
-	 * 
-	 * we use remove callback to remove our task from the timer and it will
-	 * return to the MainActivity without openning AutenticationActivity
+	 * the user pushes the back button. We use remove callback to remove our
+	 * task from the timer and it will return to the MainActivity without
+	 * opening AutenticationActivity
 	 */
 	@Override
 	public void onBackPressed() {

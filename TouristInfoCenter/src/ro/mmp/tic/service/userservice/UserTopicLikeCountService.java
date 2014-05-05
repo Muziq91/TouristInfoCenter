@@ -1,8 +1,8 @@
 /**
  * @author Matei Mircea
  * 
- * this class extends UserService and is an asynch task, it gets the count of the likes and unlikes
- * for a certain landmark. It returns the result to opinionActivity using the finishedlistener
+ * this class extends UserService and is an AsynkTask, it gets the count of the likes and unlikes
+ * for a certain user topic. It returns the result to presentationActivity using the finishedlistener
  */
 package ro.mmp.tic.service.userservice;
 

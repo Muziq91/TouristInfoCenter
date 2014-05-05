@@ -12,17 +12,21 @@ public class Schedule {
 	private String date;
 	private String time;
 	private String place;
+	private int alarmnr;
 
 	public Schedule() {
 
 	}
 
-	public Schedule(int idschedule, String date, String time, String place) {
+	public Schedule(int idschedule, String date, String time, String place,
+			int alarmnr) {
 
 		this.idschedule = idschedule;
 		this.date = date;
 		this.time = time;
 		this.place = place;
+		this.setAlarmnr(alarmnr);
+
 	}
 
 	public int getIdschedule() {
@@ -55,5 +59,13 @@ public class Schedule {
 
 	public void setPlace(String place) {
 		this.place = place;
+	}
+
+	public int getAlarmnr() {
+		return alarmnr;
+	}
+
+	public void setAlarmnr(int alarmnr) {
+		this.alarmnr = alarmnr;
 	}
 }

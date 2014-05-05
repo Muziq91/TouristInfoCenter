@@ -21,6 +21,8 @@ public abstract class UserService extends AsyncTask<String, Void, String> {
 	protected Connection connection;
 	protected Context context;
 
+	// It is not possible for the invocations of the synchronized method on the
+	// same object to interleave
 	protected synchronized Connection getConnection() {
 
 		if (connection == null) {

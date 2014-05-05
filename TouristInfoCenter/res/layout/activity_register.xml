@@ -111,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
                 android:background="@drawable/buttonback"
-                android:onClick="registerAccount"
+                android:onClick="onRegisterAccountButtonClick"
                 android:text="@string/register" />
         </LinearLayout>
         <!-- Registration Form Ends -->

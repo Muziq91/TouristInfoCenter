@@ -20,13 +20,12 @@ public class UpdateTypeService extends UpdateDataBaseService {
 		this.db = db;
 	}
 
-	
 	@Override
 	public void insertType(ArrayList<Type> types) {
 
 		for (Type t : types) {
 
-			if (getType(t.getType(), db).isEmpty()) {
+			if (getType(t.getType()).isEmpty()) {
 				String sqlQuery = "Insert into type (type) " + "VALUES('"
 						+ t.getType() + "')";
 				db.execSQL(sqlQuery);
@@ -36,7 +35,7 @@ public class UpdateTypeService extends UpdateDataBaseService {
 
 	}
 
-	public HashMap<String, String> getType(String typeName, SQLiteDatabase db) {
+	public HashMap<String, String> getType(String typeName) {
 		HashMap<String, String> type = new HashMap<String, String>(0);
 
 		String query = "Select * from type where type='" + typeName + "'";

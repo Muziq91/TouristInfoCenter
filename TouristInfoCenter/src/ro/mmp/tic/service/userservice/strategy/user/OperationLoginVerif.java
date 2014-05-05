@@ -17,6 +17,7 @@ import ro.mmp.tic.service.userservice.strategy.Strategy;
 
 public class OperationLoginVerif extends Strategy {
 
+	@Override
 	public boolean execute(User user, Connection connection) {
 
 		PreparedStatement statement = null;

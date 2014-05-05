@@ -27,7 +27,7 @@
         android:background="@drawable/buttonback"
         android:minHeight="38dip"
         android:minWidth="24dip"
-        android:onClick="register"
+        android:onClick="onRegisterButtonClick"
         android:text="@string/register" />
 
     <Button
@@ -40,7 +40,7 @@
         android:background="@drawable/buttonback"
         android:minHeight="38dip"
         android:minWidth="24dip"
-        android:onClick="login"
+        android:onClick="onLoginButtonClick"
         android:text="@string/login" />
 
 </RelativeLayout>

@@ -1,7 +1,8 @@
 /**
  * @author Matei Mircea
  * 
- * this class extends Strategy and has the role of updating the likes and unlikes of a user for a certain landmark
+ * this class extends Strategy and has the role of updating the likes and 
+ * unlikes of a user for a certain landmark
  */
 package ro.mmp.tic.service.userservice.strategy.like;
 
@@ -27,9 +28,8 @@ public class OperationSetUserTopicLike extends Strategy {
 							+ like.getUnlike());
 
 			String sqlQuery = "";
+			// if the like column already exists we only udpate it
 			if (exists) {
-				Log.d("OperationSetUserTopicLike", "2 update am ajuns aici "
-						+ like.getLike() + " " + like.getUnlike());
 
 				sqlQuery = "UPDATE `center`.`like` l SET l.likes="
 						+ like.getLike()
@@ -39,11 +39,10 @@ public class OperationSetUserTopicLike extends Strategy {
 						+ username + "')" + " AND l.idusertopic='"
 						+ like.getIdusertopic() + "'";
 				
-				Log.d("OperationSetUserTopicLike", sqlQuery);
-			} else {
+			} 
+			// if the like comment does not exist we insert it
+			else {
 
-				Log.d("OperationSetUserTopicLike", "2 insert am ajuns aici "
-						+ like.getLike() + " " + like.getUnlike());
 				sqlQuery = "Insert into `center`.`like` (iduser,idtopic,idusertopic,likes,unlikes) "
 						+ "VALUES( (Select u.iduser from `center`.`user` u  where u.username='"
 						+ username
@@ -54,14 +53,11 @@ public class OperationSetUserTopicLike extends Strategy {
 						+ like.getLike()
 						+ ","
 						+ like.getUnlike() + ")";
-				Log.d("OperationSetUserTopicLike", sqlQuery);
 			}
 
 			statement = connection.createStatement();
 			statement.executeUpdate(sqlQuery);
 
-			Log.d("OperationSetUserTopicLike",
-					"3 am ajuns aici si am facut apelu in baza de date");
 		} catch (Exception e) {
 
 			try {

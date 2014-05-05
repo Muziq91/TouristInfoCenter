@@ -21,22 +21,20 @@ public class ImageUtil {
 
 	}
 
+	// saves image to internal storage
 	public boolean saveImageToInternalStorage(Bitmap image, String imageName) {
 
 		try {
 			// Use the compress method on the Bitmap object to write image to
 			// the OutputStream
-			Log.d("ImageUtil", "Trying to save image ");
 			@SuppressWarnings("static-access")
 			FileOutputStream fos = context.openFileOutput(imageName + ".png",
 					context.MODE_PRIVATE);
 
 			// Writing the bitmap to the output stream
 			image.compress(Bitmap.CompressFormat.PNG, 100, fos);
-			Log.d("ImageUtil", "Image was stored");
 
 			fos.close();
-			Log.d("ImageUtil", "Saved in internal storage ");
 			return true;
 		} catch (Exception e) {
 			Log.e("ImageUtil", e.getMessage());
@@ -44,6 +42,7 @@ public class ImageUtil {
 		}
 	}
 
+	// gets the iamge from internal storage
 	public Bitmap getThumbnail(String filename) {
 
 		Bitmap thumbnail = null;

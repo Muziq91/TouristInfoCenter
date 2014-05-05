@@ -1,11 +1,12 @@
 /**
  * @author Matei Mircea
  * 
- * helps with the streetmap functionality
+ * This class is used to help with streetmap functionality
  */
 
 package ro.mmp.tic.activities.streetmap.util;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -16,11 +17,19 @@ import ro.mmp.tic.domain.Schedule;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.metaio.tools.io.AssetsManager;
 
 public class StreetMapUtil {
 
@@ -405,25 +414,15 @@ public class StreetMapUtil {
 		calendar.setTimeInMillis(System.currentTimeMillis());
 		calendar.clear();
 
-		calendar.set(year, month, day, hour-1, minute, 00);
-		Log.d("StreetmapUtil", "Set time by the user " + calendar.getTime()
-				+ " current time: " + currentTime.getTime());
+		calendar.set(year, month, day, hour - 1, minute, 00);
 
 		if (calendar.compareTo(currentTime) < 0) {
 			Log.d("StreetmapUtil", "Incorrect time");
 		} else {
-			Log.d("StreetmapUtil",
-					"time in milis :"
-							+ calendar.getTimeInMillis()
-							+ " currentTime in Milis"
-							+ currentTime.getTimeInMillis()
-							+ " their difference: "
-							+ (calendar.getTimeInMillis() - currentTime
-									.getTimeInMillis()));
 
-			ScheduleAlarm scheduleAlarm = new ScheduleAlarm();
-			scheduleAlarm.setScheduleAllarm(context,
-					calendar.getTimeInMillis(), schedule);
+			ScheduleAlarm scheduleAlarm = new ScheduleAlarm(context);
+			scheduleAlarm.setScheduleAllarm(calendar.getTimeInMillis(),
+					schedule);
 		}
 
 	}
@@ -434,7 +433,6 @@ public class StreetMapUtil {
 	 * @param context
 	 */
 	public void setUpLegendAlertDialog(Context context) {
-		Log.d("StreetMap", "Enter onLegendButtonClick Touched");
 		// We create the view
 		LayoutInflater layoutInflater = LayoutInflater.from(context);
 		View dialogView = layoutInflater.inflate(R.layout.legend_prompt_layout,
@@ -449,8 +447,6 @@ public class StreetMapUtil {
 		alertDialogBuilder.setTitle("Legend");
 		alertDialogBuilder.setIcon(R.drawable.ic_launcher);
 		alertDialogBuilder.setInverseBackgroundForced(true);
-
-		Log.d("StreetMap", "set the view");
 
 		// setUpAlert(geometry.getName()); // say what the buttons do
 		alertDialogBuilder.setCancelable(true)
@@ -489,6 +485,101 @@ public class StreetMapUtil {
 		dateText = (TextView) dialogView.findViewById(R.id.dateText);
 		timeText = (TextView) dialogView.findViewById(R.id.timeText);
 		currentText = (TextView) dialogView.findViewById(R.id.currentText);
+
+	}
+
+	/**
+	 * This method creates the sign the suer sees on the device screen while
+	 * using this activity
+	 * 
+	 * @param title
+	 * @return
+	 */
+	public String createSign(Context context, String title) {
+
+		try {
+
+			final String texture = context.getCacheDir() + "/" + title + ".png";
+			Paint paint = new Paint();
+			/**
+			 * The background image is POI_bg2
+			 */
+
+			Bitmap sign = null;
+			/**
+			 * Get the image from the assets folder
+			 */
+
+			String file = AssetsManager.getAssetPath("streetmap/POI_bg2.png");
+			Bitmap background = BitmapFactory.decodeFile(file);
+
+			sign = background.copy(Bitmap.Config.ARGB_8888, true);
+
+			Canvas canvas = new Canvas(sign);
+
+			paint.setColor(Color.WHITE);
+			paint.setTextSize(24);
+			paint.setTypeface(Typeface.DEFAULT);
+
+			float x = 30, y = 40;
+			/**
+			 * Now we draw the name onto the sign
+			 */
+
+			if (title.length() > 0) {
+
+				/**
+				 * it removes the white spaces from the initial String
+				 */
+				String trim = title.trim();
+
+				final int width = 200;
+				/**
+				 * we make sure that no text extends outside the rectangle
+				 */
+				int extend = paint.breakText(trim, true, width, null);
+
+				canvas.drawText(trim.substring(0, extend), x, y, paint);
+				/**
+				 * if valid we will draw the second line
+				 */
+
+				if (extend < trim.length()) {
+					trim = trim.substring(extend);
+					y += 20;
+					extend = paint.breakText(trim, true, width, null);
+
+					if (extend < trim.length()) {
+						extend = paint.breakText(trim, true, width - 20, null);
+						canvas.drawText(trim.substring(0, extend) + "...", x,
+								y, paint);
+					} else {
+						canvas.drawText(trim.substring(0, extend), x, y, paint);
+					}
+				}
+
+			}
+			/**
+			 * We will be saving the new texture
+			 */
+
+			try {
+				FileOutputStream outputStream = new FileOutputStream(texture);
+				sign.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+				return texture;
+
+			} catch (Exception e) {
+
+			}
+
+			sign.recycle();
+			sign = null;
+
+		} catch (Exception e) {
+
+			return null;
+		}
+		return null;
 
 	}
 

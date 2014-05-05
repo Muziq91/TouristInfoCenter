@@ -32,7 +32,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -68,6 +67,13 @@ public class PresentationActivity extends Activity implements
 		// Show the Up button in the action bar.
 		setupActionBar();
 
+		setupInterface();
+
+	}
+
+	// This method is Used to prepare the interface for the presentation for the
+	// selected location
+	private void setupInterface() {
 		loadDialog = new ProgressDialog(this);
 		loadDialog.setTitle("Loading Content...");
 		loadDialog.setMessage("Please wait.");
@@ -95,24 +101,27 @@ public class PresentationActivity extends Activity implements
 		topicName = intent.getStringExtra("name");
 		username = intent.getStringExtra("loggedUser");
 
-		if (token.equals("streetmap")) {
-			setLikeButtons();
-			Log.d("PresentationActivity", "Entering  PresentationActivity");
+		// set the title based on the location selected
+		setTitle(topicName);
 
+		if (token.equals("streetmap")) {
+
+			// sets the like and unlike buttons
+			setLikeButtons();
+
+			// gets the presentation to be displayed
 			Presentation presentation = dataBaseConnection
 					.getPresentaion(topicName);
 
-			setTitle(topicName);
+			// set up the interface elements information
 			descriptionText.setText(presentation.getDescription());
 
-			Log.d("ce am primit sari in ochi ", "" + presentation.getImage());
 			Context context = imageView.getContext();
+			// get the id of the image for this presentation
 			int id = context.getResources().getIdentifier(
 					presentation.getImage(), "drawable",
 					context.getPackageName());
 			imageView.setImageResource(id);
-
-			Log.d("PresentationActivity", "GUI set up");
 
 			user = new User();
 			user.setUsername(username);
@@ -124,22 +133,19 @@ public class PresentationActivity extends Activity implements
 					getApplicationContext(), this);
 			likeCountService.execute("");
 		} else if (token.equals("userstreetmap")) {
-			toastMessage("Presentation for user streetmap");
-
+			// sets the like and unlike buttons
 			setUserTopicLikeButtons();
-			Log.d("PresentationActivity", "Entering  PresentationActivity");
 
+			// gets the presentation that will be displayed
 			Presentation presentation = dataBaseConnection
 					.getUserTopicPresentaion(topicName);
 
-			setTitle(topicName);
+			// set up the interface elements information
 			descriptionText.setText(presentation.getDescription());
 
-			Log.d("ce am primit sari in ochi ", "" + presentation.getImage());
 			ImageUtil iu = new ImageUtil(this);
+			// gets the iamge that was saved for this presentation
 			imageView.setImageBitmap(iu.getThumbnail(presentation.getImage()));
-
-			Log.d("PresentationActivity", "GUI set up");
 
 			user = new User();
 			user.setUsername(username);
@@ -154,6 +160,10 @@ public class PresentationActivity extends Activity implements
 		}
 
 	}
+
+	/**
+	 * This method is used to prepare the buttons for a topic
+	 */
 
 	private void setLikeButtons() {
 		HashMap<String, String> likes = dataBaseConnection.getLike(username,
@@ -173,7 +183,7 @@ public class PresentationActivity extends Activity implements
 			if (like.getLike() == 1) {
 				likeButton.setVisibility(View.GONE);
 				unlikeButton.setVisibility(View.VISIBLE);
-			} else if (like.getIdlike() == 0) {
+			} else if (like.getLike() == 0) {
 				likeButton.setVisibility(View.VISIBLE);
 				unlikeButton.setVisibility(View.GONE);
 			}
@@ -187,7 +197,10 @@ public class PresentationActivity extends Activity implements
 
 	}
 
-	public void setUserTopicLikeButtons() {
+	/**
+	 * This method is used to prepare the buttons for a user topic
+	 */
+	private void setUserTopicLikeButtons() {
 
 		HashMap<String, String> likes = dataBaseConnection.getUserTopicLike(
 				username, topicName);
@@ -207,7 +220,7 @@ public class PresentationActivity extends Activity implements
 			if (like.getLike() == 1) {
 				likeButton.setVisibility(View.GONE);
 				unlikeButton.setVisibility(View.VISIBLE);
-			} else if (like.getIdlike() == 0) {
+			} else if (like.getLike() == 0) {
 				likeButton.setVisibility(View.VISIBLE);
 				unlikeButton.setVisibility(View.GONE);
 			}
@@ -224,7 +237,7 @@ public class PresentationActivity extends Activity implements
 	/**
 	 * When the user presses the like button
 	 */
-	public void likeTopic(View v) {
+	public void onLikeTopicButtonClick(View v) {
 
 		loadDialog.show();
 
@@ -252,10 +265,14 @@ public class PresentationActivity extends Activity implements
 
 			like.setLike(1);
 			like.setUnlike(0);
+			// updates the cloud database like column when the likebutton is
+			// pressed
 			UserService userUpdateLike = new UserTopicUpdateLikeService(user,
 					userTopic, getApplicationContext(), like, exists, this);
 			userUpdateLike.execute("");
 
+			// updates the sqlite database like column when the likebutton is
+			// pressed
 			if (exists == false) {
 				dataBaseConnection.insertUserTopicLike(username, topicName,
 						like);
@@ -270,7 +287,7 @@ public class PresentationActivity extends Activity implements
 	/**
 	 * When the user presses the unlike button
 	 */
-	public void unlikeTopic(View v) {
+	public void onUnlikeTopicButtonClick(View v) {
 		loadDialog.show();
 
 		if (token.equals("streetmap")) {
@@ -298,10 +315,14 @@ public class PresentationActivity extends Activity implements
 			like.setLike(0);
 			like.setUnlike(1);
 
+			// updates the cloud database like column when the unlikebutton is
+			// pressed
 			UserService userUpdateLike = new UserTopicUpdateLikeService(user,
 					userTopic, getApplicationContext(), like, exists, this);
 			userUpdateLike.execute("");
 
+			// updates the sqlite database like column when the unlikebutton is
+			// pressed
 			if (exists == false) {
 				dataBaseConnection.insertUserTopicLike(username, topicName,
 						like);
@@ -324,7 +345,7 @@ public class PresentationActivity extends Activity implements
 	public void onCommentButtonPush(View v) {
 		Intent intent = new Intent(PresentationActivity.this,
 				OpinionActivity.class);
-		
+
 		intent.putExtra("loggedUser", user.getUsername());
 		intent.putExtra("name", topicName);
 		intent.putExtra("token", token);
@@ -372,6 +393,10 @@ public class PresentationActivity extends Activity implements
 		return super.onOptionsItemSelected(item);
 	}
 
+	/**
+	 * When the count of the likes has finished it returns here to display the
+	 * chart with all the likes and unlikes
+	 */
 	@Override
 	public void onTaskFinished(int likeCount, int unlikeCount) {
 
@@ -433,10 +458,15 @@ public class PresentationActivity extends Activity implements
 	 */
 	private void toastMessage(String text) {
 
-		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT)
+				.show();
 
 	}
 
+	/**
+	 * When the like or unlike has been updated in the database it comes here in
+	 * order to update the chart
+	 */
 	@Override
 	public void onTaskFinished() {
 		loadDialog.dismiss();

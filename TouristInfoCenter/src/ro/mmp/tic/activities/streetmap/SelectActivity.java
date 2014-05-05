@@ -28,10 +28,10 @@ public class SelectActivity extends FragmentActivity implements
 		ActionBar.TabListener {
 
 	private ViewPager viewPager;
-	private TabAdapter mAdapter;
+	private TabAdapter tabAdapter;
 	private ActionBar actionBar;
-	private TypeSelectListener tsl;
-	private LocationSelectListener ll;
+	private TypeSelectListener typeSelectListener;
+	private LocationSelectListener locationSelectListener;
 
 	// Tab titles
 	private String[] tabs = { "Category", "Type", "Location" };
@@ -43,20 +43,27 @@ public class SelectActivity extends FragmentActivity implements
 		// Show the Up button in the action bar.
 		setupActionBar();
 
-		tsl = new TypeFragment();
-		ll = new LocationFragment();
+		setupTabs();
+
+	}
+
+	//This method sets the tabs and listeners for the fragmentactivity
+	private void setupTabs() {
+		
+		typeSelectListener = new TypeFragment();
+		locationSelectListener = new LocationFragment();
 		// Initilization
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		actionBar = getActionBar();
-		mAdapter = new TabAdapter(getSupportFragmentManager());
+		tabAdapter = new TabAdapter(getSupportFragmentManager());
 
-		viewPager.setAdapter(mAdapter);
+		viewPager.setAdapter(tabAdapter);
 		actionBar.setHomeButtonEnabled(false);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-		// Adding Tabs
-		for (String tab_name : tabs) {
-			actionBar.addTab(actionBar.newTab().setText(tab_name)
+		// Adding Tabs, and setting the listener for the tabs
+		for (String tabName : tabs) {
+			actionBar.addTab(actionBar.newTab().setText(tabName)
 					.setTabListener(this));
 		}
 
@@ -80,6 +87,7 @@ public class SelectActivity extends FragmentActivity implements
 			public void onPageScrollStateChanged(int arg0) {
 			}
 		});
+
 	}
 
 	/**
@@ -128,12 +136,12 @@ public class SelectActivity extends FragmentActivity implements
 		if (tab.getPosition() == 1
 				&& CategoryFragment.getSelectedCategory().isEmpty() == false) {
 
-			tsl.taskFinished();
+			typeSelectListener.taskFinished();
 		}
 
 		if (tab.getPosition() == 2
 				&& TypeFragment.getSeletedType().isEmpty() == false) {
-			ll.taskFinished();
+			locationSelectListener.taskFinished();
 		}
 
 	}

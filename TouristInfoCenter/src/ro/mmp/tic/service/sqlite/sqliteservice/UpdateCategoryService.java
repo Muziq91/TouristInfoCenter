@@ -25,7 +25,7 @@ public class UpdateCategoryService extends UpdateDataBaseService {
 
 		for (Category c : categories) {
 
-			if (getCategory(c.getCategory(), db).isEmpty()) {
+			if (getCategory(c.getCategory()).isEmpty()) {
 				String sqlQuery = "Insert into category (category,color) "
 						+ "VALUES('" + c.getCategory() + "','" + c.getColor()
 						+ "')";
@@ -37,8 +37,9 @@ public class UpdateCategoryService extends UpdateDataBaseService {
 
 	}
 
-	public HashMap<String, String> getCategory(String categoryName,
-			SQLiteDatabase db) {
+	// This method is used to retrieve from the sqlite database a category using
+	// its name.
+	private HashMap<String, String> getCategory(String categoryName) {
 		HashMap<String, String> category = new HashMap<String, String>(0);
 
 		String query = "Select * from category where category='" + categoryName

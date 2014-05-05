@@ -5,6 +5,9 @@
  * This activity has the role of controlling the login page. It takes the username and password inserted by the user and
  * passes them to the UserLoginService class to be processed. It also offers the possibility to remember the 
  * username and password. This way the user does not have to input them all the time.
+ * 
+ * The class implements the UserLoginServiceFinishedListener interface and overrides its method. This way it passes "this"
+ * to the AsyncTask and when that task finishes it will call the overriden method 
  */
 
 package ro.mmp.tic.activities.authenticate;
@@ -41,11 +44,12 @@ public class LoginActivity extends Activity implements
 	private EditText username;
 	private EditText password;
 	private CheckBox remember;
+
 	private ProgressDialog loadDialog;
 
 	private SharedPreferences loginPreferences;
 	private SharedPreferences.Editor loginPrefsEditor;
-	private Boolean saveLogin;
+	private Boolean saveLoginInfo;
 	private boolean canLogin = false;
 	private DataBaseConnection dataBaseConnection;
 
@@ -56,6 +60,12 @@ public class LoginActivity extends Activity implements
 		// Show the Up button in the action bar.
 		setupActionBar();
 
+		setupInterface();
+
+	}
+
+	// Used to prepare the user interface elements
+	private void setupInterface() {
 		loadDialog = new ProgressDialog(this);
 
 		dataBaseConnection = new DataBaseConnection(this);
@@ -64,12 +74,15 @@ public class LoginActivity extends Activity implements
 		password = (EditText) findViewById(R.id.password);
 		remember = (CheckBox) findViewById(R.id.remember);
 
+		// we use the login preferences in order to remember the username and
+		// password, if the suer desires so
+
 		loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
 		loginPrefsEditor = loginPreferences.edit();
 
-		saveLogin = loginPreferences.getBoolean("saveLogin", false);
+		saveLoginInfo = loginPreferences.getBoolean("saveLoginInfo", false);
 
-		if (saveLogin == true) {
+		if (saveLoginInfo == true) {
 			username.setText(loginPreferences.getString("username", ""));
 			password.setText(loginPreferences.getString("password", ""));
 			remember.setChecked(true);
@@ -80,20 +93,26 @@ public class LoginActivity extends Activity implements
 	 * Login into account over here
 	 */
 
-	public void login(View v) {
+	public void onLoginButtonClick(View v) {
 
-		InitializeEditTextFields();
+		validateInputData();
 		if (canLogin) {
 
+			// We try to get the user from the sqlite database
 			HashMap<String, String> sqlUser = dataBaseConnection
 					.getUserAfterUsername(username.getText().toString());
 
+			// If the user is not inserted in the sqlite database we will check
+			// the cloud database
 			if (sqlUser.get("username") == null) {
 
 				UserService userLoginService = new UserLoginService(
 						createUser(), getApplicationContext(), this);
 				userLoginService.execute("");
-			} else {
+			}
+			// If the user is in the sqlite databse, he has an account and we
+			// let him go to the next activity
+			else {
 				Intent intent = new Intent(getApplicationContext(),
 						CentralActivity.class);
 				intent.putExtra("loggedUser", username.getText().toString());
@@ -113,13 +132,15 @@ public class LoginActivity extends Activity implements
 		loadDialog.dismiss();
 	}
 
-	public void remember(View view) {
+	// When the user click on the remember username and password checkbox and
+	// his information will be remembered
+	public void onRememberCheckClick(View view) {
 
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(username.getWindowToken(), 0);
 
 		if (remember.isChecked()) {
-			loginPrefsEditor.putBoolean("saveLogin", true);
+			loginPrefsEditor.putBoolean("saveLoginInfo", true);
 			loginPrefsEditor.putString("username", username.getText()
 					.toString());
 			loginPrefsEditor.putString("password", password.getText()
@@ -131,6 +152,7 @@ public class LoginActivity extends Activity implements
 		}
 	}
 
+	// used to create a basic user with only username and password
 	private User createUser() {
 		User user = new User();
 
@@ -140,7 +162,8 @@ public class LoginActivity extends Activity implements
 		return user;
 	}
 
-	private void InitializeEditTextFields() {
+	// This method is used to validate the information from the text fields
+	private void validateInputData() {
 		canLogin = false;
 
 		loadDialog.setTitle("Loading Content...");
@@ -159,7 +182,7 @@ public class LoginActivity extends Activity implements
 			loadDialog.dismiss();
 			toastMessage("Username can not be empty");
 
-		} else if (username.getText().toString().matches("")) {
+		} else if (password.getText().toString().matches("")) {
 			loadDialog.dismiss();
 			toastMessage("Password can not be empty");
 

@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
                 android:background="@drawable/buttonback"
-                android:onClick="login"
+                android:onClick="onLoginButtonClick"
                 android:text="@string/login" />
             <!-- Link to Login Screen -->
 
@@ -70,7 +70,7 @@
                 android:id="@+id/remember"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="remember"
+                android:onClick="onRememberCheckClick"
                 android:text="@string/remember" />
         </LinearLayout>
         <!-- Login Form Ends -->

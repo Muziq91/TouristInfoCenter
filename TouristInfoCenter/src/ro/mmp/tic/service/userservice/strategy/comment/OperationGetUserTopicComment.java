@@ -1,3 +1,10 @@
+/**
+ * 
+ * @author Matei Mircea
+ * 
+ * This class is used to return all the comments from a certain usertopic
+ */
+
 package ro.mmp.tic.service.userservice.strategy.comment;
 
 import java.sql.Connection;

@@ -27,6 +27,7 @@ public class UserRegisterService extends UserService {
 		this.user = user;
 		this.context = context;
 		this.finishedListener = finishedListener;
+		TAG = "UserRegisterServiceFinishedListener";
 	}
 
 	@Override
@@ -37,6 +38,8 @@ public class UserRegisterService extends UserService {
 
 			Strategy verif = new OperationVerif();
 			if (verif.execute(user, connection)) {
+				// the user is added to the cloud database if everything is in
+				// order
 				Strategy add = new OperationAdd();
 				add.execute(user, connection);
 				return "registered";

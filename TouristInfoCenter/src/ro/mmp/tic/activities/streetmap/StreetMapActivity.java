@@ -7,7 +7,6 @@
 package ro.mmp.tic.activities.streetmap;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -29,13 +28,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -75,8 +68,9 @@ public class StreetMapActivity extends ARViewActivity implements
 
 	private IRadar radar;
 
+	// These id's are used to know which picker to display
 	static final int DATE_DIALOG_ID = 100;
-	static final int TIME_DIALOG_ID = 999;
+	static final int TIME_DIALOG_ID = 200;
 
 	// alert display
 	private boolean displayAlertOnce = false;
@@ -86,6 +80,7 @@ public class StreetMapActivity extends ARViewActivity implements
 	private StreetMapUtil streetMapUtil;
 	private File googleImagefilePath;
 	private String streetMapFile;
+
 	// variables for downloading the image
 	private Display display;
 	private Point size;
@@ -98,6 +93,8 @@ public class StreetMapActivity extends ARViewActivity implements
 	// radar options
 	private float x1, x2;
 	private float y1, y2;
+	// this decides which radar is displayed, true is the gogole image as radar,
+	// false is the default radar
 	private boolean radarType = true;
 	private boolean hasChanged = false;
 
@@ -108,8 +105,6 @@ public class StreetMapActivity extends ARViewActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-	
 
 		/**
 		 * Create connection to database
@@ -174,14 +169,12 @@ public class StreetMapActivity extends ARViewActivity implements
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 
 	}
 
 	@Override
 	public void onSurfaceCreated() {
-		// TODO Auto-generated method stub
 		super.onSurfaceCreated();
 
 	}
@@ -195,38 +188,41 @@ public class StreetMapActivity extends ARViewActivity implements
 
 	}
 
+	/**
+	 * This method is overriden in order to update the interface based on new
+	 * information
+	 */
 	@Override
 	public void onDrawFrame() {
-		// TODO Auto-generated method stub
 		super.onDrawFrame();
-		/*
-		 * Log.d("StreetMap", "Entered lat:" + lat + " lng:" + lng +
-		 * " sensorLant:" + mSensors.getLocation().getLatitude() +
-		 * " sensorLong:" + mSensors.getLocation().getLongitude());
-		 */
 
-		// download map based on lcoation lat and lng
+		// download map based on location lat and lng
+		// detect if the lattitude or longitude has changed and if the radar has
+		// been created
 		if (radar != null
 				&& (lat != mSensors.getLocation().getLatitude() || lng != mSensors
 						.getLocation().getLongitude())) {
-			Log.d("StreetMap", "onDrawFrame");
-			Log.d("StreetMapActivity", "Entering3 in onDrawFrame");
+			// delete the last image downloaded
 			this.deleteFile("mapImage");
+			// get width and height of the screen
 			width = size.x;
 			height = size.y;
 
+			// get new lattitude and longitude
 			lat = mSensors.getLocation().getLatitude();
 			lng = mSensors.getLocation().getLongitude();
 
-			Log.d("StreetMapActivity", "Entering3 in onDrawFrame lat:" + lat
-					+ " lng:" + lng);
-
+			// download the new iamge with the new properties
 			googleUtil.downloadImage(lat, lng, width, height, ZOOM);
 			googleImagefilePath = this.getFileStreamPath("mapImage.png");
+
+			// if the image was successfully donwloaded
 			if (googleImagefilePath.getAbsoluteFile() != null) {
-				Log.d("StreetMapActivity", "set background in onDrawFrame");
 				radar.setBackgroundTexture(googleImagefilePath.toString());
-			} else {
+			}
+			// if the image could not be downloaded, display the default radar
+			else {
+
 				streetMapFile = AssetsManager
 						.getAssetPath("streetmap/radar.png");
 				radar.setBackgroundTexture(streetMapFile);
@@ -236,7 +232,10 @@ public class StreetMapActivity extends ARViewActivity implements
 		}
 		// set up the radar or map based on user click choice
 		if (radar != null && hasChanged) {
+
+			// this determines which radar to select based on user interactions
 			if (radarType) {
+				// this is the google image displayed as the radar
 				googleImagefilePath = this.getFileStreamPath("mapImage.png");
 				if (googleImagefilePath.getAbsoluteFile() != null) {
 					Log.d("StreetMapActivity", "set background in onDrawFrame");
@@ -244,6 +243,7 @@ public class StreetMapActivity extends ARViewActivity implements
 				}
 
 			} else {
+				// this si the default radar displayed
 				streetMapFile = AssetsManager
 						.getAssetPath("streetmap/radar.png");
 				radar.setBackgroundTexture(streetMapFile);
@@ -254,6 +254,8 @@ public class StreetMapActivity extends ARViewActivity implements
 
 				ArrayList<Schedule> schedules = dbc.getAllSchedule();
 
+				// we color green all locations that are currently in the
+				// schedule
 				for (MapModel m : mapModel) {
 
 					if (isInSchedule(m, schedules)) {
@@ -292,7 +294,6 @@ public class StreetMapActivity extends ARViewActivity implements
 
 	@Override
 	protected IMetaioSDKCallback getMetaioSDKCallbackHandler() {
-		// TODO Auto-generated method stub
 
 		return null;
 	}
@@ -321,16 +322,20 @@ public class StreetMapActivity extends ARViewActivity implements
 
 			// set up the bilboard in order for geometries not to overlap
 			billboardGroup = metaioSDK.createBillboardGroup(720, 850);
+			// influences how much the bilboard will expand relative to the
+			// center of the camera
 			billboardGroup.setBillboardExpandFactors(1, 5, 30);
+			// sets the near and far clipping planes of the renderer
 			metaioSDK.setRendererClippingPlaneLimits(50, 100000000);
-			metaioSDK.setLLAObjectRenderingLimits(10, 10000); // to reduce
-																// flickering
+			// reduces flickering
+			metaioSDK.setLLAObjectRenderingLimits(10, 10000);
 
 			// create geometry
 			for (MapModel m : mapModel) {
 
-				m.setGeometry(metaioSDK.createGeometryFromImage(createSign(m
-						.getTopic().getName()), true));
+				m.setGeometry(metaioSDK.createGeometryFromImage(
+						streetMapUtil.createSign(this, m.getTopic().getName()),
+						true));
 				m.getGeometry().setName(m.getTopic().getName());
 				billboardGroup.addBillboard(m.getGeometry());
 			}
@@ -344,8 +349,6 @@ public class StreetMapActivity extends ARViewActivity implements
 			 * Create the radar
 			 */
 
-			Log.d("StreetMapActivity",
-					"Create googleUtil object in loadGPSInformation");
 			googleUtil = new GoogleImageUtil(mapModel, this);
 
 			display = getWindowManager().getDefaultDisplay();
@@ -354,9 +357,10 @@ public class StreetMapActivity extends ARViewActivity implements
 			width = size.x;
 			height = size.y;
 
+			// set the latitude and longitude of the current suer location
 			lat = mSensors.getLocation().getLatitude();
 			lng = mSensors.getLocation().getLongitude();
-			// st up the color for those lcoations that are in the schedule
+			// set up the color for those locations that are in the schedule
 			ArrayList<Schedule> schedules = dbc.getAllSchedule();
 			for (MapModel m : mapModel) {
 				if (isInSchedule(m, schedules)) {
@@ -366,20 +370,15 @@ public class StreetMapActivity extends ARViewActivity implements
 
 			// download the first map from google maps
 			googleUtil.downloadImage(lat, lng, width, height, ZOOM);
-			Log.d("StreetMap", "Saved image");
 			googleImagefilePath = this.getFileStreamPath("mapImage.png");
 
 			// ccreate the radar
 			radar = metaioSDK.createRadar();
-			Log.d("StreetMapActivity",
-					"set background in loadGPSInformation lat:" + lat + "lng:"
-							+ lng);
+
 			// set radar background
 			radar.setBackgroundTexture(googleImagefilePath.toString());
 			radar.setRelativeToScreen(IGeometry.ANCHOR_TL);
 			radar.setVisible(true);
-
-			Log.i(TAG, "Set up everything ");
 
 		} catch (Exception e) {
 
@@ -391,7 +390,7 @@ public class StreetMapActivity extends ARViewActivity implements
 
 	}
 
-	// detect if a specific lcoation is set up in schedule
+	// detect if a specific location is set up in schedule
 	private boolean isInSchedule(MapModel m, ArrayList<Schedule> schedules) {
 
 		for (Schedule s : schedules) {
@@ -404,7 +403,7 @@ public class StreetMapActivity extends ARViewActivity implements
 	}
 
 	/**
-	 * This method has the responsability of updating the location on the radar
+	 * This method has the responsibility of updating the location on the radar
 	 * It uses an offset to get a more precise location
 	 * 
 	 * @param location
@@ -438,7 +437,6 @@ public class StreetMapActivity extends ARViewActivity implements
 
 		if (displayAlertOnce) {
 
-			Log.d("StreetMap", "Enter onGeometry Touched");
 			// We create the view
 			LayoutInflater layoutInflater = LayoutInflater.from(this);
 			View dialogView = layoutInflater.inflate(
@@ -449,8 +447,6 @@ public class StreetMapActivity extends ARViewActivity implements
 			alertDialogBuilder.setView(dialogView);
 
 			alertDialogBuilder.setInverseBackgroundForced(true);
-
-			Log.d("StreetMap", "set the view");
 
 			// setUpAlert(geometry.getName()); // say what the buttons do
 			alertDialogBuilder
@@ -540,7 +536,6 @@ public class StreetMapActivity extends ARViewActivity implements
 		case DATE_DIALOG_ID:
 
 			// set date picker as current date
-
 			return new DatePickerDialog(this, datePickerListener,
 					streetMapUtil.getYear(), streetMapUtil.getMonth(),
 					streetMapUtil.getDay());
@@ -620,9 +615,9 @@ public class StreetMapActivity extends ARViewActivity implements
 	// save schedule
 	public void saveSchedule(View view) {
 
-		
-
 		Schedule schedule = new Schedule();
+		ArrayList<Schedule> lastSchedule = dbc.getLastSchedule();
+		
 		schedule.setTime(streetMapUtil.getTimeText().getText().toString());
 		schedule.setDate(streetMapUtil.getDateText().getText().toString());
 		schedule.setPlace(mapModel.get(streetMapUtil.getCurrentPosition())
@@ -630,10 +625,16 @@ public class StreetMapActivity extends ARViewActivity implements
 				+ "\n"
 				+ mapModel.get(streetMapUtil.getCurrentPosition()).getTopic()
 						.getAddress());
-
-		streetMapUtil.setScheduledAllarm(getApplicationContext(),schedule);
+		if(lastSchedule.isEmpty()){
+			schedule.setAlarmnr(1);
+		}else{
+			schedule.setAlarmnr(lastSchedule.get(0).getAlarmnr()+1);
+		}
+		
+		
+		streetMapUtil.setScheduledAllarm(getApplicationContext(), schedule);
 		toastMessage("date: " + schedule.getDate() + " time: "
-				+ schedule.getTime() + " place " + schedule.getPlace());
+				+ schedule.getTime() + " place " + schedule.getPlace()+" alarmnr:"+schedule.getAlarmnr());
 
 		dbc.saveSchedule(schedule);
 		mapModel.get(streetMapUtil.getCurrentPosition()).setColor("green");
@@ -754,10 +755,6 @@ public class StreetMapActivity extends ARViewActivity implements
 
 			else if (geometry != null) {
 				try {
-					Log.d("StreetMap", "On touch we detect geometry");
-
-					Log.d("StreetMap",
-							"Geometry is not null we call on geometery touched");
 					displayAlertOnce = true;
 					onGeometryTouched(geometry);
 
@@ -771,101 +768,6 @@ public class StreetMapActivity extends ARViewActivity implements
 		}
 
 		return true;
-	}
-
-	/**
-	 * This method creates the sign the suer sees on the device screen while
-	 * using this activity
-	 * 
-	 * @param title
-	 * @return
-	 */
-	public String createSign(String title) {
-
-		try {
-
-			final String texture = getCacheDir() + "/" + title + ".png";
-			Paint paint = new Paint();
-			/**
-			 * The background image is POI_bg2
-			 */
-
-			Bitmap sign = null;
-			/**
-			 * Get the image from the assets folder
-			 */
-
-			String file = AssetsManager.getAssetPath("streetmap/POI_bg2.png");
-			Bitmap background = BitmapFactory.decodeFile(file);
-
-			sign = background.copy(Bitmap.Config.ARGB_8888, true);
-
-			Canvas canvas = new Canvas(sign);
-
-			paint.setColor(Color.WHITE);
-			paint.setTextSize(24);
-			paint.setTypeface(Typeface.DEFAULT);
-
-			float x = 30, y = 40;
-			/**
-			 * Now we draw the name onto the sign
-			 */
-
-			if (title.length() > 0) {
-
-				/**
-				 * it removes the white spaces from the initial String
-				 */
-				String trim = title.trim();
-
-				final int width = 200;
-				/**
-				 * we make sure that no text extends outside the rectangle
-				 */
-				int extend = paint.breakText(trim, true, width, null);
-
-				canvas.drawText(trim.substring(0, extend), x, y, paint);
-				/**
-				 * if valid we will draw the second line
-				 */
-
-				if (extend < trim.length()) {
-					trim = trim.substring(extend);
-					y += 20;
-					extend = paint.breakText(trim, true, width, null);
-
-					if (extend < trim.length()) {
-						extend = paint.breakText(trim, true, width - 20, null);
-						canvas.drawText(trim.substring(0, extend) + "...", x,
-								y, paint);
-					} else {
-						canvas.drawText(trim.substring(0, extend), x, y, paint);
-					}
-				}
-
-			}
-			/**
-			 * We will be saving the new texture
-			 */
-
-			try {
-				FileOutputStream outputStream = new FileOutputStream(texture);
-				sign.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
-				return texture;
-
-			} catch (Exception e) {
-
-			}
-
-			sign.recycle();
-			sign = null;
-
-		} catch (Exception e) {
-
-			return null;
-		}
-		return null;
-
 	}
 
 }

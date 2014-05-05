@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import ro.mmp.tic.R;
+import ro.mmp.tic.activities.ScheduleActivity;
 import ro.mmp.tic.activities.streetmap.util.ScheduleAlarm;
 import ro.mmp.tic.domain.Schedule;
 import ro.mmp.tic.domain.UserPref;
@@ -52,6 +53,12 @@ public class DisplayDefaultScheduleActivity extends Activity {
 
 		setupActionBar();
 
+		setupInterface();
+
+	}
+
+	private void setupInterface() {
+
 		final Calendar c = Calendar.getInstance();
 		year = c.get(Calendar.YEAR);
 		month = c.get(Calendar.MONTH);
@@ -75,6 +82,11 @@ public class DisplayDefaultScheduleActivity extends Activity {
 
 	}
 
+	public void onScheduleButtonClick(View view) {
+		Intent intent = new Intent(this, ScheduleActivity.class);
+		startActivityForResult(intent, 0);
+	}
+
 	public void onRefreshScheduleButtonClick(View view) {
 		ArrayList<UserPref> allUserPref = dbc.getAllUserPreferences(username);
 		allStringDefaultSchedule = dbc.getAllDefaultSchedule(allUserPref);
@@ -90,6 +102,7 @@ public class DisplayDefaultScheduleActivity extends Activity {
 	}
 
 	public void onAcceptScheduleButtonClick(View view) {
+
 		showDialog(DATE_DIALOG_ID);
 	}
 
@@ -152,8 +165,9 @@ public class DisplayDefaultScheduleActivity extends Activity {
 		public void onDateSet(DatePicker view, int selectedYear,
 				int selectedMonth, int selectedDay) {
 
+			ArrayList<Schedule> lastSchedule = dbc.getLastSchedule();
 			year = selectedYear;
-			month = selectedMonth + 1;
+			month = selectedMonth;
 			day = selectedDay;
 
 			int scheduleHour = 8;
@@ -165,7 +179,15 @@ public class DisplayDefaultScheduleActivity extends Activity {
 				schedule.setDate(day + "/" + month + "/" + year);
 				schedule.setPlace(s);
 
+				if (lastSchedule.isEmpty()) {
+					schedule.setAlarmnr(1);
+				} else {
+					schedule.setAlarmnr(lastSchedule.get(0).getAlarmnr() + 1);
+				}
+
 				setScheduledAllarm(getApplicationContext(), schedule);
+
+				schedule.setDate(day + "/" + (month + 1) + "/" + year);
 				toastMessage("date: " + schedule.getDate() + " time: "
 						+ schedule.getTime() + " place " + schedule.getPlace());
 
@@ -201,9 +223,9 @@ public class DisplayDefaultScheduleActivity extends Activity {
 							+ (calendar.getTimeInMillis() - currentTime
 									.getTimeInMillis()));
 
-			ScheduleAlarm scheduleAlarm = new ScheduleAlarm();
-			scheduleAlarm.setScheduleAllarm(context,
-					calendar.getTimeInMillis(), schedule);
+			ScheduleAlarm scheduleAlarm = new ScheduleAlarm(context);
+			scheduleAlarm.setScheduleAllarm(calendar.getTimeInMillis(),
+					schedule);
 		}
 
 	}

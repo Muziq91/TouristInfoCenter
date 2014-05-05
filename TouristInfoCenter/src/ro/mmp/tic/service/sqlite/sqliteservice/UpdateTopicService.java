@@ -25,7 +25,7 @@ public class UpdateTopicService extends UpdateDataBaseService {
 
 		for (Topic t : topics) {
 
-			if (getTopic(t.getName(), db).isEmpty()) {
+			if (getTopic(t.getName()).isEmpty()) {
 				String sqlQuery = "Insert into topic (idcategory,idtype,name,address,lat,lng) "
 						+ "VALUES("
 						+ t.getIdcategory()
@@ -44,7 +44,7 @@ public class UpdateTopicService extends UpdateDataBaseService {
 
 	}
 
-	public HashMap<String, String> getTopic(String topicName, SQLiteDatabase db) {
+	public HashMap<String, String> getTopic(String topicName) {
 		HashMap<String, String> topic = new HashMap<String, String>(0);
 
 		String query = "Select * from topic where name='" + topicName + "'";

@@ -27,6 +27,8 @@ public class GoogleImageUtil extends ImageUtil {
 		this.mapModel = mapModel;
 	}
 
+	
+	// downloads the iamge from google
 	public void downloadImage(double lat, double lng, int width, int height,
 			int zoom) {
 
@@ -37,16 +39,15 @@ public class GoogleImageUtil extends ImageUtil {
 					+ "&maptype=roadmap&sensor=false&path="
 					+ createPath(lat, lng);
 
-			Log.d("URl is", url);
 			Drawable urlImage = LoadImageFromWebOperations(url);
-			Log.d("GoogleimageUtil", "DownloadImage");
 			Bitmap bmp = ((BitmapDrawable) urlImage).getBitmap();
-			Log.d("GoogleimageUtil", "Create bitmap");
 			if (bmp != null) {
+				
+				// set the context for the ImageUtil
 				super.context = context;
+				// saves image to internal storage
 				saveImageToInternalStorage(bmp, "mapImage");
 			}
-			Log.d("GoogleimageUtil", "Save to internal storage");
 		} catch (Exception e) {
 			Log.d("GoogleImageUtil ERROR", "ERROR");
 		}
@@ -62,6 +63,7 @@ public class GoogleImageUtil extends ImageUtil {
 		}
 	}
 
+	// used to create paths for the google iamge
 	private String createPath(double lat, double lng) {
 		String path = "";
 		path = lat + "," + lng;
@@ -73,6 +75,7 @@ public class GoogleImageUtil extends ImageUtil {
 		return path;
 	}
 
+	// used to create the markers for the google image
 	private String createMarkers(double lat, double lng) {
 
 		String markers = lat + "," + lng;

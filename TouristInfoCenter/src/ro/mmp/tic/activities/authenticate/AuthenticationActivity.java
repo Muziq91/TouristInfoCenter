@@ -1,7 +1,7 @@
 /**
  * @author Matei Mircea
  * 
- * This class represents the authenticate page and says what the buttons "login" and "Register" will do.
+ * This class represents the authenticate page, it says what the buttons "login" and "Register" will do.
  * 
  */
 
@@ -34,7 +34,7 @@ public class AuthenticationActivity extends Activity {
 	/**
 	 * The login button
 	 */
-	public void login(View v) {
+	public void onLoginButtonClick(View v) {
 
 		Intent i = new Intent(AuthenticationActivity.this, LoginActivity.class);
 		startActivity(i);
@@ -45,7 +45,7 @@ public class AuthenticationActivity extends Activity {
 	 * The register button
 	 */
 
-	public void register(View v) {
+	public void onRegisterButtonClick(View v) {
 
 		Intent i = new Intent(AuthenticationActivity.this,
 				RegisterActivity.class);

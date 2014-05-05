@@ -50,7 +50,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		String commentTable = "create table comment(idcomment integer primary key AUTOINCREMENT, idu integer,idt integer, idut integer,comment text,FOREIGN KEY(idu) references user(iduser),FOREIGN KEY(idt) references topic(idtopic),FOREIGN KEY(idut) references usertopic(idusertopic))";
 		String likeTable = "create table like(idlike integer primary key AUTOINCREMENT, iduser integer, idtopic integer, idusertopic integer, likes integer,unlikes integer, FOREIGN KEY (iduser) references user(iduser), FOREIGN KEY (idtopic) references topic(idtopic), FOREIGN KEY (idusertopic) references usertopic(idusertopic))";
 		String topicTable = "create table topic(idtopic integer primary key AUTOINCREMENT, idcategory integer, idtype integer, name text, address text, lat real, lng,real, FOREIGN KEY (idcategory) references category(idcategory), FOREIGN KEY (idtype) references type(idtype))";
-		String scheduleTable = "create table schedule(idschedule integer primary key AUTOINCREMENT, date text,time text, place text)";
+		String scheduleTable = "create table schedule(idschedule integer primary key AUTOINCREMENT, date text,time text, place text, alarmnr integer)";
 		String presentationTable = "create table presentation(idpresentation integer primary key AUTOINCREMENT, idtopic integer, image text,description text,  FOREIGN KEY (idtopic) references topic(idtopic))";
 		String userTopicTable = "create table usertopic(idusertopic integer primary key AUTOINCREMENT, iduser integer, name text, description text, image text, color text, lat real, lng real,  FOREIGN KEY (iduser) references user(iduser))";
 		String userPrefTable = "create table userpref(iduserpref integer primary key AUTOINCREMENT, iduser integer, favfood text, favactivity text, likehistory text,  FOREIGN KEY (iduser) references user(iduser))";
@@ -481,13 +481,10 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 	 */
 
 	public void insertPresentation(ArrayList<Presentation> presentations) {
-		Log.d("DatabaeConnection", "5 incercam din nou sa inseram");
 		db = this.getWritableDatabase();
 		UpdateDataBaseService uds = new UpdatePresentationService(db);
 		uds.insertPresentation(presentations);
 		closeDB();
-
-		Log.d("DatabaeConnection", "Finished inserting presentation");
 
 	}
 
@@ -888,22 +885,24 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 
 	public void saveSchedule(Schedule schedule) {
 		db = this.getWritableDatabase();
-		String sqlQuery = "Insert into schedule (date,time,place) "
+		String sqlQuery = "Insert into schedule (date,time,place,alarmnr) "
 				+ "VALUES('" + schedule.getDate() + "','" + schedule.getTime()
-				+ "','" + schedule.getPlace() + "')";
+				+ "','" + schedule.getPlace() + "','" + schedule.getAlarmnr()
+				+ "')";
 		db.execSQL(sqlQuery);
 
 		closeDB();
 
 	}
-
+	
+	
 	public ArrayList<Schedule> getAllSchedule() {
 
 		ArrayList<Schedule> allSchedule = new ArrayList<Schedule>(0);
 		allSchedule.clear();
 		db = this.getWritableDatabase();
 
-		String scheduleQuery = "SELECT s.idschedule,s.date,s.time,s.place FROM schedule s";
+		String scheduleQuery = "SELECT s.idschedule,s.date,s.time,s.place,s.alarmnr FROM schedule s";
 
 		Cursor scheduleCursor = db.rawQuery(scheduleQuery, null);
 
@@ -915,6 +914,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 				s.setDate(scheduleCursor.getString(1));
 				s.setTime(scheduleCursor.getString(2));
 				s.setPlace(scheduleCursor.getString(3));
+				s.setAlarmnr(scheduleCursor.getInt(4));
 
 				allSchedule.add(s);
 
@@ -924,14 +924,48 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		closeDB();
 		return allSchedule;
 	}
+	
+	
+	public ArrayList<Schedule> getLastSchedule() {
+
+		ArrayList<Schedule> allSchedule = new ArrayList<Schedule>(0);
+		allSchedule.clear();
+		db = this.getWritableDatabase();
+
+		String scheduleQuery = "SELECT s.idschedule,s.date,s.time,s.place,Max(s.alarmnr) FROM schedule s";
+
+		Cursor scheduleCursor = db.rawQuery(scheduleQuery, null);
+
+		if (scheduleCursor.moveToFirst()) {
+			do {
+				Schedule s = new Schedule();
+
+				s.setIdschedule(scheduleCursor.getInt(0));
+				s.setDate(scheduleCursor.getString(1));
+				s.setTime(scheduleCursor.getString(2));
+				s.setPlace(scheduleCursor.getString(3));
+				s.setAlarmnr(scheduleCursor.getInt(4));
+
+				allSchedule.add(s);
+
+			} while (scheduleCursor.moveToNext());
+		}
+
+		closeDB();
+		return allSchedule;
+	}
+	
 
 	public void updateSchedule(Schedule updateSchedule) {
 		db = this.getWritableDatabase();
 		String sqlQuery = "UPDATE schedule SET date='"
 				+ updateSchedule.getDate() + "',time='"
 				+ updateSchedule.getTime() + "',place='"
-				+ updateSchedule.getPlace() + "' WHERE idschedule ='"
+				+ updateSchedule.getPlace() + "',alarmnr='"
+				+ updateSchedule.getAlarmnr() + "' WHERE idschedule ='"
 				+ updateSchedule.getIdschedule() + "'";
+		
+		Log.d("DataabseCon", sqlQuery);
 		db.execSQL(sqlQuery);
 		closeDB();
 
@@ -1029,7 +1063,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		ArrayList<HashMap<String, String>> allTopicsAfterType = getTopicAfterType(up
 				.getFavFood());
 
-		int poz = 0, newpoz = 0, ok = 0;
+		int poz = 0, ok = 0;
 		boolean isSaved = true;
 		Random random = new Random();
 		Log.d("DataBaseConnection", "Incepem inserarea de topicuri in schedule");

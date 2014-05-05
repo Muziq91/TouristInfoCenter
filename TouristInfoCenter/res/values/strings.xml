@@ -59,6 +59,8 @@
 
     <!-- Like and unlike buttons -->
     <string name="like">Like</string>
+    <string name="presentationImage">Presentation image</string>
+    
     <string name="unlike">Unlike</string>
     <string name="comment">Comment Section</string>
     <string name="title_activity_opinion">OpinionActivity</string>

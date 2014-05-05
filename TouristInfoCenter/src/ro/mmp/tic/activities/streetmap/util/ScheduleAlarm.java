@@ -16,10 +16,13 @@ import android.util.Log;
 
 public class ScheduleAlarm {
 
-	private static int alarmNumber = 0;
+	private Context context;
 
-	public void setScheduleAllarm(Context context, long alarmTime,
-			Schedule schedule) {
+	public ScheduleAlarm(Context context) {
+		this.context = context;
+	}
+
+	public void setScheduleAllarm(long alarmTime, Schedule schedule) {
 
 		Log.d("ScheduleAlarm", "Set alarm for " + alarmTime);
 
@@ -30,14 +33,28 @@ public class ScheduleAlarm {
 		intent.putExtra("schedulePlace", schedule.getPlace());
 
 		PendingIntent pendingIntent = PendingIntent.getActivity(context,
-				alarmNumber, intent, 0);
+				schedule.getAlarmnr(), intent, 0);
 		AlarmManager alarmManager = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 
 		alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent);
-		alarmNumber++;
-		Log.d("ScheduleAlarm",
-				"Creating the alarm Manager and seting the alarm" + alarmTime);
+
+	}
+
+	public void cancelScheduleAllarm(Schedule schedule) {
+
+		Intent intent = new Intent(context, AlarmActivity.class);
+
+		intent.putExtra("scheduleDate", schedule.getDate());
+		intent.putExtra("scheduleTime", schedule.getTime());
+		intent.putExtra("schedulePlace", schedule.getPlace());
+
+		PendingIntent pendingIntent = PendingIntent.getActivity(context,
+				schedule.getAlarmnr(), intent, 0);
+		AlarmManager alarmManager = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+
+		alarmManager.cancel(pendingIntent);
 
 	}
 }
