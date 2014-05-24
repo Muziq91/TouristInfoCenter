@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<Camera>
+      <Name>Manual Calibration</Name>
+      <Info />
+      <CalibrationResolution>
+            <X>1024</X>
+            <Y>600</Y>
+      </CalibrationResolution>
+      <FocalLength>
+            <X>577.2347</X>
+            <Y>580.0264</Y>
+      </FocalLength>
+      <PrincipalPoint>
+            <X>317.850983</X>
+            <Y>240.612549</Y>
+      </PrincipalPoint>
+      <Distortion>
+            <k1>0.0656162351</k1>
+            <k2>-0.228799954</k2>
+            <p1>0.00270225317</p1>
+            <p2>0.0007854185</p2>
+      </Distortion>
+</Camera>
