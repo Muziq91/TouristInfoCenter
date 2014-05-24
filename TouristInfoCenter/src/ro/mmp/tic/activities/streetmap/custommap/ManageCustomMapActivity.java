@@ -111,9 +111,9 @@ public class ManageCustomMapActivity extends Activity implements
 		 */
 	}
 
-	private void createDialogView(HashMap<String, String> hashMap) {
+	private void createDialogView(HashMap<String, String> selectedMap) {
 
-		this.clickPosition = hashMap;
+		this.clickPosition = selectedMap;
 		// We create the view
 		LayoutInflater layoutInflater = LayoutInflater.from(this);
 		View dialogView = layoutInflater.inflate(
@@ -275,6 +275,7 @@ public class ManageCustomMapActivity extends Activity implements
 		Bitmap image = imageUtil.getThumbnail(clickPosition.get("IMAGE"));
 
 		if (image != null) {
+			clickPosition.put("DESCRIPTION", "Inserted by "+username+":\n"+clickPosition.get("DESCRIPTION"));
 			UserService addUserTopic = new UserTopicAdd(clickPosition, image,
 					username, this, this);
 			addUserTopic.execute("UserTopicAdd");

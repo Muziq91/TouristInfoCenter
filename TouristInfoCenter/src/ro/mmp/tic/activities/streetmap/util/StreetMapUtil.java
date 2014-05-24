@@ -464,8 +464,9 @@ public class StreetMapUtil {
 						});
 
 		legendText.setText("Landmarks : yellow" + "\n" + "Restaurants : red"
-				+ "\n" + "Schedule items : green" + "\n\n" + "Instructions:"
-				+ "\n" + "\t Tap on the radar to change the radar type" + "\n"
+				+ "\n" + " Museums: blue" + "\n" + "Schedule items : green"
+				+ "\n\n" + "Instructions:" + "\n"
+				+ "\t Tap on the radar to change the radar type" + "\n"
 				+ "\t Slide top-down/bottom-up to change radar perspective");
 
 		// create the alert dialog
@@ -489,8 +490,8 @@ public class StreetMapUtil {
 	}
 
 	/**
-	 * This method creates the sign the suer sees on the device screen while
-	 * using this activity
+	 * This method creates the sign the user sees on the device screen while
+	 * using the street map activities
 	 * 
 	 * @param title
 	 * @return

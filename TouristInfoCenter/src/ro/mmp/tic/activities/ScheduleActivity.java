@@ -163,7 +163,8 @@ public class ScheduleActivity extends Activity {
 
 	public void onUpdateButtonClick(View view) {
 
-		Log.d("ScheduleActivity","Old alarm " + oldSchedule.getPlace()+" old nr"+oldSchedule.getAlarmnr());
+		Log.d("ScheduleActivity", "Old alarm " + oldSchedule.getPlace()
+				+ " old nr" + oldSchedule.getAlarmnr());
 		// cancel old schedule alarm
 		scheduleAlarm.cancelScheduleAllarm(oldSchedule);
 
@@ -185,8 +186,9 @@ public class ScheduleActivity extends Activity {
 		} else {
 			updateSchedule.setAlarmnr(lastSchedule.get(0).getAlarmnr() + 1);
 		}
-		
-		Log.d("ScheduleActivity","New alarm " + updateSchedule.getPlace()+" new nr"+updateSchedule.getAlarmnr());
+
+		Log.d("ScheduleActivity", "New alarm " + updateSchedule.getPlace()
+				+ " new nr" + updateSchedule.getAlarmnr());
 
 		// update the schedule
 		dbc.updateSchedule(updateSchedule);
@@ -198,7 +200,7 @@ public class ScheduleActivity extends Activity {
 		// set day/month/year hour:mionute elements in order to set a new alarm
 		day = Integer.parseInt(newDate[0]);
 		month = Integer.parseInt(newDate[1]);
-		month = month-1;
+		month = month - 1;
 		year = Integer.parseInt(newDate[2]);
 
 		hour = Integer.parseInt(newTime[0]);
@@ -206,7 +208,7 @@ public class ScheduleActivity extends Activity {
 
 		// set the new alarm
 		setScheduledAllarm(updateSchedule);
-	
+
 		// gets all schedules including the one updated
 		ArrayList<String> allStringSchedule = new ArrayList<String>(0);
 		allSchedule = new ArrayList<Schedule>(0);
@@ -218,7 +220,6 @@ public class ScheduleActivity extends Activity {
 					+ s.getTime();
 			allStringSchedule.add(text);
 		}
-
 
 		// set the list view with the new information
 		listView = (ListView) findViewById(R.id.scheduleListView);
@@ -314,7 +315,7 @@ public class ScheduleActivity extends Activity {
 		calendar.set(year, month, day, hour - 1, minute, 00);
 
 		if (calendar.compareTo(currentTime) < 0) {
-			toastMessage("Incorrect time");
+			toastMessage("That time is no longer valid, please select another time");
 		} else {
 
 			scheduleAlarm.setScheduleAllarm(calendar.getTimeInMillis(),

@@ -71,6 +71,7 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 	private StreetMapUtil streetMapUtil;
 	private String customMapFile;
 	private String streetMapFile;
+	private String cameraCalibrationFile;
 	// alert dialog box
 	AlertDialog addPhotoAlert;
 	// get photo
@@ -89,11 +90,18 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 	private static String descriptionField;
 	private final static int cameraData = 200;
 
+	private String username;
+	private boolean wasAdded = false;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Log.d(TAG, "onCreate");
+		setupInterface();
+
+	}
+
+	private void setupInterface() {
 		/**
 		 * Create connection to database
 		 */
@@ -116,13 +124,13 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 			e.printStackTrace();
 		}
 
-		// create Imageutil object
+		// create Imageutil object for the locations already inserted
 		imageUtil = new ImageUtil(getApplicationContext());
 
 		// build the custom map model
 		customMapModel = new ArrayList<CustomMapModel>(0);
 		Intent intent = getIntent();
-		String username = intent.getStringExtra("loggedUser");
+		username = intent.getStringExtra("loggedUser");
 		customMapModel = dbc.getUserCustomMapModel(username);
 
 		// create the StreetMapUtil object
@@ -148,6 +156,19 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 		if (mSensors != null) {
 			mSensors.registerCallback(null);
 
+		}
+	}
+
+	@Override
+	public void onDrawFrame() {
+
+		super.onDrawFrame();
+
+		// The draw is used to display the new locations added
+		if (wasAdded) {
+			customMapModel = dbc.getUserCustomMapModel(username);
+			loadGPSInformation();
+			wasAdded = false;
 		}
 	}
 
@@ -198,17 +219,21 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 
 	}
 
+	// when the schedule button is clicked open the schedule activity
 	public void onScheduleButtonClick(View view) {
 		Intent intent = new Intent(this, ScheduleActivity.class);
 		startActivityForResult(intent, 0);
 	}
 
+	// when the add button is clicked open the add dialog box
 	public void onAddButtonClick(View view) {
 
 		showAddAlertDialogBox();
 
 	}
 
+	// when the image button is clicked send the suer to the camera in order to
+	// take a picture of what he wants to add
 	public void onImageButtonClick(View view) {
 		addPhotoAlert.cancel();
 		this.onStop();
@@ -220,12 +245,15 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 		startActivityForResult(i, cameraData);
 	}
 
+	// when the activity comes back
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		this.onResume();
 
+		// if it is from the camera we will add the new image to the Interface
+		// so the user can see his iamge
 		if (resultCode == RESULT_OK && requestCode != 0) {
 
 			showAddAlertDialogBox();
@@ -241,6 +269,7 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 
 	}
 
+	// Opens the alert dialog box when the add button is clicked
 	private void showAddAlertDialogBox() {
 		// We create the view
 		LayoutInflater layoutInflater = LayoutInflater.from(this);
@@ -318,6 +347,8 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 
 	}
 
+	// when the add button from inside the dialog box is clicked we verify the
+	// data.
 	public void onAddLocationButtonClick(View view) {
 
 		if (nameText.getText().toString().equals("")) {
@@ -352,6 +383,8 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 			canAdd = false;
 		}
 
+		// if the data is correctly inserted we can add the new location to the
+		// database
 		if (canAdd) {
 
 			nameField = null;
@@ -372,12 +405,14 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 			Intent intent = getIntent();
 			String username = intent.getStringExtra("loggedUser");
 			dbc.insertUserTopic(ut, username);
+			wasAdded = true;
 
 			toastMessage("Location added");
 		}
 
 	}
 
+	// When the Mnage button is clicked we send the user to the Manage Activity
 	public void onManageButtonClick(View view) {
 		Intent intent = getIntent();
 		Intent nextActivity = new Intent(this, ManageCustomMapActivity.class);
@@ -388,6 +423,7 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 
 	}
 
+	// this method is used to load the information and create the radar
 	private void loadGPSInformation() {
 
 		try {
@@ -452,6 +488,11 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 				radar.setObjectTexture(cm.getGeometry(), colorFile);
 				cm.getGeometry().setVisible(true);
 			}
+
+			// setting camra calibration
+			cameraCalibrationFile = AssetsManager
+					.getAssetPath("streetmap/CameraCalibration.xml");
+			metaioSDK.setCameraParameters(cameraCalibrationFile);
 
 			Log.i(TAG, "Set up everything ");
 
@@ -557,6 +598,9 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 
 	}
 
+	// gets the distance between two points
+	// one point is the user's current location and the other point is the
+	// selected location.
 	private String getDistance() {
 		LLACoordinate target = new LLACoordinate();
 		target.setLatitude(mSensors.getLocation().getLatitude());
@@ -565,6 +609,7 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 				.get(streetMapUtil.getCurrentPosition()).getCoordinate()
 				.distanceTo(target);
 		distance = (double) distance / 1000;
+		distance = distance * 1.6;
 		String result = "";
 		result = new DecimalFormat("##.##").format(distance) + " KM";
 		return result;
@@ -683,7 +728,7 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 
 		Schedule schedule = new Schedule();
 		ArrayList<Schedule> lastSchedule = dbc.getLastSchedule();
-		
+
 		schedule.setTime(streetMapUtil.getTimeText().getText().toString());
 		schedule.setDate(streetMapUtil.getDateText().getText().toString());
 		schedule.setPlace(customMapModel

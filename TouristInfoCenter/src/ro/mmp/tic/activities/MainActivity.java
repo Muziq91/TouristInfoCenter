@@ -45,25 +45,25 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		/*DataBaseConnection dbx = new DataBaseConnection(this);
+		DataBaseConnection dbx = new DataBaseConnection(this);
 		dbx.upgrade();
 
 		HashMap<String, String> user = new HashMap<String, String>(0);
 		HashMap<String, String> user1 = new HashMap<String, String>(0);
-		user.put("name", "a");
-		user.put("username", "a");
-		user.put("password", "a");
-		user.put("email", "a");
-		user.put("country", "a");
+		user.put("name", "userA");
+		user.put("username", "userA");
+		user.put("password", "userA");
+		user.put("email", "userA");
+		user.put("country", "Romania");
 
-		user1.put("name", "b");
-		user1.put("username", "b");
-		user1.put("password", "b");
-		user1.put("email", "b");
-		user1.put("country", "b");
+		user1.put("name", "userB");
+		user1.put("username", "userB");
+		user1.put("password", "userB");
+		user1.put("email", "userB");
+		user1.put("country", "France");
 
 		dbx.insertUserAtRegister(user);
-		dbx.insertUserAtRegister(user1);*/
+		dbx.insertUserAtRegister(user1);
 
 		startAgainButton = (Button) findViewById(R.id.startAgainButton);
 		activateInternetAndGps();
@@ -246,7 +246,8 @@ public class MainActivity extends Activity {
 	 */
 	private void toastMessage(String text) {
 
-		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT)
+				.show();
 
 	}
 

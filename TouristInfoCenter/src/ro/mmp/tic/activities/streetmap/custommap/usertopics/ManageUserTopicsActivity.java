@@ -9,6 +9,7 @@ import ro.mmp.tic.adapter.UserLocationsAdapter;
 import ro.mmp.tic.adapter.model.UserLocationModel;
 import ro.mmp.tic.service.UserService;
 import ro.mmp.tic.service.interfaces.UserTopicGetFinishedListener;
+import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import ro.mmp.tic.service.userservice.UserGetAllUserTopic;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -28,12 +29,20 @@ public class ManageUserTopicsActivity extends Activity implements
 	private ListView listView;
 	private String username;
 	private ProgressDialog loadDialog;
+	private DataBaseConnection dbc;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_manage_user_locations);
 
+		setupInterface();
+
+	}
+
+	private void setupInterface() {
+
+		dbc = new DataBaseConnection(this);
 		UserService us = new UserGetAllUserTopic(this, this);
 		us.execute("Execute");
 
@@ -120,6 +129,36 @@ public class ManageUserTopicsActivity extends Activity implements
 		super.onActivityResult(requestCode, resultCode, data);
 		loadDialog.dismiss();
 		userCustomLocation.clear();
+
+		ArrayList<UserLocationModel> userModel = new ArrayList<UserLocationModel>(
+				0);
+
+		ArrayList<HashMap<String, String>> userTopicList = dbc.getUserTopicModel();
+		for (HashMap<String, String> hm : userTopicList) {
+
+			Log.d("dsadsadsa", hm.get("NAME"));
+
+			UserLocationModel um = new UserLocationModel();
+
+			um.getUserLocation().setIdusertopic(
+					Integer.parseInt(hm.get("IDUSERTOPIC")));
+			um.getUserLocation().setIduser(Integer.parseInt(hm.get("IDUSER")));
+			um.getUserLocation().setName(hm.get("NAME"));
+			um.getUserLocation().setDescription(hm.get("DESCRIPTION"));
+			um.getUserLocation().setLat(Double.parseDouble(hm.get("LAT")));
+			um.getUserLocation().setLng(Double.parseDouble(hm.get("LNG")));
+			um.getUserLocation().setDescription(hm.get("DESCRIPTION"));
+			um.getUserLocation().setImage(hm.get("IMAGE"));
+			um.getUserLocation().setColor(hm.get("COLOR"));
+
+			userModel.add(um);
+
+		}
+
+		final UserLocationsAdapter adapter = new UserLocationsAdapter(this,
+				R.layout.activity_manage_user_locations, userModel);
+		listView = (ListView) findViewById(R.id.userLocationListView);
+		listView.setAdapter(adapter);
 
 	}
 

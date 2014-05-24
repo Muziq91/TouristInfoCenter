@@ -44,7 +44,6 @@ public class DisplayDefaultScheduleActivity extends Activity {
 	private int day;
 	// time elements
 	private int hour;
-	private int minute;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +174,7 @@ public class DisplayDefaultScheduleActivity extends Activity {
 				Schedule schedule = new Schedule();
 				schedule.setTime(scheduleHour + ":00");
 				hour = scheduleHour - 1;
-				minute = 0;
+
 				schedule.setDate(day + "/" + month + "/" + year);
 				schedule.setPlace(s);
 
@@ -207,7 +206,7 @@ public class DisplayDefaultScheduleActivity extends Activity {
 		calendar.setTimeInMillis(System.currentTimeMillis());
 		calendar.clear();
 
-		calendar.set(year, month, day, hour, minute, 00);
+		calendar.set(year, month, day, hour, 00, 00);
 		Log.d("StreetmapUtil", "Set time by the user " + calendar.getTime()
 				+ " current time: " + currentTime.getTime());
 

@@ -28,10 +28,8 @@ public class OperationGetUserTopic extends Strategy {
 		ResultSet result = null;
 		try {
 
-			String sqlQuery = "Select ut.idusertopic,ut.iduser,ut.name,ut.description,ut.image,ut.color,ut.lat,ut.lng from `center`.`usertopic` ut ";
-
+			String sqlQuery = "Select ut.idusertopic,ut.iduser,ut.name,ut.description,ut.image,ut.color,ut.lat,ut.lng from `center`.`usertopic` ut where ut.idusertopic<>1";
 			statement = connection.prepareStatement(sqlQuery);
-
 			result = statement.executeQuery();
 
 			while (result.next()) {
@@ -48,16 +46,11 @@ public class OperationGetUserTopic extends Strategy {
 				userTopic.setImage(userTopic.getName().toLowerCase()
 						+ "download.png");
 
-				Log.d("Crap aici", "1");
 				ImageUtil imageUtil = new ImageUtil(context);
-				Log.d("Crap aici", "2");
 				byte[] byteArr = result.getBytes("image");
-				Log.d("Crap aici", "3 " + byteArr.length);
 				byte[] decodedByte = Base64.decode(byteArr, 0);
-				Log.d("Crap aici", "4 " + decodedByte.length);
 				Bitmap bitmap = BitmapFactory.decodeByteArray(decodedByte, 0,
 						decodedByte.length);
-				Log.d("Crap aici", "5");
 
 				if (bitmap == null) {
 					Log.d("IMAGINEA E NULL", "IAMGINEA E NULL");

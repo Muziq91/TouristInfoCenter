@@ -57,12 +57,13 @@
 
         <TextView
             android:id="@+id/currentText"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/prevButton"
             android:layout_toLeftOf="@+id/nextButton"
             android:layout_toRightOf="@+id/prevButton"
             android:background="@drawable/rectangle"
+            android:gravity="center_horizontal"
             android:paddingTop="3dp"
             android:text="@string/currentText"
             android:textSize="14sp"
@@ -85,14 +86,7 @@
         android:orientation="vertical" >
 
         <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dp"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/saveButton"
-            android:background="#c0c0c0" />
-
-        <View
-            android:id="@+id/view2"
+            android:id="@+id/currentTimeSeparator"
             android:layout_width="fill_parent"
             android:layout_height="2dp"
             android:layout_alignParentLeft="true"
@@ -117,13 +111,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/dateButton"
-            android:layout_below="@+id/view2"
+            android:layout_below="@+id/currentTimeSeparator"
             android:layout_marginTop="14dp"
             android:background="@drawable/time"
             android:onClick="setTime" />
 
         <View
-            android:id="@+id/view1"
+            android:id="@+id/timeDateSeparator"
             android:layout_width="fill_parent"
             android:layout_height="2dp"
             android:layout_alignParentLeft="true"
@@ -136,7 +130,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/view1"
+            android:layout_below="@+id/timeDateSeparator"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="21dp"
             android:background="@drawable/date"
@@ -150,7 +144,8 @@
             android:layout_alignBottom="@+id/dateButton"
             android:layout_toLeftOf="@+id/saveButton"
             android:background="@drawable/rectangle"
-            android:text="@string/dateText" />
+            android:text="@string/dateText"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/timeText"
@@ -160,7 +155,17 @@
             android:layout_alignBottom="@+id/timeButton"
             android:layout_alignRight="@+id/dateText"
             android:background="@drawable/rectangle"
-            android:text="@string/timeText" />
+            android:text="@string/timeText"
+            android:textSize="15sp" />
+
+        <View
+            android:id="@+id/dateEndSeparator"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/saveButton"
+            android:layout_marginTop="43dp"
+            android:background="#c0c0c0" />
 
     </RelativeLayout>
 

@@ -169,6 +169,7 @@ public class PresentationActivity extends Activity implements
 		HashMap<String, String> likes = dataBaseConnection.getLike(username,
 				topicName);
 		like = new Like();
+
 		if (likes.get("likes") != null) {
 			exists = true;
 
@@ -471,6 +472,7 @@ public class PresentationActivity extends Activity implements
 	public void onTaskFinished() {
 		loadDialog.dismiss();
 
+		setLikeButtons();
 		if (token.equals("streetmap")) {
 			UserService likeCountService = new UserLikeCountService(topic,
 					getApplicationContext(), this);

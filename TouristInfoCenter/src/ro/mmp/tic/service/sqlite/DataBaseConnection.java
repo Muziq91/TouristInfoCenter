@@ -22,6 +22,7 @@ import ro.mmp.tic.domain.Type;
 import ro.mmp.tic.domain.UserPref;
 import ro.mmp.tic.domain.UserTopic;
 import ro.mmp.tic.service.sqlite.sqliteservice.UpdateCategoryService;
+import ro.mmp.tic.service.sqlite.sqliteservice.UpdateLikeService;
 import ro.mmp.tic.service.sqlite.sqliteservice.UpdatePresentationService;
 import ro.mmp.tic.service.sqlite.sqliteservice.UpdateTopicService;
 import ro.mmp.tic.service.sqlite.sqliteservice.UpdateTypeService;
@@ -154,6 +155,19 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 
 	/**************************************************************************************/
 
+	
+	public boolean insertLikes(ArrayList<Like> likes, String username) {
+		Log.d("DatabaeConnection", "5 incercam din nou sa inseram likeurile");
+		db = this.getWritableDatabase();
+		UpdateDataBaseService uds = new UpdateLikeService(db);
+		uds.insertLikes(likes,username);
+		closeDB();
+
+		return true;
+
+	}
+	
+	
 	/**
 	 * Operation on Like table
 	 * 
@@ -174,6 +188,8 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 				+ "' "
 				+ "AND t.name='"
 				+ topicName + "'";
+
+		Log.d("DatabaseConnection", sqlQuery);
 		Cursor cursor = db.rawQuery(sqlQuery, null);
 		if (cursor.moveToFirst()) {
 			do {
@@ -183,6 +199,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 				likes.put("likes", cursor.getString(3));
 				likes.put("unlikes", cursor.getString(4));
 
+				Log.d("DatabaseConnection", "Like was retrieved");
 			} while (cursor.moveToNext());
 		}
 
@@ -480,11 +497,12 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 	 * @param presentations
 	 */
 
-	public void insertPresentation(ArrayList<Presentation> presentations) {
+	public boolean insertPresentation(ArrayList<Presentation> presentations) {
 		db = this.getWritableDatabase();
 		UpdateDataBaseService uds = new UpdatePresentationService(db);
 		uds.insertPresentation(presentations);
 		closeDB();
+		return true;
 
 	}
 
@@ -569,7 +587,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 
 		for (String s : selectedCategory) {
 
-			String query = "SELECT t.idtype,t.type FROM type t "
+			String query = "SELECT distinct t.idtype,t.type FROM type t "
 					+ "join topic tp on t.idtype=tp.idtype "
 					+ "join category c on c.idcategory=tp.idcategory "
 					+ "where c.category='" + s + "'";
@@ -755,6 +773,39 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		return customMapModel;
 	}
 
+	public ArrayList<HashMap<String, String>> getUserTopicModel() {
+		db = this.getWritableDatabase();
+		ArrayList<HashMap<String, String>> downloadMapModel = new ArrayList<HashMap<String, String>>(
+				0);
+
+		String customMapQuery = "SELECT ut.idusertopic, ut.iduser, ut.name, ut.description, ut.image,ut.color, ut.lat, ut.lng FROM usertopic ut where ut.image LIKE'%download%'";
+
+		Cursor customMapCursor = db.rawQuery(customMapQuery, null);
+
+		if (customMapCursor.moveToFirst()) {
+			do {
+				HashMap<String, String> map = new HashMap<String, String>(0);
+
+				map.put("IDUSERTOPIC",
+						String.valueOf(customMapCursor.getInt(0)));
+				map.put("IDUSER", String.valueOf(customMapCursor.getInt(1)));
+				map.put("NAME", customMapCursor.getString(2));
+				map.put("DESCRIPTION", customMapCursor.getString(3));
+				map.put("IMAGE", customMapCursor.getString(4));
+				map.put("COLOR", customMapCursor.getString(5));
+				map.put("LAT", String.valueOf(customMapCursor.getDouble(6)));
+				map.put("LNG", String.valueOf(customMapCursor.getDouble(7)));
+
+				downloadMapModel.add(map);
+			} while (customMapCursor.moveToNext());
+		}
+
+		closeDB();
+
+		Log.d("CustomMapModel", "Finished");
+		return downloadMapModel;
+	}
+
 	public CustomMapModel getCustomMapModel(String name) {
 
 		db = this.getWritableDatabase();
@@ -894,8 +945,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		closeDB();
 
 	}
-	
-	
+
 	public ArrayList<Schedule> getAllSchedule() {
 
 		ArrayList<Schedule> allSchedule = new ArrayList<Schedule>(0);
@@ -924,8 +974,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		closeDB();
 		return allSchedule;
 	}
-	
-	
+
 	public ArrayList<Schedule> getLastSchedule() {
 
 		ArrayList<Schedule> allSchedule = new ArrayList<Schedule>(0);
@@ -954,7 +1003,6 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		closeDB();
 		return allSchedule;
 	}
-	
 
 	public void updateSchedule(Schedule updateSchedule) {
 		db = this.getWritableDatabase();
@@ -964,7 +1012,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 				+ updateSchedule.getPlace() + "',alarmnr='"
 				+ updateSchedule.getAlarmnr() + "' WHERE idschedule ='"
 				+ updateSchedule.getIdschedule() + "'";
-		
+
 		Log.d("DataabseCon", sqlQuery);
 		db.execSQL(sqlQuery);
 		closeDB();

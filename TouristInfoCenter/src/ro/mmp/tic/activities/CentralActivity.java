@@ -19,6 +19,7 @@ import ro.mmp.tic.activities.streetmap.SelectActivity;
 import ro.mmp.tic.activities.streetmap.custommap.CustomStreetMapActivity;
 import ro.mmp.tic.activities.streetmap.custommap.usertopics.ManageUserTopicsActivity;
 import ro.mmp.tic.domain.Category;
+import ro.mmp.tic.domain.Like;
 import ro.mmp.tic.domain.Presentation;
 import ro.mmp.tic.domain.Topic;
 import ro.mmp.tic.domain.Type;
@@ -136,7 +137,8 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 	 */
 	private void toastMessage(String text) {
 
-		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT)
+				.show();
 
 	}
 
@@ -155,12 +157,15 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 		private PreparedStatement topicStatement;
 		// Statement used to update the presentation database
 		private PreparedStatement presentationStatement;
+		// Statement used to update the like database
+		private PreparedStatement likeStatement;
 		// Next are the result sets that hold the information from the cloud
 		// database
 		private ResultSet categooryResult;
 		private ResultSet typeResult;
 		private ResultSet topicResult;
 		private ResultSet presentationResult;
+		private ResultSet likeResult;
 		private DataBaseConnection dbc;
 		private UpdateFinishedListener finished;
 
@@ -179,6 +184,7 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 				ArrayList<Topic> topics = new ArrayList<Topic>(0);
 				ArrayList<Presentation> presentations = new ArrayList<Presentation>(
 						0);
+				ArrayList<Like> likes = new ArrayList<Like>(0);
 
 				connection = super.getConnection();
 
@@ -254,9 +260,7 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 							p.setIdpresentation(presentationResult
 									.getInt("idpresentation"));
 							p.setIdtopic(presentationResult.getInt("idtopic"));
-
 							p.setImage(presentationResult.getString("image"));
-
 							p.setDescription(presentationResult
 									.getString("description"));
 
@@ -264,9 +268,35 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 
 						}
 
-						dbc.insertPresentation(presentations);
+					}
+					if (dbc.insertPresentation(presentations)) {
+						// if everything went good and no errors were displayed
+						// we can now move forward and get all presentations
+						String likeQuery = "SELECT l.idlike,l.iduser,l.idtopic,l.idusertopic,l.likes,l.unlikes FROM `center`.`like` l "
+								+ "join `center`.`user` u ON l.iduser=u.iduser where u.username='"+username+"'";
+
+						likeStatement = connection
+								.prepareStatement(likeQuery);
+						likeResult = likeStatement
+								.executeQuery();
+
+						while (likeResult.next()) {
+
+							Like l = new Like();
+
+							l.setIdlike(likeResult.getInt("idlike"));
+							l.setIduser(likeResult.getInt("iduser"));
+							l.setIdtopic(likeResult.getInt("idtopic"));
+							l.setIdusertopic(likeResult.getInt("idusertopic"));
+							l.setLike(likeResult.getInt("likes"));
+							l.setUnlike(likeResult.getInt("unlikes"));
+						
+							likes.add(l);
+
+						}
 
 					}
+					dbc.insertLikes(likes, username);
 				}
 
 			} catch (Exception e) {
@@ -283,6 +313,12 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 
 					topicResult.close();
 					topicStatement.close();
+
+					presentationResult.close();
+					presentationStatement.close();
+
+					likeResult.close();
+					likeStatement.close();
 
 				} catch (SQLException e) {
 					e.printStackTrace();

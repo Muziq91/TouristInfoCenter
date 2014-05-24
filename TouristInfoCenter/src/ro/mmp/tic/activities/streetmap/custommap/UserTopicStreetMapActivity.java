@@ -59,12 +59,19 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 	private StreetMapUtil streetMapUtil;
 	private String customMapFile;
 	private String streetMapFile;
+	private String cameraCalibrationFile;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		Log.d(TAG, "onCreate");
+
+		setupInterface();
+
+	}
+
+	private void setupInterface() {
 		/**
 		 * Create connection to database
 		 */
@@ -89,8 +96,6 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 
 		// build the custom map model
 		customMapModel = new ArrayList<CustomMapModel>(0);
-		Intent intent = getIntent();
-		String username = intent.getStringExtra("loggedUser");
 
 		for (String s : ManageUserTopicsActivity.getUserCustomLocation()) {
 
@@ -171,6 +176,7 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 
 	}
 
+	// this determines what happens when the user clicks the schedule button
 	public void onScheduleButtonClick(View view) {
 		Intent intent = new Intent(this, ScheduleActivity.class);
 		startActivityForResult(intent, 0);
@@ -184,16 +190,7 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 
 	}
 
-	public void onManageButtonClick(View view) {
-		Intent intent = getIntent();
-		Intent nextActivity = new Intent(this, ManageCustomMapActivity.class);
-		nextActivity.putExtra("loggedUser",
-				(String) intent.getStringExtra("loggedUser"));
-
-		startActivityForResult(nextActivity, 1);
-
-	}
-
+	// This method loads the information on the map
 	private void loadGPSInformation() {
 
 		try {
@@ -258,6 +255,11 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 				radar.setObjectTexture(cm.getGeometry(), colorFile);
 				cm.getGeometry().setVisible(true);
 			}
+
+			// setting camra calibration
+			cameraCalibrationFile = AssetsManager
+					.getAssetPath("streetmap/CameraCalibration.xml");
+			metaioSDK.setCameraParameters(cameraCalibrationFile);
 
 			Log.i(TAG, "Set up everything ");
 
@@ -399,6 +401,7 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 				.get(streetMapUtil.getCurrentPosition()).getCoordinate()
 				.distanceTo(target);
 		distance = (double) distance / 1000;
+		distance = distance * 1.6;
 		String result = "";
 		result = new DecimalFormat("##.##").format(distance) + " KM";
 		return result;

@@ -35,7 +35,7 @@ public class OperationGetComment extends Strategy {
 					+ "join `center`.`user` u on c.idu = u.iduser "
 					+ "where t.name = '"
 					+ topicName
-					+ "' Order by c.idcomment desc";
+					+ "' and c.idut=1 Order by c.idcomment desc";
 
 			statement = connection.prepareStatement(sqlQuery);
 

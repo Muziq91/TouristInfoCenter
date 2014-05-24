@@ -80,6 +80,7 @@ public class StreetMapActivity extends ARViewActivity implements
 	private StreetMapUtil streetMapUtil;
 	private File googleImagefilePath;
 	private String streetMapFile;
+	private String cameraCalibrationFile;
 
 	// variables for downloading the image
 	private Display display;
@@ -134,6 +135,8 @@ public class StreetMapActivity extends ARViewActivity implements
 
 		// create the StreetMapUtil object
 		streetMapUtil = new StreetMapUtil();
+		
+		
 
 	}
 
@@ -243,7 +246,7 @@ public class StreetMapActivity extends ARViewActivity implements
 				}
 
 			} else {
-				// this si the default radar displayed
+				// this is the default radar displayed
 				streetMapFile = AssetsManager
 						.getAssetPath("streetmap/radar.png");
 				radar.setBackgroundTexture(streetMapFile);
@@ -379,6 +382,11 @@ public class StreetMapActivity extends ARViewActivity implements
 			radar.setBackgroundTexture(googleImagefilePath.toString());
 			radar.setRelativeToScreen(IGeometry.ANCHOR_TL);
 			radar.setVisible(true);
+			
+			// setting camra calibration
+			cameraCalibrationFile = AssetsManager
+					.getAssetPath("streetmap/CameraCalibration.xml");
+			metaioSDK.setCameraParameters(cameraCalibrationFile);
 
 		} catch (Exception e) {
 
@@ -512,6 +520,7 @@ public class StreetMapActivity extends ARViewActivity implements
 		double distance = mapModel.get(streetMapUtil.getCurrentPosition())
 				.getCoordinate().distanceTo(target);
 		distance = (double) distance / 1000;
+		distance = distance * 1.6;
 		String result = "";
 		result = new DecimalFormat("##.##").format(distance) + " KM";
 		return result;
@@ -617,7 +626,7 @@ public class StreetMapActivity extends ARViewActivity implements
 
 		Schedule schedule = new Schedule();
 		ArrayList<Schedule> lastSchedule = dbc.getLastSchedule();
-		
+
 		schedule.setTime(streetMapUtil.getTimeText().getText().toString());
 		schedule.setDate(streetMapUtil.getDateText().getText().toString());
 		schedule.setPlace(mapModel.get(streetMapUtil.getCurrentPosition())
@@ -625,16 +634,16 @@ public class StreetMapActivity extends ARViewActivity implements
 				+ "\n"
 				+ mapModel.get(streetMapUtil.getCurrentPosition()).getTopic()
 						.getAddress());
-		if(lastSchedule.isEmpty()){
+		if (lastSchedule.isEmpty()) {
 			schedule.setAlarmnr(1);
-		}else{
-			schedule.setAlarmnr(lastSchedule.get(0).getAlarmnr()+1);
+		} else {
+			schedule.setAlarmnr(lastSchedule.get(0).getAlarmnr() + 1);
 		}
-		
-		
+
 		streetMapUtil.setScheduledAllarm(getApplicationContext(), schedule);
 		toastMessage("date: " + schedule.getDate() + " time: "
-				+ schedule.getTime() + " place " + schedule.getPlace()+" alarmnr:"+schedule.getAlarmnr());
+				+ schedule.getTime() + " place " + schedule.getPlace()
+				+ " alarmnr:" + schedule.getAlarmnr());
 
 		dbc.saveSchedule(schedule);
 		mapModel.get(streetMapUtil.getCurrentPosition()).setColor("green");
