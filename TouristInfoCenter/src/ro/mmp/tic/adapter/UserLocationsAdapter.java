@@ -46,7 +46,6 @@ public class UserLocationsAdapter extends ArrayAdapter<UserLocationModel> {
 
 		ViewHolder holder = null;
 
-		Log.v("ConvertView", String.valueOf(position));
 
 		if (convertView == null) {
 

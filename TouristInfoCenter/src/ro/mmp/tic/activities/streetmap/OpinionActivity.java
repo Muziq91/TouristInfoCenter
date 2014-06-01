@@ -49,7 +49,7 @@ public class OpinionActivity extends ListActivity implements
 		setContentView(R.layout.activity_opinion);
 		// Show the Up button in the action bar.
 		setupActionBar();
-
+		//setup the user interface
 		setupInterface();
 
 	}

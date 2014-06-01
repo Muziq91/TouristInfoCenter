@@ -285,7 +285,7 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 		for (CustomMapModel mm : customMapModel) {
 			mm.setCoordinate(new LLACoordinate(mm.getUserTopic().getLat(), mm
 					.getUserTopic().getLng(), currPos.getAltitude(), currPos
-					.getAltitude(), currPos.getAccuracy()));
+					.getAccuracy()));
 
 			if (mm.getGeometry() != null) {
 				mm.getGeometry().setTranslationLLA(mm.getCoordinate());

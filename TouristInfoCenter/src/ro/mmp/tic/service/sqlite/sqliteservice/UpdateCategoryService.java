@@ -56,7 +56,7 @@ public class UpdateCategoryService extends UpdateDataBaseService {
 
 			} while (cursor.moveToNext());
 		}
-
+		cursor.close();
 		return category;
 	}
 

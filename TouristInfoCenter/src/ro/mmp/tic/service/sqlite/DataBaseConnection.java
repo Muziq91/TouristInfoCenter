@@ -48,7 +48,6 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		String userTable = "create table user(iduser integer primary key AUTOINCREMENT, name text, username text, password text,email text, country text)";
 		String categorytable = "create table category(idcategory integer primary key AUTOINCREMENT, category text, color text)";
 		String typeTable = "create table type(idtype integer primary key AUTOINCREMENT, type text)";
-		String commentTable = "create table comment(idcomment integer primary key AUTOINCREMENT, idu integer,idt integer, idut integer,comment text,FOREIGN KEY(idu) references user(iduser),FOREIGN KEY(idt) references topic(idtopic),FOREIGN KEY(idut) references usertopic(idusertopic))";
 		String likeTable = "create table like(idlike integer primary key AUTOINCREMENT, iduser integer, idtopic integer, idusertopic integer, likes integer,unlikes integer, FOREIGN KEY (iduser) references user(iduser), FOREIGN KEY (idtopic) references topic(idtopic), FOREIGN KEY (idusertopic) references usertopic(idusertopic))";
 		String topicTable = "create table topic(idtopic integer primary key AUTOINCREMENT, idcategory integer, idtype integer, name text, address text, lat real, lng,real, FOREIGN KEY (idcategory) references category(idcategory), FOREIGN KEY (idtype) references type(idtype))";
 		String scheduleTable = "create table schedule(idschedule integer primary key AUTOINCREMENT, date text,time text, place text, alarmnr integer)";
@@ -59,7 +58,6 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		db.execSQL(userTable);
 		db.execSQL(categorytable);
 		db.execSQL(typeTable);
-		db.execSQL(commentTable);
 		db.execSQL(likeTable);
 		db.execSQL(topicTable);
 		db.execSQL(scheduleTable);
@@ -77,7 +75,6 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		String topicTable = "DROP TABLE IF EXISTS topic";
 		String typeTable = "DROP TABLE IF EXISTS type";
 		String categoryTable = "DROP TABLE IF EXISTS category";
-		String commentTable = "DROP TABLE IF EXISTS comment";
 		String likeTable = "DROP TABLE IF EXISTS like";
 		String scheduleTable = "DROP TABLE IF EXISTS schedule";
 		String presentationTable = "DROP TABLE IF EXISTS presentation";
@@ -88,7 +85,6 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		db.execSQL(typeTable);
 		db.execSQL(categoryTable);
 		db.execSQL(topicTable);
-		db.execSQL(commentTable);
 		db.execSQL(likeTable);
 		db.execSQL(scheduleTable);
 		db.execSQL(presentationTable);
@@ -147,6 +143,9 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 		return user;
 	}
 
+	/**
+	 * close the databse connection
+	 */
 	private void closeDB() {
 		if (db != null && db.isOpen()) {
 			db.close();
@@ -155,19 +154,16 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 
 	/**************************************************************************************/
 
-	
 	public boolean insertLikes(ArrayList<Like> likes, String username) {
-		Log.d("DatabaeConnection", "5 incercam din nou sa inseram likeurile");
 		db = this.getWritableDatabase();
 		UpdateDataBaseService uds = new UpdateLikeService(db);
-		uds.insertLikes(likes,username);
+		uds.insertLikes(likes, username);
 		closeDB();
 
 		return true;
 
 	}
-	
-	
+
 	/**
 	 * Operation on Like table
 	 * 
@@ -189,7 +185,6 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 				+ "AND t.name='"
 				+ topicName + "'";
 
-		Log.d("DatabaseConnection", sqlQuery);
 		Cursor cursor = db.rawQuery(sqlQuery, null);
 		if (cursor.moveToFirst()) {
 			do {
@@ -199,7 +194,6 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 				likes.put("likes", cursor.getString(3));
 				likes.put("unlikes", cursor.getString(4));
 
-				Log.d("DatabaseConnection", "Like was retrieved");
 			} while (cursor.moveToNext());
 		}
 

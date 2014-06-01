@@ -1,6 +1,5 @@
 package ro.mmp.tic.service.userservice.strategy.usertopic;
 
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

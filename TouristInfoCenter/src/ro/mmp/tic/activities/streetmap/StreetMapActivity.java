@@ -131,12 +131,11 @@ public class StreetMapActivity extends ARViewActivity implements
 
 		// map model
 		mapModel = new ArrayList<MapModel>(0);
+		// retrieve all locations selected by the user and create the array
 		mapModel = dbc.getMapModel(LocationFragment.getSelectedLocation());
 
 		// create the StreetMapUtil object
 		streetMapUtil = new StreetMapUtil();
-		
-		
 
 	}
 
@@ -333,13 +332,16 @@ public class StreetMapActivity extends ARViewActivity implements
 			// reduces flickering
 			metaioSDK.setLLAObjectRenderingLimits(10, 10000);
 
-			// create geometry
+			// create geometry from MapModels array
 			for (MapModel m : mapModel) {
 
+				// set the geometry field for each MapModel with an iamge object
 				m.setGeometry(metaioSDK.createGeometryFromImage(
 						streetMapUtil.createSign(this, m.getTopic().getName()),
 						true));
+				// we give a name to each geometry
 				m.getGeometry().setName(m.getTopic().getName());
+				// we add the geometry to the billboatrd.
 				billboardGroup.addBillboard(m.getGeometry());
 			}
 
@@ -375,14 +377,14 @@ public class StreetMapActivity extends ARViewActivity implements
 			googleUtil.downloadImage(lat, lng, width, height, ZOOM);
 			googleImagefilePath = this.getFileStreamPath("mapImage.png");
 
-			// ccreate the radar
+			// create the radar
 			radar = metaioSDK.createRadar();
 
 			// set radar background
 			radar.setBackgroundTexture(googleImagefilePath.toString());
 			radar.setRelativeToScreen(IGeometry.ANCHOR_TL);
 			radar.setVisible(true);
-			
+
 			// setting camra calibration
 			cameraCalibrationFile = AssetsManager
 					.getAssetPath("streetmap/CameraCalibration.xml");
@@ -419,14 +421,12 @@ public class StreetMapActivity extends ARViewActivity implements
 	@SuppressLint("NewApi")
 	private void updateGeometriesLocation(LLACoordinate location) {
 
-		Log.i(TAG, "Update geometry locations ");
-
 		LLACoordinate currPos = mSensors.getLocation();
 
 		for (MapModel mm : mapModel) {
 			mm.setCoordinate(new LLACoordinate(mm.getTopic().getLat(), mm
 					.getTopic().getLng(), currPos.getAltitude(), currPos
-					.getAltitude(), currPos.getAccuracy()));
+					.getAccuracy()));
 
 			if (mm.getGeometry() != null) {
 				mm.getGeometry().setTranslationLLA(mm.getCoordinate());

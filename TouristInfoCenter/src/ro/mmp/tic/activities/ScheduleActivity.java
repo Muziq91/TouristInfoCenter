@@ -279,31 +279,6 @@ public class ScheduleActivity extends Activity {
 		return true;
 	}
 
-	private class ScheduleArrayAdapter extends ArrayAdapter<String> {
-
-		HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
-
-		public ScheduleArrayAdapter(Context context, int textViewResourceId,
-				List<String> objects) {
-			super(context, textViewResourceId, objects);
-			for (int i = 0; i < objects.size(); ++i) {
-				mIdMap.put(objects.get(i), i);
-			}
-		}
-
-		@Override
-		public long getItemId(int position) {
-			String item = getItem(position);
-			return mIdMap.get(item);
-		}
-
-		@Override
-		public boolean hasStableIds() {
-			return true;
-		}
-
-	}
-
 	private void setScheduledAllarm(Schedule schedule) {
 
 		Calendar currentTime = Calendar.getInstance();
@@ -334,6 +309,31 @@ public class ScheduleActivity extends Activity {
 
 		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT)
 				.show();
+
+	}
+
+	private class ScheduleArrayAdapter extends ArrayAdapter<String> {
+
+		HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
+
+		public ScheduleArrayAdapter(Context context, int textViewResourceId,
+				List<String> objects) {
+			super(context, textViewResourceId, objects);
+			for (int i = 0; i < objects.size(); ++i) {
+				mIdMap.put(objects.get(i), i);
+			}
+		}
+
+		@Override
+		public long getItemId(int position) {
+			String item = getItem(position);
+			return mIdMap.get(item);
+		}
+
+		@Override
+		public boolean hasStableIds() {
+			return true;
+		}
 
 	}
 

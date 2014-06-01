@@ -36,7 +36,7 @@ public class GoogleImageUtil extends ImageUtil {
 			String url = "http://maps.google.com/maps/api/staticmap?center="
 					+ createMarkers(lat, lng) + "&zoom=" + zoom + "&size="
 					+ width + "x" + height
-					+ "&maptype=roadmap&sensor=false&path="
+					+ "&maptype=roadmap&sensor=true&path="
 					+ createPath(lat, lng);
 
 			Drawable urlImage = LoadImageFromWebOperations(url);

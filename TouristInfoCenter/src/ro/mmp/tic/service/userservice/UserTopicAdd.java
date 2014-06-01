@@ -6,8 +6,6 @@ import java.util.HashMap;
 import ro.mmp.tic.service.UserService;
 import ro.mmp.tic.service.interfaces.UserTopicAddFinishedListener;
 import ro.mmp.tic.service.userservice.strategy.Strategy;
-import ro.mmp.tic.service.userservice.strategy.user.OperationAdd;
-import ro.mmp.tic.service.userservice.strategy.user.OperationVerif;
 import ro.mmp.tic.service.userservice.strategy.usertopic.OperationAddUserTopic;
 import ro.mmp.tic.service.userservice.strategy.usertopic.OperationVerifUserTopic;
 import android.content.Context;

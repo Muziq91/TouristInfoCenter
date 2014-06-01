@@ -47,7 +47,7 @@ public class SelectActivity extends FragmentActivity implements
 
 	}
 
-	//This method sets the tabs and listeners for the fragmentactivity
+	//This method sets the tabs and listeners for the fragment
 	private void setupTabs() {
 		
 		typeSelectListener = new TypeFragment();
@@ -153,7 +153,7 @@ public class SelectActivity extends FragmentActivity implements
 	 */
 	private void toastMessage(String text) {
 
-		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
 
 	}
 

@@ -113,6 +113,7 @@ public class LoginActivity extends Activity implements
 			// If the user is in the sqlite databse, he has an account and we
 			// let him go to the next activity
 			else {
+				CentralActivity.setCanUpdate(true);
 				Intent intent = new Intent(getApplicationContext(),
 						CentralActivity.class);
 				intent.putExtra("loggedUser", username.getText().toString());
@@ -240,6 +241,7 @@ public class LoginActivity extends Activity implements
 	@Override
 	public void onTaskFinished(boolean canLogin) {
 		if (canLogin) {
+			CentralActivity.setCanUpdate(true);
 			Intent intent = new Intent(getApplicationContext(),
 					CentralActivity.class);
 			intent.putExtra("loggedUser", username.getText().toString());

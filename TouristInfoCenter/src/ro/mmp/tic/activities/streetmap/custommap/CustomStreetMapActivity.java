@@ -503,7 +503,7 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 	}
 
 	/**
-	 * This method has the responsability of updating the location on the radar
+	 * This method has the responsibility of updating the location on the radar
 	 * It uses an offset to get a more precise location
 	 * 
 	 * @param location
@@ -518,7 +518,7 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 		for (CustomMapModel mm : customMapModel) {
 			mm.setCoordinate(new LLACoordinate(mm.getUserTopic().getLat(), mm
 					.getUserTopic().getLng(), currPos.getAltitude(), currPos
-					.getAltitude(), currPos.getAccuracy()));
+					.getAccuracy()));
 
 			if (mm.getGeometry() != null) {
 				mm.getGeometry().setTranslationLLA(mm.getCoordinate());

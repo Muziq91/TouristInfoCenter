@@ -99,8 +99,20 @@ public class ManageCustomMapActivity extends Activity implements
 					int position, long id) {
 
 				createDialogView(userLocations.get(position));
-				toastMessage("Am apasat pe: "
-						+ userLocations.get(position).get("IMAGE"));
+
+				if (userLocations.get(position).get("COLOR")
+						.equals("default.png")) {
+					customColorSpinner.setSelection(0);
+				} else if (userLocations.get(position).get("COLOR")
+						.equals("blue.png")) {
+					customColorSpinner.setSelection(1);
+				} else if (userLocations.get(position).get("COLOR")
+						.equals("red.png")) {
+					customColorSpinner.setSelection(2);
+				} else if (userLocations.get(position).get("COLOR")
+						.equals("yellow.png")) {
+					customColorSpinner.setSelection(3);
+				}
 			}
 		});
 
@@ -275,7 +287,8 @@ public class ManageCustomMapActivity extends Activity implements
 		Bitmap image = imageUtil.getThumbnail(clickPosition.get("IMAGE"));
 
 		if (image != null) {
-			clickPosition.put("DESCRIPTION", "Inserted by "+username+":\n"+clickPosition.get("DESCRIPTION"));
+			clickPosition.put("DESCRIPTION", "Inserted by " + username + ":\n"
+					+ clickPosition.get("DESCRIPTION"));
 			UserService addUserTopic = new UserTopicAdd(clickPosition, image,
 					username, this, this);
 			addUserTopic.execute("UserTopicAdd");

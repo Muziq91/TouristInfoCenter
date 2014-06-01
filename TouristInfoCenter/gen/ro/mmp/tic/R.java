@@ -1185,20 +1185,22 @@ public final class R {
         public static final int favFoodSpinner=0x7f070150;
         /**  Location fragment 
  Location fragment 
+ Location fragment 
          */
         public static final int goToMap=0x7f070135;
         public static final int goToQuestionnaire=0x7f07014d;
-        public static final int googleMap=0x7f070159;
         public static final int gps=0x7f070124;
         public static final int hello_world=0x7f07010e;
         public static final int latTextString=0x7f070140;
         public static final int legend=0x7f07013a;
         /**  Like and unlike buttons 
  Like and unlike buttons 
+ Like and unlike buttons 
          */
         public static final int like=0x7f07012d;
         public static final int likeHistorytext=0x7f070154;
         /**  Login and Register buttons 
+ Login and Register buttons 
  Login and Register buttons 
          */
         public static final int login=0x7f070112;
@@ -1206,9 +1208,11 @@ public final class R {
         public static final int metaioSDKSignature=0x7f070000;
         /**  Metaio strings 
  Metaio strings 
+ Metaio strings 
          */
         public static final int mySdkSignature=0x7f070123;
         /**  Registration form hit values 
+ Registration form hit values 
  Registration form hit values 
          */
         public static final int name=0x7f070117;
@@ -1225,32 +1229,40 @@ public final class R {
         public static final int repassword=0x7f07011a;
         public static final int saveText=0x7f07012b;
         /**  Schedule 
-  
+ Schedule 
+ Schedule 
          */
         public static final int schedule=0x7f070136;
         public static final int scheduleDeleteButton=0x7f070138;
         public static final int scheduleUpdateButton=0x7f070137;
         /**  When the user goes to the first screen but wants to go back and not exit 
  When the user goes to the first screen but wants to go back and not exit 
+ When the user goes to the first screen but wants to go back and not exit 
          */
         public static final int startAgain=0x7f070111;
         public static final int stop_alarm=0x7f07013d;
         /**  For the central activity 
  For the central activity 
+ For the central activity 
          */
         public static final int streetMap=0x7f07011f;
         /**  Comment Section 
+ Comment Section 
  Comment Section 
          */
         public static final int submitComment=0x7f070132;
         public static final int submitQuestionnaire=0x7f070155;
         public static final int timeText=0x7f070129;
         /**  Alarm 
+ Alarm 
+ Alarm 
          */
         public static final int title_activity_alarm=0x7f07013b;
         public static final int title_activity_authentication=0x7f07010f;
         public static final int title_activity_central=0x7f07011e;
         /**  Custom map 
+ Custom map 
+ Custom map 
          */
         public static final int title_activity_custom_map=0x7f07013e;
         public static final int title_activity_default_schedule=0x7f07014c;
@@ -1260,6 +1272,7 @@ public final class R {
         public static final int title_activity_manage_user_locations=0x7f07014a;
         public static final int title_activity_opinion=0x7f070131;
         /**  Presentation Activities String 
+ Presentation Activities String 
  Presentation Activities String 
          */
         public static final int title_activity_presentation=0x7f07012c;

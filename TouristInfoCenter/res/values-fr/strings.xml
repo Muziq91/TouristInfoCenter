@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TouristInfoCenter</string>
+    <string name="action_settings">Paramètres</string>
+    
+    <string name="title_activity_authentication">Conexion</string>
+    <string name="title_activity_splash_screen">BienvenueCluj-Napoca</string>
+
+    <!-- When the user goes to the first screen but wants to go back and not exit -->
+    <string name="startAgain">Recharger</string>
+
+    <!-- Login and Register buttons -->
+
+    <string name="login">Login</string>
+    <string name="register">Enregister</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_register">Enregister</string>
+    <string name="countrySpinner">Choisir un Pays</string>
+
+    <string-array name="countrySpinnerArray">
+        <item> Pays</item>
+        <item> Romania</item>
+        <item> England</item>
+        <item> France</item>
+    </string-array>
+
+    <!-- Registration form hit values -->
+    <string name="name">Nom</string>
+    <string name="username">Nom d\'utilisateur</string>
+    <string name="password">Passe</string>
+    <string name="repassword">Récrire parola</string>
+    <string name="email">E-mail</string>
+    <string name="country">Pays</string>
+    <string name="remember">Rappelez-vous utilziator nom et mot de passe</string>
+    <string name="title_activity_central">Tourist Info Center</string>
+
+    <!-- For the central activity -->
+    <string name="streetMap">Street Map</string>
+    <string name="customMap">Custom Map</string>
+    <string name="userTopic">Topicul userilor</string>
+    <string name="defaultSchedule">Zone par défaut</string>
+
+    <!-- Metaio strings -->
+
+    <string name="mySdkSignature">Vvt9sk3kKKEX/cz1Xxy2S+faVyTQ6k7tv1NjBDPJSy0=</string>
+    <string name="gps">GPS</string>
+    <string name="customLocation">Ajouter</string>
+    <string name="prevText">Précédent</string>
+    <string name="nextText">Suivant</string>
+    <string name="currentText">Courant</string>
+    <string name="timeText">Temps</string>
+    <string name="dateText">Données</string>
+    <string name="saveText">Sauver</string>
+
+    <!-- Presentation Activities String -->
+
+    <string name="title_activity_presentation">Lieu de présentation</string>
+
+    <!-- Like and unlike buttons -->
+    <string name="like">Like</string>
+    <string name="presentationImage">Présentation de l\'image</string>
+    
+    <string name="unlike">Unlike</string>
+    <string name="comment">Section Commentaire</string>
+    <string name="title_activity_opinion">Forum</string>
+
+    <!-- Comment Section -->
+
+    <string name="submitComment">Exécuter</string>
+    <string name="commentText">Commentaire</string>
+    <string name="title_activity_select">Certains endroits</string>
+
+    <!-- Location fragment -->
+
+    <string name="goToMap">Carte</string>
+
+    <!-- Schedule -->
+    <string name="schedule">Calendrier</string>
+    <string name="scheduleUpdateButton">Mettre à jour</string>
+    <string name="scheduleDeleteButton">Effacer</string>
+    <string name="title_activity_schedule">Calendrier</string>
+    <string name="legend">Légende</string>
+
+    <!-- Alarm -->
+    <string name="title_activity_alarm">Alarma</string>
+    <string name="alarmInfoTextString">Informatii</string>
+    <string name="stop_alarm">Arrêter l\'alarme</string>
+
+    <!-- Custom map -->
+    <string name="title_activity_custom_map">Carte proprie</string>
+    <string name="addButton">Ajouter</string>
+    <string name="latTextString">Lat</string>
+    <string name="LngTextString">Lng</string>
+    <string name="nameTextString">Nom</string>
+    <string name="descriptionTextString">Description</string>
+    <string name="manage">Gérer</string>
+
+    <string-array name="customColorArray">
+        <item> Default</item>
+        <item> Blue</item>
+        <item> Red</item>
+        <item> Yellow</item>
+    </string-array>
+
+    <string name="customColor">Couleur</string>
+    <string name="customMapSubmitButton">Envoie</string>
+    <string name="customMapDeleteButton">Effacer</string>
+    <string name="customMapUpdateButton">Mettre a jour</string>
+    <string name="title_activity_manage_custom_map">Gérerpropre carte</string>
+    <string name="title_activity_manage_user_locations">Gérer sujet utilisateurs</string>
+    <string name="title_activity_user_custom_topic">Carte utilisateurs</string>
+    <string name="title_activity_default_schedule">Zone par défaut</string>
+    <string name="goToQuestionnaire">Questionnaire</string>
+    <string name="displayDefaultSchedule">Voir le calendrier</string>
+    <string name="title_activity_questionnaire">Questionnaire</string>
+    <string name="favFoodSpinner">Choisissez votre plat préféré</string>
+
+    <string-array name="favFoodSpinnerArray">
+        <item> Pizza</item>
+        <item> Indian</item>
+        <item> Chinesse</item>
+        <item> Traditional</item>
+    </string-array>
+
+    <string name="favActivitySpinner">Choisissez votre activité favorite</string>
+
+    <string-array name="favActivitySpinnerArray">
+        <item>Indoor</item>
+        <item>Outdoor</item>
+    </string-array>
+
+    <string name="radioLikeHistory">Oui</string>
+    <string name="radioUnlikeHistory">No</string>
+    <string name="likeHistorytext">Nous palce histoire?</string>
+    <string name="submitQuestionnaire">Envoie chestionar</string>
+    <string name="title_activity_display_default_schedule">Zone par défaut</string>
+    <string name="refreshSchedule">Recharger</string>
+    <string name="acceptSchedule">Accepter</string>
+
+</resources>

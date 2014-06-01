@@ -57,7 +57,7 @@ public class UpdatePresentationService extends UpdateDataBaseService {
 
 			} while (cursor.moveToNext());
 		}
-
+		cursor.close();
 		return presentation;
 	}
 }

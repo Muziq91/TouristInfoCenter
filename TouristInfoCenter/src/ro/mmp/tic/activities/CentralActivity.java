@@ -40,6 +40,7 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 	private String username;
 	private DataBaseConnection dbc;
 	private ProgressDialog loadDialog;
+	private static boolean canUpdate = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +61,14 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 
 		dbc = new DataBaseConnection(this);
 
-		UpdateDB udb = new UpdateDB(dbc, this);
-		udb.execute("");
-
+		if (canUpdate) {
+			Log.d("Central Activity", "UPDATIGN");
+			Log.d("Central Activity", "canUpdate is true");
+			UpdateDB udb = new UpdateDB(dbc, this);
+			udb.execute("");
+		}else{
+			Log.d("Central Activity", "canUpdate is false");
+		}
 		Intent i = getIntent();
 		username = i.getStringExtra("loggedUser");
 	}
@@ -70,6 +76,8 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 	public void onStreetMapButtonClick(View view) {
 		Intent intent = new Intent(CentralActivity.this, SelectActivity.class);
 		intent.putExtra("loggedUser", username);
+		canUpdate = false;
+		Log.d("Central Activity", "canUpdate is false");
 		startActivityForResult(intent, 0);
 
 	}
@@ -77,6 +85,8 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 	public void onScheduleButtonClick(View view) {
 		Intent intent = new Intent(CentralActivity.this, ScheduleActivity.class);
 		intent.putExtra("loggedUser", username);
+		canUpdate = false;
+		Log.d("Central Activity", "canUpdate is false");
 		startActivityForResult(intent, 1);
 
 	}
@@ -85,6 +95,8 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 		Intent intent = new Intent(CentralActivity.this,
 				CustomStreetMapActivity.class);
 		intent.putExtra("loggedUser", username);
+		canUpdate = false;
+		Log.d("Central Activity", "canUpdate is false");
 		startActivityForResult(intent, 2);
 
 	}
@@ -94,6 +106,8 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 		Intent intent = new Intent(CentralActivity.this,
 				ManageUserTopicsActivity.class);
 		intent.putExtra("loggedUser", username);
+		canUpdate = false;
+		Log.d("Central Activity", "canUpdate is false");
 		startActivityForResult(intent, 3);
 
 	}
@@ -102,6 +116,8 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 		Intent intent = new Intent(CentralActivity.this,
 				DefaultScheduleActivity.class);
 		intent.putExtra("loggedUser", username);
+		canUpdate = false;
+		Log.d("Central Activity", "canUpdate is false");
 		startActivityForResult(intent, 4);
 	}
 
@@ -109,6 +125,7 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
+		
 		loadDialog.dismiss();
 		this.deleteFile("mapImage.png");
 	}
@@ -147,6 +164,7 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 
 	private class UpdateDB extends UserService {
 
+		// database connection
 		private Connection connection;
 
 		// Statement used to update the category database
@@ -273,12 +291,11 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 						// if everything went good and no errors were displayed
 						// we can now move forward and get all presentations
 						String likeQuery = "SELECT l.idlike,l.iduser,l.idtopic,l.idusertopic,l.likes,l.unlikes FROM `center`.`like` l "
-								+ "join `center`.`user` u ON l.iduser=u.iduser where u.username='"+username+"'";
+								+ "join `center`.`user` u ON l.iduser=u.iduser where u.username='"
+								+ username + "'";
 
-						likeStatement = connection
-								.prepareStatement(likeQuery);
-						likeResult = likeStatement
-								.executeQuery();
+						likeStatement = connection.prepareStatement(likeQuery);
+						likeResult = likeStatement.executeQuery();
 
 						while (likeResult.next()) {
 
@@ -290,7 +307,11 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 							l.setIdusertopic(likeResult.getInt("idusertopic"));
 							l.setLike(likeResult.getInt("likes"));
 							l.setUnlike(likeResult.getInt("unlikes"));
-						
+							Log.d("CentralActivity",
+									"IDTopic: " + l.getIdtopic()
+											+ " IDUserTopic:"
+											+ l.getIdusertopic());
+
 							likes.add(l);
 
 						}
@@ -334,6 +355,14 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 
 			finished.onFinish();
 		}
+	}
+
+	public static boolean isCanUpdate() {
+		return canUpdate;
+	}
+
+	public static void setCanUpdate(boolean canUpdate) {
+		CentralActivity.canUpdate = canUpdate;
 	}
 
 }

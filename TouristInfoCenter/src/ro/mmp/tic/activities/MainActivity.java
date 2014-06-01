@@ -166,10 +166,16 @@ public class MainActivity extends Activity {
 				.setPositiveButton("Enable Internet now",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
+								// open the wireless setting available for the
+								// device
 								Intent callInternetSettingsIntent = new Intent(
 										android.provider.Settings.ACTION_WIRELESS_SETTINGS);
+								// start activity for result in order to return
+								// back here
+								// when the user activation was finished
 								startActivityForResult(
 										callInternetSettingsIntent, 1);
+								// cancel the alert
 								dialog.cancel();
 
 							}

@@ -50,6 +50,7 @@ public class UpdateTypeService extends UpdateDataBaseService {
 			} while (cursor.moveToNext());
 		}
 
+		cursor.close();
 		return type;
 	}
 }

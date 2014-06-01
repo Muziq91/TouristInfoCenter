@@ -616,7 +616,6 @@ int string favActivitySpinner 0x7f070151
 int string favFoodSpinner 0x7f070150
 int string goToMap 0x7f070135
 int string goToQuestionnaire 0x7f07014d
-int string googleMap 0x7f070159
 int string gps 0x7f070124
 int string hello_world 0x7f07010e
 int string latTextString 0x7f070140

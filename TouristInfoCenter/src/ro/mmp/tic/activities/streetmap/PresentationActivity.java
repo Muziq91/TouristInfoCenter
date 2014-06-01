@@ -178,9 +178,6 @@ public class PresentationActivity extends Activity implements
 			like.setLike(Integer.parseInt(likes.get("likes")));
 			like.setUnlike(Integer.parseInt(likes.get("unlikes")));
 
-			toastMessage("iduser:" + like.getIduser() + " idtopic:"
-					+ like.getIdtopic() + " likes:" + like.getLike()
-					+ " unlike:" + like.getUnlike());
 			if (like.getLike() == 1) {
 				likeButton.setVisibility(View.GONE);
 				unlikeButton.setVisibility(View.VISIBLE);
@@ -215,9 +212,6 @@ public class PresentationActivity extends Activity implements
 			like.setLike(Integer.parseInt(likes.get("likes")));
 			like.setUnlike(Integer.parseInt(likes.get("unlikes")));
 
-			toastMessage("iduser:" + like.getIduser() + " idtopic:"
-					+ like.getIdtopic() + " likes:" + like.getLike()
-					+ " unlike:" + like.getUnlike());
 			if (like.getLike() == 1) {
 				likeButton.setVisibility(View.GONE);
 				unlikeButton.setVisibility(View.VISIBLE);
@@ -258,7 +252,7 @@ public class PresentationActivity extends Activity implements
 			} else {
 				dataBaseConnection.updateLike(username, topicName, like);
 			}
-			setUserTopicLikeButtons();
+			setLikeButtons();
 		} else if (token.equals("userstreetmap")) {
 
 			likeButton.setVisibility(View.GONE);
@@ -307,7 +301,7 @@ public class PresentationActivity extends Activity implements
 			} else {
 				dataBaseConnection.updateLike(username, topicName, like);
 			}
-			setUserTopicLikeButtons();
+			setLikeButtons();
 		} else if (token.equals("userstreetmap")) {
 
 			unlikeButton.setVisibility(View.GONE);

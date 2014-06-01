@@ -64,6 +64,7 @@ public class UpdateTopicService extends UpdateDataBaseService {
 			} while (cursor.moveToNext());
 		}
 
+		cursor.close();
 		return topic;
 	}
 }

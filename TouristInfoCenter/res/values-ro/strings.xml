@@ -1,48 +1,57 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">TouristInfoCenter</string>
     <string name="action_settings">Setari</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_authentication">Autenticare</string>
-    <string name="title_activity_splash_screen">Bine ati venit in Cluj</string>
+    
+    <string name="title_activity_authentication">Autentificare</string>
+    <string name="title_activity_splash_screen">Bun venit in Cluj-Napoca</string>
 
     <!-- When the user goes to the first screen but wants to go back and not exit -->
-    <string name="startAgain">Refresh</string>
+    <string name="startAgain">Reincarca</string>
 
     <!-- Login and Register buttons -->
 
-    <string name="login">Logare</string>
+    <string name="login">Login</string>
     <string name="register">Inregistrare</string>
     <string name="title_activity_login">Login</string>
-    <string name="title_activity_register">Register</string>
-    <string name="countrySpinner">Selectati o tara</string>
+    <string name="title_activity_register">Inregistrare</string>
+    <string name="countrySpinner">Selecteaza tara</string>
 
     <string-array name="countrySpinnerArray">
-        <item> Country</item>
+        <item> Tara</item>
         <item> Romania</item>
-        <item> Anglia</item>
-        <item> Franta</item>
+        <item> England</item>
+        <item> France</item>
     </string-array>
 
     <!-- Registration form hit values -->
     <string name="name">Nume</string>
     <string name="username">Nume de utilizator</string>
     <string name="password">Parola</string>
-    <string name="repassword">Re-scrieti parola</string>
-    <string name="email">Email</string>
+    <string name="repassword">Rescrie parola</string>
+    <string name="email">E-mail</string>
     <string name="country">Tara</string>
-    <string name="remember">Aminteste Utilizator si Parola</string>
-    <string name="title_activity_central">CentralActivity</string>
+    <string name="remember">Aminteste numele de utilziator si parola</string>
+    <string name="title_activity_central">Tourist Info Center</string>
 
     <!-- For the central activity -->
-    <string name="streetMap">Harta de strada</string>
-    <string name="googleMap">Harta Google</string>
+    <string name="streetMap">Street Map</string>
+    <string name="customMap">Custom Map</string>
+    <string name="userTopic">Topicul userilor</string>
+    <string name="defaultSchedule">Orar implicit</string>
 
     <!-- Metaio strings -->
 
     <string name="mySdkSignature">Vvt9sk3kKKEX/cz1Xxy2S+faVyTQ6k7tv1NjBDPJSy0=</string>
     <string name="gps">GPS</string>
+    <string name="customLocation">Adauga</string>
+    <string name="prevText">Anterior</string>
+    <string name="nextText">Urmator</string>
+    <string name="currentText">Curent</string>
+    <string name="timeText">Timp</string>
+    <string name="dateText">Data</string>
+    <string name="saveText">Salveaza</string>
 
     <!-- Presentation Activities String -->
 
@@ -50,25 +59,42 @@
 
     <!-- Like and unlike buttons -->
     <string name="like">Like</string>
+    <string name="presentationImage">Imaginea prezentarii</string>
+    
     <string name="unlike">Unlike</string>
-    <string name="comment">Sectie de comentarii</string>
-    <string name="title_activity_opinion">OpinionActivity</string>
+    <string name="comment">Sectiune de comentarii</string>
+    <string name="title_activity_opinion">Forum</string>
 
     <!-- Comment Section -->
 
-    <string name="submitComment">Salveaza comentariu</string>
+    <string name="submitComment">Executa</string>
     <string name="commentText">Comentariu</string>
-    <string name="title_activity_select">Selectati locatiile</string>
+    <string name="title_activity_select">Selecteaza locatiile</string>
 
     <!-- Location fragment -->
 
-    <string name="goToMap">Dute la harta</string>
-    <!--  -->
+    <string name="goToMap">Harta</string>
+
+    <!-- Schedule -->
     <string name="schedule">Orar</string>
+    <string name="scheduleUpdateButton">Updateaza</string>
+    <string name="scheduleDeleteButton">Sterge</string>
     <string name="title_activity_schedule">Orar</string>
     <string name="legend">Legenda</string>
+
+    <!-- Alarm -->
     <string name="title_activity_alarm">Alarma</string>
-    <string name="stop_alarm">Opreste alarama</string>
+    <string name="alarmInfoTextString">Informatii</string>
+    <string name="stop_alarm">Opreste alarma</string>
+
+    <!-- Custom map -->
+    <string name="title_activity_custom_map">Harta proprie</string>
+    <string name="addButton">Adauga</string>
+    <string name="latTextString">Lat</string>
+    <string name="LngTextString">Lng</string>
+    <string name="nameTextString">Nume</string>
+    <string name="descriptionTextString">Descriere</string>
+    <string name="manage">Administreaza</string>
 
     <string-array name="customColorArray">
         <item> Default</item>
@@ -78,11 +104,38 @@
     </string-array>
 
     <string name="customColor">Culoare</string>
-    <string name="customMapSubmitButton">Submit</string>
+    <string name="customMapSubmitButton">Trimite</string>
     <string name="customMapDeleteButton">Sterge</string>
     <string name="customMapUpdateButton">Updateaza</string>
-    <string name="title_activity_manage_custom_map">Ingrijeste harta personalizata</string>
-    <string name="title_activity_manage_user_locations">Ingeijeste topicul userilor</string>
-    <string name="title_activity_user_custom_topic">Harta create din user topic</string>
+    <string name="title_activity_manage_custom_map">Administreaza propria harta</string>
+    <string name="title_activity_manage_user_locations">Administreaza topicul utilizatorilor</string>
+    <string name="title_activity_user_custom_topic">Harta utilizatorilor</string>
+    <string name="title_activity_default_schedule">Orar implicit</string>
+    <string name="goToQuestionnaire">Chestionar</string>
+    <string name="displayDefaultSchedule">Vezi orar</string>
+    <string name="title_activity_questionnaire">Chestionar</string>
+    <string name="favFoodSpinner">Alege mancarea favorita</string>
+
+    <string-array name="favFoodSpinnerArray">
+        <item> Pizza</item>
+        <item> Indian</item>
+        <item> Chinesse</item>
+        <item> Traditional</item>
+    </string-array>
+
+    <string name="favActivitySpinner">Alege activitatea favorita</string>
+
+    <string-array name="favActivitySpinnerArray">
+        <item>Indooe</item>
+        <item>Oudoor</item>
+    </string-array>
+
+    <string name="radioLikeHistory">Da</string>
+    <string name="radioUnlikeHistory">Nu</string>
+    <string name="likeHistorytext">Va palce istoria?</string>
+    <string name="submitQuestionnaire">Trimite chestionar</string>
+    <string name="title_activity_display_default_schedule">Orar implicit</string>
+    <string name="refreshSchedule">Reincarca</string>
+    <string name="acceptSchedule">Accepta</string>
 
 </resources>

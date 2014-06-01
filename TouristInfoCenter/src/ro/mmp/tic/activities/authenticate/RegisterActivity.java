@@ -221,6 +221,7 @@ public class RegisterActivity extends Activity implements
 			newUser.put("country", user.getCountry());
 			dataBaseConnection.insertUserAtRegister(newUser);
 			loadDialog.dismiss();
+			CentralActivity.setCanUpdate(true);
 			Intent intent = new Intent(getApplicationContext(),
 					CentralActivity.class);
 			intent.putExtra("loggedUser", username.getText().toString());

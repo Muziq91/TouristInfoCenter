@@ -63,7 +63,7 @@
     
     <string name="unlike">Unlike</string>
     <string name="comment">Comment Section</string>
-    <string name="title_activity_opinion">OpinionActivity</string>
+    <string name="title_activity_opinion">Forum</string>
 
     <!-- Comment Section -->
 
@@ -88,7 +88,7 @@
     <string name="stop_alarm">Stop Alarm</string>
 
     <!-- Custom map -->
-    <string name="title_activity_custom_map">CustomMapActivity</string>
+    <string name="title_activity_custom_map">Custom map</string>
     <string name="addButton">Add</string>
     <string name="latTextString">Lat</string>
     <string name="LngTextString">Lng</string>
@@ -132,7 +132,7 @@
 
     <string name="radioLikeHistory">Yes</string>
     <string name="radioUnlikeHistory">No</string>
-    <string name="likeHistorytext">Do you like history</string>
+    <string name="likeHistorytext">Do you like history?</string>
     <string name="submitQuestionnaire">Submit Questionnaire</string>
     <string name="title_activity_display_default_schedule">Default Schedule</string>
     <string name="refreshSchedule">Refresh</string>
