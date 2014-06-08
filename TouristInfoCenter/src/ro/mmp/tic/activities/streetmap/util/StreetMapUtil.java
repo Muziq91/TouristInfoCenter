@@ -512,8 +512,10 @@ public class StreetMapUtil {
 			 */
 
 			String file = AssetsManager.getAssetPath("streetmap/POI_bg2.png");
+			// bacground image
 			Bitmap background = BitmapFactory.decodeFile(file);
 
+			// set the configuration, decide if it can be mutable
 			sign = background.copy(Bitmap.Config.ARGB_8888, true);
 
 			Canvas canvas = new Canvas(sign);

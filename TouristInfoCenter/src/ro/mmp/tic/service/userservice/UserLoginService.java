@@ -23,13 +23,21 @@ public class UserLoginService extends UserService {
 	// This listener is used to call a method from the LoginActivity when the
 	// AsyncTask has finished
 	private final UserLoginServiceFinishedListener finishedListener;
-	
+
 	public UserLoginService(User user, Context context,
 			UserLoginServiceFinishedListener finishedListener) {
 		this.user = user;
 		this.context = context;
 		this.finishedListener = finishedListener;
-		TAG="UserLoginService";
+		TAG = "UserLoginService";
+	}
+
+	public UserLoginService(User user,
+			UserLoginServiceFinishedListener finishedListener) {
+		this.user = user;
+
+		this.finishedListener = finishedListener;
+		TAG = "UserLoginService";
 	}
 
 	@Override

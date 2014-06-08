@@ -466,12 +466,15 @@ public class PresentationActivity extends Activity implements
 	public void onTaskFinished() {
 		loadDialog.dismiss();
 
-		setLikeButtons();
+		
+		
 		if (token.equals("streetmap")) {
+			setLikeButtons();
 			UserService likeCountService = new UserLikeCountService(topic,
 					getApplicationContext(), this);
 			likeCountService.execute("");
 		} else if (token.equals("userstreetmap")) {
+			setUserTopicLikeButtons();
 			UserService likeCountService = new UserTopicLikeCountService(
 					userTopic, getApplicationContext(), this);
 			likeCountService.execute("");

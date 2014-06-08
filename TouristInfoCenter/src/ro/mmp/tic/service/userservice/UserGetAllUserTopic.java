@@ -37,8 +37,6 @@ public class UserGetAllUserTopic extends UserService {
 
 			for (HashMap<String, String> ut : userTopicList) {
 
-				Log.d("USERGETALLUSERTOPIC", "" + ut.get("IDUSER"));
-
 				if (dbc.getCustomMapModel(ut.get("NAME")) == null) {
 
 					UserTopic u = new UserTopic();

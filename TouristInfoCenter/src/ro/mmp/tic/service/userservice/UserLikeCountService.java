@@ -27,6 +27,15 @@ public class UserLikeCountService extends UserService {
 			UserLikeCountFinishedListener finishedListener) {
 
 		this.topic = topic;
+		this.context = context;
+		this.finishedListener = finishedListener;
+		TAG = "UserLikeService";
+	}
+
+	public UserLikeCountService(Topic topic,
+			UserLikeCountFinishedListener finishedListener) {
+
+		this.topic = topic;
 
 		this.context = context;
 		this.finishedListener = finishedListener;
@@ -45,13 +54,13 @@ public class UserLikeCountService extends UserService {
 					"unlike");
 
 		} catch (Exception e) {
-			Log.i("TAG", "ERROR " + e.toString());
+			Log.i(TAG, "ERROR " + e.toString());
 		} finally {
 			try {
 				connection.close();
 
 			} catch (SQLException e) {
-				Log.i("TAG", "ERROR " + e.toString());
+				Log.i(TAG, "ERROR " + e.toString());
 			}
 
 		}

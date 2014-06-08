@@ -13,5 +13,6 @@
 	</classpathentry>
 	<classpathentry exported="true" kind="src" path="/metaioSDK"/>
 	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
+	<classpathentry kind="lib" path="libs/junit-4.11.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

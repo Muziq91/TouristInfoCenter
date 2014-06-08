@@ -9,7 +9,6 @@ import ro.mmp.tic.adapter.CustomMapAdapter;
 import ro.mmp.tic.adapter.model.CustomMapModel;
 import ro.mmp.tic.service.UserService;
 import ro.mmp.tic.service.interfaces.UserTopicAddFinishedListener;
-import ro.mmp.tic.service.interfaces.UserTopicGetFinishedListener;
 import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import ro.mmp.tic.service.userservice.UserTopicAdd;
 import android.app.Activity;
@@ -32,7 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ManageCustomMapActivity extends Activity implements
-		UserTopicAddFinishedListener, UserTopicGetFinishedListener {
+		UserTopicAddFinishedListener {
 
 	private ArrayList<CustomMapModel> customMapModel;
 	private DataBaseConnection dbc;
@@ -117,10 +116,7 @@ public class ManageCustomMapActivity extends Activity implements
 		});
 
 		loadDialog = new ProgressDialog(this);
-		/*
-		 * UserService us = new UserGetAllUserTopic(this, this);
-		 * us.execute("Execute");
-		 */
+
 	}
 
 	private void createDialogView(HashMap<String, String> selectedMap) {
@@ -334,17 +330,6 @@ public class ManageCustomMapActivity extends Activity implements
 		} else {
 			toastMessage("Could not add this topic, it already exists");
 		}
-
-	}
-
-	@Override
-	public void onTaskFinished(ArrayList<HashMap<String, String>> userTopicList) {
-
-		listView = (ListView) findViewById(R.id.customMapListView);
-		final CustomMapAdapter adapter = new CustomMapAdapter(this,
-				userTopicList);
-
-		listView.setAdapter(adapter);
 
 	}
 
