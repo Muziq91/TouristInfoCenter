@@ -113,7 +113,6 @@ public class RegisterActivity extends Activity implements
 
 				userCountry = countrySpinner.getItemAtPosition(position)
 						.toString();
-
 				countrySelected = true;
 
 			}
@@ -126,21 +125,20 @@ public class RegisterActivity extends Activity implements
 		});
 
 		if (name.getText().toString().matches("")) {
-			toastMessage("Name can not be empty");
+			toastMessage(getString(R.string.nameNotEmpty));
 		} else if (username.getText().toString().matches("")) {
-			toastMessage("UserName can not be empty");
+			toastMessage(getString(R.string.usernameNotEmpty));
 		} else if (password.getText().toString().matches("")) {
-			toastMessage("Password can not be empty");
+			toastMessage(getString(R.string.passwordNotEmpty));
 		} else if (repassword.getText().toString().matches("")) {
-			toastMessage("Please re type the password");
+			toastMessage(getString(R.string.retypepasswordNotEmpty));
 		} else if (email.getText().toString().matches("")) {
-			toastMessage("Email can not be empty");
-		}
-		if (!password.getText().toString()
+			toastMessage(getString(R.string.emailNotEmpty));
+		} else if (!password.getText().toString()
 				.equals(repassword.getText().toString())) {
-			toastMessage("Passwords must match");
+			toastMessage(getString(R.string.passwordsMatch));
 		} else if (countrySelected == false) {
-			toastMessage("You must select a country");
+			toastMessage(getString(R.string.countryNotEmpty));
 
 		} else {
 
@@ -228,7 +226,7 @@ public class RegisterActivity extends Activity implements
 			startActivityForResult(intent, 0);
 		} else {
 			loadDialog.dismiss();
-			toastMessage("Username or email are already in use");
+			toastMessage(getString(R.string.incorrectRegister));
 
 		}
 	}

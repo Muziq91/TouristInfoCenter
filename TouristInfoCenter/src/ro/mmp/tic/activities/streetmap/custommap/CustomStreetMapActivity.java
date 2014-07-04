@@ -28,6 +28,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -170,6 +171,7 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 			loadGPSInformation();
 			wasAdded = false;
 		}
+
 	}
 
 	/**
@@ -238,7 +240,9 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 		addPhotoAlert.cancel();
 		this.onStop();
 
+		nameField = new String();
 		nameField = nameText.getText().toString();
+		descriptionField = new String();
 		descriptionField = descriptionText.getText().toString();
 
 		Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -265,6 +269,12 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 			Bundle bundle = data.getExtras();
 			cameraBmp = (Bitmap) bundle.get("data");
 			imageViewReturnPicture.setImageBitmap(cameraBmp);
+
+			if (cameraBmp == null) {
+				cameraBmp = BitmapFactory.decodeResource(getResources(),
+						R.drawable.ic_launcher);
+
+			}
 		}
 
 	}
@@ -352,18 +362,18 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 	public void onAddLocationButtonClick(View view) {
 
 		if (nameText.getText().toString().equals("")) {
-			toastMessage("The name cannot be empty");
+			toastMessage(getString(R.string.nameNotEmpty));
 		} else if (descriptionText.getText().toString().equals("")) {
-			toastMessage("Description cannot be empty");
+			toastMessage(getString(R.string.descriptionNotEmpty));
 		} else if (latText.getText().toString().equals("")) {
 
-			toastMessage("Lattitude must not be empty");
+			toastMessage(getString(R.string.latNotEmpty));
 		} else if (lngText.getText().toString().equals("")) {
-			toastMessage("Longitude must not be empty");
+			toastMessage(getString(R.string.lngNotEmpty));
 		} else if (cameraBmp == null) {
-			toastMessage("You must take a picture");
+			toastMessage(getString(R.string.pictureNotEmpty));
 		} else if (customColorString == null) {
-			toastMessage("A color must be selected");
+			toastMessage(getString(R.string.colorNotEmpty));
 
 		} else {
 			canAdd = true;
@@ -485,6 +495,11 @@ public class CustomStreetMapActivity extends ARViewActivity implements
 
 				String colorFile = AssetsManager.getAssetPath("streetmap/"
 						+ cm.getUserTopic().getColor());
+				if (isInSchedule(cm, schedules)) {
+					cm.getUserTopic().setColor("green.png");
+					colorFile = AssetsManager
+							.getAssetPath("streetmap/green.png");
+				}
 				radar.setObjectTexture(cm.getGeometry(), colorFile);
 				cm.getGeometry().setVisible(true);
 			}

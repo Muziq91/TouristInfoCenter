@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/deleteButton"
         android:layout_alignBottom="@+id/deleteButton"
+        android:layout_below="@+id/customColorSpinner"
         android:layout_alignParentRight="true"
         android:background="@drawable/smallbuttonback"
         android:onClick="onSubmitButtonClick"
@@ -109,6 +110,7 @@
         android:layout_alignBaseline="@+id/deleteButton"
         android:layout_alignBottom="@+id/deleteButton"
         android:layout_toLeftOf="@+id/deleteButton"
+        android:layout_below="@+id/customColorSpinner"
         android:background="@drawable/smallbuttonback"
         android:onClick="onUpdateButtonClick"
         android:text="@string/customMapUpdateButton" />

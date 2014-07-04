@@ -20,8 +20,8 @@
 
     <string-array name="countrySpinnerArray">
         <item> Country</item>
-        <item> Romania</item>
         <item> England</item>
+        <item> Romania</item>
         <item> France</item>
     </string-array>
 
@@ -60,7 +60,6 @@
     <!-- Like and unlike buttons -->
     <string name="like">Like</string>
     <string name="presentationImage">Presentation image</string>
-    
     <string name="unlike">Unlike</string>
     <string name="comment">Comment Section</string>
     <string name="title_activity_opinion">Forum</string>
@@ -138,4 +137,31 @@
     <string name="refreshSchedule">Refresh</string>
     <string name="acceptSchedule">Accept</string>
 
+    <!-- Other messages -->
+    <string name="internetGpsActive">Both the Internet and GPS are active</string>
+    <string name="usernameNotEmpty">Username cannot be empty</string>
+    <string name="nameNotEmpty">Name cannot be empty</string>
+    <string name="passwordNotEmpty">Password cannot be empty</string>
+    <string name="retypepasswordNotEmpty">Please re type the password</string>
+    <string name="passwordsMatch">Passwords must match</string>
+    <string name="emailNotEmpty">Email cannot be empty</string>
+    <string name="countryNotEmpty">You must select a country</string>
+    
+    <string name="incorrectCredentials">Username or password are incorrect</string>
+    <string name="incorrectRegister">Username or email are already in use</string>
+    
+    
+    <string name="descriptionNotEmpty">Description cannot be empty</string>
+    <string name="latNotEmpty">Lattitude cannot be empty</string>
+    <string name="lngNotEmpty">Longitude cannot be empty</string>
+    <string name="pictureNotEmpty">You must take a picture</string>
+    <string name="colorNotEmpty">A color must be selected</string>
+    
+    <string name="favFoodNotSelected">You need to select a favourite food</string>
+    <string name="favActivityNotSelected">You need to select a favourite activity</string>
+    <string name="likeHistoryNotSelected">You need to decide if you like history or not</string>
+
+    
+    
+    
 </resources>

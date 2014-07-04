@@ -66,7 +66,7 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 			Log.d("Central Activity", "canUpdate is true");
 			UpdateDB udb = new UpdateDB(dbc, this);
 			udb.execute("");
-		}else{
+		} else {
 			Log.d("Central Activity", "canUpdate is false");
 		}
 		Intent i = getIntent();
@@ -125,7 +125,6 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		
 		loadDialog.dismiss();
 		this.deleteFile("mapImage.png");
 	}
@@ -137,7 +136,6 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 
 		}
 
-		toastMessage("Update finished");
 	}
 
 	@Override

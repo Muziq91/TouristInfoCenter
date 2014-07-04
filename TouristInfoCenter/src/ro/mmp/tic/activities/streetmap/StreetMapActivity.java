@@ -322,6 +322,9 @@ public class StreetMapActivity extends ARViewActivity implements
 
 		try {
 
+			// get all schedule items
+			ArrayList<Schedule> schedules = dbc.getAllSchedule();
+
 			// set up the bilboard in order for geometries not to overlap
 			billboardGroup = metaioSDK.createBillboardGroup(720, 850);
 			// influences how much the bilboard will expand relative to the
@@ -341,6 +344,10 @@ public class StreetMapActivity extends ARViewActivity implements
 						true));
 				// we give a name to each geometry
 				m.getGeometry().setName(m.getTopic().getName());
+
+				if (isInSchedule(m, schedules)) {
+					m.setColor("green.png");
+				}
 				// we add the geometry to the billboatrd.
 				billboardGroup.addBillboard(m.getGeometry());
 			}
@@ -366,7 +373,7 @@ public class StreetMapActivity extends ARViewActivity implements
 			lat = mSensors.getLocation().getLatitude();
 			lng = mSensors.getLocation().getLongitude();
 			// set up the color for those locations that are in the schedule
-			ArrayList<Schedule> schedules = dbc.getAllSchedule();
+
 			for (MapModel m : mapModel) {
 				if (isInSchedule(m, schedules)) {
 					m.setColor("green");

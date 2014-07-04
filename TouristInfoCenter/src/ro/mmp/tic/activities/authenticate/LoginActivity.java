@@ -181,11 +181,11 @@ public class LoginActivity extends Activity implements
 		}
 		if (username.getText().toString().matches("")) {
 			loadDialog.dismiss();
-			toastMessage("Username can not be empty");
+			toastMessage(getString(R.string.usernameNotEmpty));
 
 		} else if (password.getText().toString().matches("")) {
 			loadDialog.dismiss();
-			toastMessage("Password can not be empty");
+			toastMessage(getString(R.string.passwordNotEmpty));
 
 		} else {
 			canLogin = true;
@@ -249,7 +249,7 @@ public class LoginActivity extends Activity implements
 			startActivityForResult(intent, 1);
 			loadDialog.dismiss();
 		} else {
-			toastMessage("Username or password are incorrect");
+			toastMessage(getString(R.string.incorrectCredentials));
 
 			loadDialog.dismiss();
 

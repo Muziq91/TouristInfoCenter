@@ -3,7 +3,6 @@
 
     <string name="app_name">TouristInfoCenter</string>
     <string name="action_settings">Paramètres</string>
-    
     <string name="title_activity_authentication">Conexion</string>
     <string name="title_activity_splash_screen">BienvenueCluj-Napoca</string>
 
@@ -20,8 +19,8 @@
 
     <string-array name="countrySpinnerArray">
         <item> Pays</item>
-        <item> Romania</item>
         <item> England</item>
+        <item> Romania</item>
         <item> France</item>
     </string-array>
 
@@ -60,7 +59,6 @@
     <!-- Like and unlike buttons -->
     <string name="like">Like</string>
     <string name="presentationImage">Présentation de l\'image</string>
-    
     <string name="unlike">Unlike</string>
     <string name="comment">Section Commentaire</string>
     <string name="title_activity_opinion">Forum</string>
@@ -137,5 +135,27 @@
     <string name="title_activity_display_default_schedule">Zone par défaut</string>
     <string name="refreshSchedule">Recharger</string>
     <string name="acceptSchedule">Accepter</string>
+
+    <!-- Other messages -->
+    <string name="internetGpsActive">L\'Internet et le GPS sont actifs</string>
+    <string name="usernameNotEmpty">Nom d\'utilisateur ne peut être vide</string>
+    <string name="nameNotEmpty">Nom ne peut pas être vide</string>
+    <string name="passwordNotEmpty">Mot de passe ne peut pas être vide</string>
+    <string name="retypepasswordNotEmpty">S\'il vous plaît re taper le mot de passe</string>
+    <string name="passwordsMatch">Les mots de passe doivent correspondre</string>
+    <string name="emailNotEmpty">Email peut pas être vide</string>
+    <string name="countryNotEmpty">Vous devez sélectionner un pays</string>
+    <string name="incorrectCredentials">Nom d\'utilisateur ou mot de passe sont incorrects</string>
+    <string name="incorrectRegister">Nom d\'utilisateur ou e-mail sont déjà en cours d\'utilisation</string>
+    
+     <string name="descriptionNotEmpty">La description peut pas être vide</string>
+    <string name="latNotEmpty">Lattitude ne peut pas être vide</string>
+    <string name="lngNotEmpty">Longitude ne peut pas être vide</string>
+    <string name="pictureNotEmpty">Vous devez prendre une photo</string>
+    <string name="colorNotEmpty">Une couleur doit être choisie</string>
+    
+    <string name="favFoodNotSelected">Vous devez sélectionner un aliment favori</string>
+    <string name="favActivityNotSelected">Vous devez sélectionner une activité favorite</string>
+    <string name="likeHistoryNotSelected">Vous devez décider si vous aimez l\'histoire ou pas</string>
 
 </resources>

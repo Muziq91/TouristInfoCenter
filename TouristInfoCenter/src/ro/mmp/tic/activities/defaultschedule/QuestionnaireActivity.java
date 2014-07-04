@@ -152,12 +152,13 @@ public class QuestionnaireActivity extends Activity {
 	}
 
 	public void onSubmitQuestionnaierButtonClick(View view) {
+		
 		if (favFoodSelected == false) {
-			toastMessage("You need to select a favourite food");
+			toastMessage(getString(R.string.favFoodNotSelected));
 		} else if (favActivitySelected == false) {
-			toastMessage("You need to select a favourite activity");
+			toastMessage(getString(R.string.favActivityNotSelected));
 		} else if (isChecked == false) {
-			toastMessage("You need to decide if you like history or not");
+			toastMessage(getString(R.string.likeHistoryNotSelected));
 		} else {
 
 			toastMessage("You selected, favourite food: " + favFoodValue
@@ -170,17 +171,6 @@ public class QuestionnaireActivity extends Activity {
 
 			dbc.saveUserPreferences(up, username);
 
-			ArrayList<UserPref> allUserPref = dbc
-					.getAllUserPreferences(username);
-
-			for (UserPref u : allUserPref) {
-
-				toastMessage("You selected, favourite food: " + u.getFavFood()
-						+ " favourite activity: " + u.getFavActivity()
-						+ " and history is:" + u.getLikeHistory() + " user is "
-						+ u.getIduser() + " userpref id " + u.getIduser());
-
-			}
 		}
 
 	}

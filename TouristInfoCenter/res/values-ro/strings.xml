@@ -3,7 +3,6 @@
 
     <string name="app_name">TouristInfoCenter</string>
     <string name="action_settings">Setari</string>
-    
     <string name="title_activity_authentication">Autentificare</string>
     <string name="title_activity_splash_screen">Bun venit in Cluj-Napoca</string>
 
@@ -20,8 +19,8 @@
 
     <string-array name="countrySpinnerArray">
         <item> Tara</item>
-        <item> Romania</item>
         <item> England</item>
+        <item> Romania</item>
         <item> France</item>
     </string-array>
 
@@ -60,7 +59,6 @@
     <!-- Like and unlike buttons -->
     <string name="like">Like</string>
     <string name="presentationImage">Imaginea prezentarii</string>
-    
     <string name="unlike">Unlike</string>
     <string name="comment">Sectiune de comentarii</string>
     <string name="title_activity_opinion">Forum</string>
@@ -126,8 +124,8 @@
     <string name="favActivitySpinner">Alege activitatea favorita</string>
 
     <string-array name="favActivitySpinnerArray">
-        <item>Indooe</item>
-        <item>Oudoor</item>
+        <item>Inauntru</item>
+        <item>Afara</item>
     </string-array>
 
     <string name="radioLikeHistory">Da</string>
@@ -137,5 +135,27 @@
     <string name="title_activity_display_default_schedule">Orar implicit</string>
     <string name="refreshSchedule">Reincarca</string>
     <string name="acceptSchedule">Accepta</string>
+
+    <!-- Other messages -->
+    <string name="internetGpsActive">Internetul si GPS sunt active</string>
+    <string name="usernameNotEmpty">Numele de utilizator trebuie introdus</string>
+    <string name="nameNotEmpty">Numele trebuie introdus</string>
+    <string name="passwordNotEmpty">Parola trebuie introdusa </string>
+    <string name="retypepasswordNotEmpty">Rescrieti parola</string>
+    <string name="passwordsMatch">Parolele trebuie sa se potriveasca</string>
+    <string name="emailNotEmpty">Emailul trebuie introdus</string>
+    <string name="countryNotEmpty">Trebuie sa selectati o tara</string>
+    <string name="incorrectCredentials">Numele de utilizator sau parola sunt incorecte</string>
+    <string name="incorrectRegister">Numele de utilizator sau emailul sunt deja folosite</string>
+    
+     <string name="descriptionNotEmpty">O descriptie trebuie introdus</string>
+    <string name="latNotEmpty">Lattitudinea trebuie completata</string>
+    <string name="lngNotEmpty">Longitudinea treabuie completata</string>
+    <string name="pictureNotEmpty">O poza trerbuie facuta</string>
+    <string name="colorNotEmpty">O culoare trebuie selectata</string>
+    
+    <string name="favFoodNotSelected">Trebuie selectata o mancare favorita</string>
+    <string name="favActivityNotSelected">Trebuie selectata o activitate favorita</string>
+    <string name="likeHistoryNotSelected">Trebuie sa decideti daca va place sau nu istoria</string>
 
 </resources>

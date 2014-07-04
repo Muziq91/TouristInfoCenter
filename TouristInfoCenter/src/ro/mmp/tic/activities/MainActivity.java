@@ -10,10 +10,7 @@
 
 package ro.mmp.tic.activities;
 
-import java.util.HashMap;
-
 import ro.mmp.tic.R;
-import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -45,10 +42,10 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		DataBaseConnection dbx = new DataBaseConnection(this);
-		dbx.upgrade();
+		/*DataBaseConnection dbx = new DataBaseConnection(this);
+		dbx.upgrade();*/
 
-		HashMap<String, String> user = new HashMap<String, String>(0);
+		/*HashMap<String, String> user = new HashMap<String, String>(0);
 		HashMap<String, String> user1 = new HashMap<String, String>(0);
 		user.put("name", "userA");
 		user.put("username", "userA");
@@ -63,7 +60,7 @@ public class MainActivity extends Activity {
 		user1.put("country", "France");
 
 		dbx.insertUserAtRegister(user);
-		dbx.insertUserAtRegister(user1);
+		dbx.insertUserAtRegister(user1);*/
 
 		startAgainButton = (Button) findViewById(R.id.startAgainButton);
 		activateInternetAndGps();
@@ -98,7 +95,7 @@ public class MainActivity extends Activity {
 				// can display the button, but in the
 				// same time we need to go to the splash screen activity
 				startAgainButton.setVisibility(View.VISIBLE);
-				toastMessage("Both the Internet and GPS are active");
+				toastMessage(getString(R.string.internetGpsActive));
 				Intent nextActivity = new Intent(this,
 						SplashScreenActivity.class);
 				startActivityForResult(nextActivity, 0);

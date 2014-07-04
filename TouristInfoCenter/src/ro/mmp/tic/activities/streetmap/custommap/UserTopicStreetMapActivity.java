@@ -109,6 +109,13 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 	}
 
 	@Override
+	public void onDrawFrame() {
+		// TODO Auto-generated method stub
+		super.onDrawFrame();
+
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.custom_map, menu);
@@ -196,6 +203,8 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 		try {
 
 			Log.d(TAG, "loadGPSinformation");
+			// get all schedule items
+			ArrayList<Schedule> schedules = dbc.getAllSchedule();
 			// set up the tracking configuration
 			@SuppressWarnings("unused")
 			boolean result = metaioSDK.setTrackingConfiguration("GPS");
@@ -210,11 +219,17 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 			// create geometry
 			for (CustomMapModel cm : customMapModel) {
 				Log.d(TAG, "setGeometry " + cm.getUserTopic().getName());
+				Log.d(TAG, "setGeometry " + cm.getUserTopic().getColor());
 
 				cm.setGeometry(metaioSDK.createGeometryFromImage(streetMapUtil
 						.createSign(getApplicationContext(), cm.getUserTopic()
 								.getName()), true));
 				cm.getGeometry().setName(cm.getUserTopic().getName());
+
+				if (isInSchedule(cm, schedules)) {
+					cm.getUserTopic().setColor("green.png");
+				}
+				
 				billboardGroup.addBillboard(cm.getGeometry());
 			}
 
@@ -231,7 +246,7 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 					"Create googleUtil object in loadGPSInformation");
 
 			// st up the color for those lcoations that are in the schedule
-			ArrayList<Schedule> schedules = dbc.getAllSchedule();
+
 			for (CustomMapModel cm : customMapModel) {
 				if (isInSchedule(cm, schedules)) {
 					cm.getUserTopic().setColor("green.png");
@@ -252,6 +267,7 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 
 				String colorFile = AssetsManager.getAssetPath("streetmap/"
 						+ cm.getUserTopic().getColor());
+
 				radar.setObjectTexture(cm.getGeometry(), colorFile);
 				cm.getGeometry().setVisible(true);
 			}
@@ -300,7 +316,9 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 	private boolean isInSchedule(CustomMapModel m, ArrayList<Schedule> schedules) {
 
 		for (Schedule s : schedules) {
-			if (s.getPlace().equals(m.getGeometry().getName())) {
+			if (s.getPlace().contains(m.getGeometry().getName())) {
+				Log.d("COMPARATIA IS INS CHEDULE", s.getPlace() + "\n"
+						+ m.getGeometry().getName());
 				return true;
 			}
 		}
@@ -549,6 +567,8 @@ public class UserTopicStreetMapActivity extends ARViewActivity implements
 				.getGeometry());
 		radar.add(customMapModel.get(streetMapUtil.getCurrentPosition())
 				.getGeometry());
+
+		Log.d("CURRENT POSITION", "" + streetMapUtil.getCurrentPosition());
 		streetMapFile = AssetsManager.getAssetPath("streetmap/green.png");
 		radar.setObjectTexture(
 				customMapModel.get(streetMapUtil.getCurrentPosition())
