@@ -135,6 +135,7 @@ public class CentralActivity extends Activity implements UpdateFinishedListener 
 			loadDialog.dismiss();
 
 		}
+		toastMessage("Update finished");
 
 	}
 

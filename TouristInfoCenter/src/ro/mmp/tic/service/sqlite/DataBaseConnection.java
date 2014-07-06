@@ -216,6 +216,9 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 				+ "' "
 				+ "AND ut.name='"
 				+ topicName + "'";
+
+		Log.d("DataBaseConnection", "topicname " +topicName+ "\n"+sqlQuery);
+
 		Cursor cursor = db.rawQuery(sqlQuery, null);
 		if (cursor.moveToFirst()) {
 			do {
@@ -228,6 +231,13 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 
 			} while (cursor.moveToNext());
 		}
+
+		Log.d("DataBaseConnection",
+				"idlike " + likes.get("idlike") + " iduser "
+						+ likes.get("iduser") + "idtopic"
+						+ likes.get("idtopic") + " idusertopic"
+						+ likes.get("idusertopic") + "likes"
+						+ likes.get("likes") + "unlikes" + likes.get("unlikes"));
 
 		closeDB();
 
@@ -900,6 +910,7 @@ public class DataBaseConnection extends SQLiteOpenHelper {
 
 	public void updateCustomMap(HashMap<String, String> clickPosition) {
 		db = this.getWritableDatabase();
+
 		String sqlQuery = "UPDATE usertopic SET name='"
 				+ clickPosition.get("NAME") + "',description='"
 				+ clickPosition.get("DESCRIPTION") + "',lat='"

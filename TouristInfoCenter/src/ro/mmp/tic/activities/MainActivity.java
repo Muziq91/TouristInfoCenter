@@ -10,7 +10,10 @@
 
 package ro.mmp.tic.activities;
 
+import java.util.HashMap;
+
 import ro.mmp.tic.R;
+import ro.mmp.tic.service.sqlite.DataBaseConnection;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -42,25 +45,19 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		/*DataBaseConnection dbx = new DataBaseConnection(this);
-		dbx.upgrade();*/
+		DataBaseConnection dbx = new DataBaseConnection(this);
+		dbx.upgrade();
 
-		/*HashMap<String, String> user = new HashMap<String, String>(0);
+		HashMap<String, String> user = new HashMap<String, String>(0);
 		HashMap<String, String> user1 = new HashMap<String, String>(0);
-		user.put("name", "userA");
-		user.put("username", "userA");
-		user.put("password", "userA");
-		user.put("email", "userA");
-		user.put("country", "Romania");
-
-		user1.put("name", "userB");
-		user1.put("username", "userB");
-		user1.put("password", "userB");
-		user1.put("email", "userB");
-		user1.put("country", "France");
+		user.put("name", "userTest");
+		user.put("username", "userTest");
+		user.put("password", "userTest");
+		user.put("email", "userTest");
+		user.put("country", "England");
 
 		dbx.insertUserAtRegister(user);
-		dbx.insertUserAtRegister(user1);*/
+		dbx.insertUserAtRegister(user1);
 
 		startAgainButton = (Button) findViewById(R.id.startAgainButton);
 		activateInternetAndGps();

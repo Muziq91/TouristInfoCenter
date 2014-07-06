@@ -36,10 +36,12 @@ public class OperationSetUserTopicLike extends Strategy {
 						+ ",l.unlikes="
 						+ like.getUnlike()
 						+ " WHERE l.iduser = (Select u.iduser from `center`.`user` u where u.username = '"
-						+ username + "')" + " AND l.idusertopic='"
-						+ like.getIdusertopic() + "'";
-				
-			} 
+						+ username
+						+ "')"
+						+ " AND l.idusertopic=(Select ut.idusertopic from `center`.`usertopic` ut where ut.name='"
+						+ topic + "')";
+				Log.d("OperationSetUserTopicLike", sqlQuery);
+			}
 			// if the like comment does not exist we insert it
 			else {
 
@@ -53,6 +55,7 @@ public class OperationSetUserTopicLike extends Strategy {
 						+ like.getLike()
 						+ ","
 						+ like.getUnlike() + ")";
+				Log.d("OperationSetUserTopicLike", sqlQuery);
 			}
 
 			statement = connection.createStatement();

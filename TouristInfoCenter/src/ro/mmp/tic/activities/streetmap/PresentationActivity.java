@@ -32,6 +32,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -203,7 +204,14 @@ public class PresentationActivity extends Activity implements
 		HashMap<String, String> likes = dataBaseConnection.getUserTopicLike(
 				username, topicName);
 		like = new Like();
-		if (likes.get("likes") != null) {
+		Log.d("PresentationActivity",
+				"idlike " + likes.get("idlike") + " iduser "
+						+ likes.get("iduser") + "idtopic"
+						+ likes.get("idtopic") + " idusertopic"
+						+ likes.get("idusertopic") + "likes"
+						+ likes.get("likes") + "unlikes" + likes.get("unlikes"));
+		if (likes.get("idlike") != null) {
+			
 			exists = true;
 
 			like.setIduser(Integer.parseInt(likes.get("iduser")));
@@ -394,7 +402,8 @@ public class PresentationActivity extends Activity implements
 	 */
 	@Override
 	public void onTaskFinished(int likeCount, int unlikeCount) {
-
+		Log.d("PresentationActivity", "likeCount " + likeCount
+				+ " unlikeCOunt " + unlikeCount);
 		loadDialog.dismiss();
 
 		// here we load the chart with information from the database about the
@@ -466,14 +475,13 @@ public class PresentationActivity extends Activity implements
 	public void onTaskFinished() {
 		loadDialog.dismiss();
 
-		
-		
 		if (token.equals("streetmap")) {
 			setLikeButtons();
 			UserService likeCountService = new UserLikeCountService(topic,
 					getApplicationContext(), this);
 			likeCountService.execute("");
 		} else if (token.equals("userstreetmap")) {
+
 			setUserTopicLikeButtons();
 			UserService likeCountService = new UserTopicLikeCountService(
 					userTopic, getApplicationContext(), this);

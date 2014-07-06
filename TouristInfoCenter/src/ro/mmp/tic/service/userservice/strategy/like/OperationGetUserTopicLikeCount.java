@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import ro.mmp.tic.service.userservice.strategy.Strategy;
+import android.util.Log;
 
 public class OperationGetUserTopicLikeCount extends Strategy {
 
@@ -32,6 +33,7 @@ public class OperationGetUserTopicLikeCount extends Strategy {
 						+ topicName
 						+ "' AND l.likes=1 AND l.unlikes=0;";
 
+				Log.d("OperationGetUserTopicLikeCount", sqlQuery);
 				statement = connection.prepareStatement(sqlQuery);
 				result = statement.executeQuery();
 
@@ -51,6 +53,7 @@ public class OperationGetUserTopicLikeCount extends Strategy {
 						+ topicName
 						+ "' AND l.likes=0 AND l.unlikes=1;";
 
+				Log.d("OperationGetUserTopicLikeCount", sqlQuery);
 				statement = connection.prepareStatement(sqlQuery);
 				result = statement.executeQuery();
 
